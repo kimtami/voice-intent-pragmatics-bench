@@ -61,7 +61,11 @@ def done_keys(path: Path) -> set[tuple[str, int]]:
     return keys
 
 
+PROFILE = ROOT / "data" / "profile.json"
+
+
 def run_one(arm: Arm, item: dict, rep: int) -> dict:
+    mode = arm.extra.get("mode")
     messages = item["context"] + [{"role": "user", "content": item["utterance"]}]
     row: dict = {
         "arm": arm.arm_id,
@@ -75,6 +79,8 @@ def run_one(arm: Arm, item: dict, rep: int) -> dict:
         "rep": rep,
         "started_at": datetime.now(timezone.utc).isoformat(),
     }
+    if arm.extra.get("base_arm"):
+        row["base_arm"] = arm.extra["base_arm"]
     extra = None
     analysis_ms = 0.0
     if arm.analyzer:
@@ -91,6 +97,11 @@ def run_one(arm: Arm, item: dict, rep: int) -> dict:
         extra = prompts.responder_extra(row["analysis"])
     elif arm.checklist:
         extra = prompts.PRAGMATIC_CHECKLIST
+    elif mode == "context":
+        extra = prompts.common_ground(json.loads(PROFILE.read_text(encoding="utf-8")), item["events"])
+    elif mode == "context_checklist":
+        cg = prompts.common_ground(json.loads(PROFILE.read_text(encoding="utf-8")), item["events"])
+        extra = prompts.PRAGMATIC_CHECKLIST + "\n\n" + cg
 
     system = prompts.system_prompt(item["state"], extra)
     res = stream_reply(arm.provider, arm.model, system, messages, arm.params)

@@ -7,6 +7,8 @@
 - A3 화용 서브에이전트: 같은 모델이 A2 강도로 화용 분석(JSON, 비스트리밍) → A1 설정 응답 모델이 분석을 받아 스트리밍 응답
 - A4 화용 점검표(요청 외 추가): 별도 호출 없이 A1 응답 모델의 시스템 프롬프트에 점검표만 추가
 - X  교차 A3: 분석 모델과 응답 모델을 다른 제공자로 조합
+- C  공유 맥락: 빠른 설정 + 시스템 프롬프트에 사용자 프로필과 최근 기록 (추가 호출 없음)
+- CK 맥락+점검표: C 에 A4 의 화용 점검표를 함께 넣음 (추가 호출 없음)
 """
 
 from __future__ import annotations
@@ -127,6 +129,19 @@ def _cross(analyzer_family: str, responder_family: str) -> Arm:
     )
 
 
+# C(공유 맥락)·CK(맥락+점검표)를 붙일 빠른 설정. 질문: 지연은 그대로 두고 상위 모델 정확도에 얼마나 다가가는가
+FAST_BASES = [("mercury", "A0"), ("mercury", "A1"), ("luna", "A1"), ("gemini", "A1")]
+
+
+def _pragmatic(family: str, base: str, mode: str) -> Arm:
+    m = MODELS[family]
+    cond = {"context": "C", "context_checklist": "CK"}[mode]
+    return Arm(
+        f"{family}.{base}+{cond}", family, cond, m["provider"], m["model"], m[base], [m["key"]],
+        extra={"mode": mode, "base_arm": f"{family}.{base}"},
+    )
+
+
 def all_arms() -> dict[str, Arm]:
     arms: dict[str, Arm] = {}
     for fam in MODELS:
@@ -138,6 +153,10 @@ def all_arms() -> dict[str, Arm]:
     for a_fam, r_fam in (("mercury", "luna"), ("luna", "mercury")):
         a = _cross(a_fam, r_fam)
         arms[a.arm_id] = a
+    for fam, base in FAST_BASES:
+        for mode in ("context", "context_checklist"):
+            a = _pragmatic(fam, base, mode)
+            arms[a.arm_id] = a
     return arms
 
 

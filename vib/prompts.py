@@ -35,6 +35,16 @@ PRAGMATIC_CHECKLIST = (
 )
 
 
+def common_ground(profile: dict, events: list[str]) -> str:
+    """C(공유 맥락): 실제 시스템이 알 법한 사실만 담는다. 말투나 의도에 대한 힌트는 넣지 않는다."""
+    lines = ["[공유 맥락: 사용자 프로필]", f"- {profile['사용자']}"]
+    lines.append("- 연락처: " + ", ".join(f"{k}({v})" for k, v in profile["연락처"].items()))
+    lines.append("- 생활 패턴: " + ", ".join(profile["생활 패턴"]))
+    lines.append("[최근 기록]")
+    lines += [f"- {e}" for e in events]
+    return "\n".join(lines)
+
+
 def system_prompt(state: str, extra: str | None = None) -> str:
     parts = [VOICE_RULES, PERSONA]
     if extra:
