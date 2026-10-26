@@ -45,6 +45,41 @@ def common_ground(profile: dict, events: list[str]) -> str:
     return "\n".join(lines)
 
 
+def auto_context(profile: dict, log: list[str]) -> str:
+    """C-auto: 선별 없는 로그. 프로필은 C 와 같고, 기록은 관련 없는 항목이 섞인 그대로 준다."""
+    head = common_ground(profile, []).split("[최근 기록]")[0]
+    return head + "[최근 기록 (시스템 로그, 선별하지 않음)]\n" + "\n".join(f"- {e}" for e in log)
+
+
+def hypotheses_block(hyps: list[dict]) -> str:
+    """C-auto+H: 미리 계산된 추정. 사실과 섞이지 않게 따로 표시한다."""
+    lines = ["[미리 계산된 추정 (사실이 아님)]"]
+    lines += [f"- {h['text']} (확신도 {h['confidence']:.1f})" for h in hyps]
+    lines.append("이 추정은 사용자의 이번 발화와 맞을 때만 참고하고, 맞지 않으면 무시한다.")
+    return "\n".join(lines)
+
+
+# 가설 생성기: 사용자가 말하기 전에 실행된다고 가정한다 (발화·정답을 보지 않는다).
+HYPOTHESIS_SYSTEM = (
+    "너는 음성 비서의 맥락 준비 모듈이다. 사용자는 아직 아무 말도 하지 않았다. 아래 프로필, 기기 상태, 시스템 로그, "
+    "직전 대화만 보고, 사용자가 다음에 말할 때 도움이 될 추정을 만든다.\n"
+    "추정할 것: 사용자가 지금 원하거나 신경 쓸 만한 것, 다음 발화에서 가리킬 만한 대상, 사용자가 이미 알고 있다고 "
+    "전제할 사실, 진행 중인 계획이나 문제. 로그 중 지금 상황과 관련 있는 항목을 골라 근거로 쓴다.\n"
+    "사실이 아닌 추정이므로 각 항목에 확신도(0~1)를 붙인다. 최대 5개, 각 한 문장.\n"
+    'JSON 하나만 출력한다: {"hypotheses": [{"text": str, "confidence": number}]}'
+)
+
+
+def hypothesis_user_message(profile: dict, state: str, log: list[str], context: list[dict]) -> str:
+    lines = [auto_context(profile, log), f"[기기 상태] {state}", "[직전 대화]"]
+    if context:
+        lines += [f"{'사용자' if t['role'] == 'user' else '비서'}: {t['content']}" for t in context]
+    else:
+        lines.append("(없음)")
+    lines.append("위 형식의 JSON 하나만 출력한다.")
+    return "\n".join(lines)
+
+
 def system_prompt(state: str, extra: str | None = None) -> str:
     parts = [VOICE_RULES, PERSONA]
     if extra:

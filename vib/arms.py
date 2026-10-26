@@ -9,6 +9,8 @@
 - X  교차 A3: 분석 모델과 응답 모델을 다른 제공자로 조합
 - C  공유 맥락: 빠른 설정 + 시스템 프롬프트에 사용자 프로필과 최근 기록 (추가 호출 없음)
 - CK 맥락+점검표: C 에 A4 의 화용 점검표를 함께 넣음 (추가 호출 없음)
+- CA C-auto: 선별 없는 로그 (관련 기록 + 관련 없는 기록 10개)
+- CH C-auto+H: CA + 미리 계산된 자동 가설 (발화를 보지 않고 생성, 응답 지연에 포함 안 됨)
 """
 
 from __future__ import annotations
@@ -131,11 +133,13 @@ def _cross(analyzer_family: str, responder_family: str) -> Arm:
 
 # C(공유 맥락)·CK(맥락+점검표)를 붙일 빠른 설정. 질문: 지연은 그대로 두고 상위 모델 정확도에 얼마나 다가가는가
 FAST_BASES = [("mercury", "A0"), ("mercury", "A1"), ("luna", "A1"), ("gemini", "A1")]
+# 3차(자동 맥락): 2차에서 맥락 효과가 있던 빠른 설정 3개
+AUTO_BASES = [("mercury", "A0"), ("mercury", "A1"), ("luna", "A1")]
 
 
 def _pragmatic(family: str, base: str, mode: str) -> Arm:
     m = MODELS[family]
-    cond = {"context": "C", "context_checklist": "CK"}[mode]
+    cond = {"context": "C", "context_checklist": "CK", "auto": "CA", "auto_hyp": "CH"}[mode]
     return Arm(
         f"{family}.{base}+{cond}", family, cond, m["provider"], m["model"], m[base], [m["key"]],
         extra={"mode": mode, "base_arm": f"{family}.{base}"},
@@ -155,6 +159,10 @@ def all_arms() -> dict[str, Arm]:
         arms[a.arm_id] = a
     for fam, base in FAST_BASES:
         for mode in ("context", "context_checklist"):
+            a = _pragmatic(fam, base, mode)
+            arms[a.arm_id] = a
+    for fam, base in AUTO_BASES:
+        for mode in ("auto", "auto_hyp"):
             a = _pragmatic(fam, base, mode)
             arms[a.arm_id] = a
     return arms

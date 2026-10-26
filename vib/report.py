@@ -35,8 +35,8 @@ COND_NAME = {
     "A4": "A4 화용 점검표",
     "X": "교차 A3",
 }
-COND_NAME |= {"C": "C 공유 맥락", "CK": "C+A4 맥락+점검표"}
-COND_MARKER = {"A0": "v", "A1": "o", "A2": "^", "A3": "s", "A4": "D", "X": "P", "C": "h", "CK": "p"}
+COND_NAME |= {"C": "C 공유 맥락", "CK": "C+A4 맥락+점검표", "CA": "C-auto 선별 없는 로그", "CH": "C-auto+H 자동 가설"}
+COND_MARKER = {"A0": "v", "A1": "o", "A2": "^", "A3": "s", "A4": "D", "X": "P", "C": "h", "CK": "p", "CA": "X", "CH": "d"}
 
 
 def cond_label(r: dict) -> str:
@@ -44,7 +44,7 @@ def cond_label(r: dict) -> str:
     c = r["condition"]
     if c == "X":
         return f"교차 A3 ({r['arm'].split('.', 1)[1].replace('>', '→')})"
-    if c in ("C", "CK") and r.get("base_arm"):
+    if c in ("C", "CK", "CA", "CH") and r.get("base_arm"):
         return f"{COND_NAME[c]} ({r['base_arm'].split('.', 1)[1]} 기준)"
     return COND_NAME.get(c, c)
 
@@ -54,15 +54,15 @@ def short_label(r: dict, always_base: bool = False) -> str:
     c = r["condition"]
     if c == "X":
         return "X:" + r["arm"].split(".", 1)[1].split(">")[0]
-    if c in ("C", "CK") and r.get("base_arm"):
+    if c in ("C", "CK", "CA", "CH") and r.get("base_arm"):
         b = r["base_arm"].split(".", 1)[1]
-        name = "C+A4" if c == "CK" else "C"
+        name = {"C": "C", "CK": "C+A4", "CA": "C-auto", "CH": "C-auto+H"}[c]
         return name if b == "A1" and not always_base else f"{b}+{name}"
     return c
 # A1 과 A4 는 지연이 비슷해 겹치기 쉬우므로 라벨을 반대 방향에 둔다
 # 개요 차트에서 지연이 비슷한 Haiku 와 Luna 이름표가 겹치지 않게 한다
 OVERVIEW_OFFSET = {"haiku": (-10, -17, "right")}
-LABEL_OFFSET = {"C": (8, -15, "left"), "CK": (8, 6, "left"), "A0": (-8, 6, "right"), "A1": (-8, -15, "right"), "A2": (8, 6, "left"), "A3": (8, 6, "left"), "A4": (8, 6, "left"), "X": (8, -15, "left")}
+LABEL_OFFSET = {"C": (8, -15, "left"), "CK": (8, 6, "left"), "CA": (8, -15, "left"), "CH": (8, 6, "left"), "A0": (-8, 6, "right"), "A1": (-8, -15, "right"), "A2": (8, 6, "left"), "A3": (8, 6, "left"), "A4": (8, 6, "left"), "X": (8, -15, "left")}
 CATEGORY_NAME = {
     "indirect_request": "간접 요청",
     "question_form_request": "질문형 요청",
@@ -245,7 +245,7 @@ def paired_vs_a1(table: list[dict], per_item_by_arm: dict) -> list[dict]:
     """같은 문항끼리 짝지어 각 조건을 같은 응답 모델의 A1 과 비교한다. 모델을 합친 비교는 문항 단위로 묶어 재표집한다."""
     by_arm = {r["arm"]: r for r in table}
     base = {r["family"]: r["arm"] for r in table if r["condition"] == "A1" and r["arm"] in per_item_by_arm}
-    control = latency_control()
+    controls = {b: latency_control(b) for b in set(CONTROL_BATCH.values())}
     out, pooled = [], defaultdict(lambda: defaultdict(list))
     for r in table:
         # C·P 는 자기 기준 설정(base_arm)과, 나머지는 같은 응답 모델의 A1 과 비교한다
@@ -258,11 +258,13 @@ def paired_vs_a1(table: list[dict], per_item_by_arm: dict) -> list[dict]:
             continue
         m, lo, hi, p = _boot_diff(diffs)
         # 같은 실행에서 다시 잰 기준 설정 지연이 있으면 그것과 비교한다 (시간대 차이 제거)
+        control = controls.get(CONTROL_BATCH.get(r["condition"]), {})
         b_lat = control.get(b_arm) if r.get("base_arm") and b_arm in control else by_arm[b_arm]["first_p50_ms"]
         out.append({
             "scope": r["family"], "arm": r["arm"], "condition": r["condition"], "base_arm": b_arm,
             "delta_acc": round(m * 100, 1), "ci_lo": round(lo * 100, 1), "ci_hi": round(hi * 100, 1), "p_gt0": round(p, 3),
             "delta_first_p50_ms": r["first_p50_ms"] - b_lat,
+            "n_settings": 1,
         })
         cond = r["condition"] if r["condition"] != "X" else "X"
         if r["arm"] in POOL_EXCLUDE:
@@ -280,6 +282,7 @@ def paired_vs_a1(table: list[dict], per_item_by_arm: dict) -> list[dict]:
             "scope": "pooled:" + "+".join(sorted({r["scope"] for r in same})), "arm": f"*.{cond}", "condition": cond,
             "delta_acc": round(m * 100, 1), "ci_lo": round(lo * 100, 1), "ci_hi": round(hi * 100, 1), "p_gt0": round(p, 3),
             "delta_first_p50_ms": round(statistics.median(r["delta_first_p50_ms"] for r in same)),
+            "n_settings": len(same),
         })
     return out
 
@@ -288,10 +291,14 @@ def _round(x):
     return None if x is None else round(x)
 
 
-def latency_control() -> dict[str, float]:
-    """C·P 와 같은 실행에서 다시 잰 기준 설정의 첫 발화 p50 (채점하지 않은 지연 대조군)."""
+# 조건별로 같은 실행에서 다시 잰 지연 대조군 폴더 (results/latency_control/<batch>)
+CONTROL_BATCH = {"C": "context", "CK": "context", "CA": "auto", "CH": "auto"}
+
+
+def latency_control(batch: str = "context") -> dict[str, float]:
+    """같은 실행에서 다시 잰 기준 설정의 첫 발화 p50 (채점하지 않은 지연 대조군)."""
     out = {}
-    for p in sorted((RES / "latency_control").glob("*.jsonl")):
+    for p in sorted((RES / "latency_control" / batch).glob("*.jsonl")):
         lat = [r["e2e_first_ms"] for r in _jsonl(p) if not r.get("error")]
         if lat:
             out[p.stem] = round(_pct(lat, 0.5))
@@ -538,7 +545,8 @@ def main() -> None:
     write_models(paired_vs_base(table, per_item_by_arm))
     gap = gap_closure(table, per_item_by_arm)
     write_gap(gap, table)
-    chart_gap(gap, table, RES / "gap_to_strong_model.png")
+    for fname, methods, colors in GAP_CHARTS:
+        chart_gap(gap, table, RES / fname, methods, colors)
     chart_overview(table, RES / "overview_default_settings.png")
     chart_scatter(table, RES / "latency_vs_accuracy.png")
     chart_heatmap(table, by_cat, RES / "accuracy_by_category.png")
@@ -548,9 +556,13 @@ def main() -> None:
 
 
 REF_ARMS = ["gemini38.A1", "gemini38.A2"]  # 상위 모델 목표선: 기본 설정, 전체 최고 설정
-GAP_METHODS = ["A4", "C", "CK"]  # 추가 호출 없이 지연을 거의 유지하는 화용 방법
+GAP_METHODS = ["A4", "C", "CK", "CA", "CH"]  # 추가 호출 없이 지연을 거의 유지하는 화용 방법
 # 방법별 색: 기본 팔레트 처음 세 슬롯 (모든 쌍 CVD·정상 시각 기준 통과, references/palette.md)
-METHOD_COLOR = {"A4": "#2a78d6", "C": "#eb6834", "CK": "#1baf7a"}
+# 차트마다 세 가지 방법만 그리고(모든 쌍 기준을 통과하는 처음 세 슬롯), C 는 두 차트에서 같은 색을 쓴다
+GAP_CHARTS = [
+    ("gap_to_strong_model.png", ["A4", "C", "CK"], {"A4": "#2a78d6", "C": "#eb6834", "CK": "#1baf7a"}),
+    ("gap_auto_context.png", ["C", "CA", "CH"], {"C": "#eb6834", "CA": "#2a78d6", "CH": "#1baf7a"}),
+]
 
 
 def gap_closure(table: list[dict], per_item_by_arm: dict) -> list[dict]:
@@ -559,16 +571,15 @@ def gap_closure(table: list[dict], per_item_by_arm: dict) -> list[dict]:
     ref = by_arm.get(REF_ARMS[0])
     if not ref:
         return []
-    control = latency_control()
+    controls = {b: latency_control(b) for b in set(CONTROL_BATCH.values())}
     bases = sorted({r["base_arm"] for r in table if r.get("base_arm")}, key=lambda a: by_arm[a]["first_p50_ms"])
     out = []
     for b in bases:
         br = by_arm[b]
         fam, bcond = b.split(".")
-        candidates = {"C": f"{b}+C", "CK": f"{b}+CK"}
+        candidates = {"C": f"{b}+C", "CK": f"{b}+CK", "CA": f"{b}+CA", "CH": f"{b}+CH"}
         if bcond == "A1":
             candidates["A4"] = f"{fam}.A4"
-        b_lat = control.get(b, br["first_p50_ms"])
         for meth in GAP_METHODS:
             arm = candidates.get(meth)
             if not arm or arm not in per_item_by_arm:
@@ -581,7 +592,8 @@ def gap_closure(table: list[dict], per_item_by_arm: dict) -> list[dict]:
             rf = per_item_by_arm[REF_ARMS[0]]
             rm, rlo, rhi, _ = _boot_diff({k: a[k] - rf[k] for k in a.keys() & rf.keys()})
             # A4 는 다른 시각에 잰 값이라 원래 기준 지연과, C·CK 는 같은 실행의 대조군 지연과 비교한다
-            lat_ref = br["first_p50_ms"] if meth == "A4" else b_lat
+            control = controls.get(CONTROL_BATCH.get(meth), {})
+            lat_ref = control.get(b, br["first_p50_ms"])
             out.append({
                 "base_arm": b, "method": meth, "arm": arm,
                 "base_acc": br["accuracy"], "acc": by_arm[arm]["accuracy"],
@@ -629,15 +641,17 @@ def write_gap(rows: list[dict], table: list[dict]) -> None:
     (RES / "gap.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def chart_gap(rows: list[dict], table: list[dict], path: Path) -> None:
+def chart_gap(rows: list[dict], table: list[dict], path: Path, methods: list[str], colors: dict[str, str]) -> None:
     """빠른 설정마다 한 줄: 기준 정확도에서 각 화용 방법으로 얼마나 이동하는지, 상위 모델 목표선과 함께."""
+    rows = [r for r in rows if r["method"] in methods]
+    bases = list(dict.fromkeys(r["base_arm"] for r in rows if r["method"] == methods[-1]))
+    rows = [r for r in rows if r["base_arm"] in bases]
     if not rows:
         return
     plt = _setup_mpl()
     from matplotlib.lines import Line2D
 
     by_arm = {r["arm"]: r for r in table}
-    bases = list(dict.fromkeys(r["base_arm"] for r in rows))
     fig, ax = plt.subplots(figsize=(9.6, 1.4 + 1.0 * len(bases)))
     for i, b in enumerate(bases):
         y = len(bases) - 1 - i
@@ -648,8 +662,8 @@ def chart_gap(rows: list[dict], table: list[dict], path: Path) -> None:
         ax.scatter([br["accuracy"]], [y], s=90, color=SURFACE, edgecolors=INK2, linewidths=1.6, zorder=3)
         for r in mine:
             # 같은 정확도의 점이 서로 가리지 않도록 방법마다 세로 위치를 조금씩 다르게 둔다
-            dy = {"A4": 0.16, "C": 0.0, "CK": -0.16}.get(r["method"], 0.0)
-            ax.scatter([r["acc"]], [y + dy], s=110, color=METHOD_COLOR[r["method"]], marker=COND_MARKER[r["method"]],
+            dy = {0: 0.16, 1: 0.0, 2: -0.16}[methods.index(r["method"])]
+            ax.scatter([r["acc"]], [y + dy], s=110, color=colors[r["method"]], marker=COND_MARKER[r["method"]],
                        edgecolors=SURFACE, linewidths=1.6, zorder=4)
         ax.text(-0.01, y, f"{base_name(b, by_arm)}\n{br['first_p50_ms']:,}ms", transform=ax.get_yaxis_transform(),
                 ha="right", va="center", fontsize=9.5, color=INK)
@@ -670,8 +684,8 @@ def chart_gap(rows: list[dict], table: list[dict], path: Path) -> None:
     ax.spines["left"].set_visible(False)
     ax.set_xlabel("의도 파악 정확도 (30문항 × 3회)", fontsize=10)
     handles = [Line2D([], [], marker="o", color=SURFACE, markeredgecolor=INK2, linestyle="", markersize=8, label="기준 (빠른 설정)")]
-    handles += [Line2D([], [], marker=COND_MARKER[m], color=METHOD_COLOR[m], linestyle="", markersize=9, label=COND_NAME[m])
-                for m in GAP_METHODS if any(r["method"] == m for r in rows)]
+    handles += [Line2D([], [], marker=COND_MARKER[m], color=colors[m], linestyle="", markersize=9, label=COND_NAME[m])
+                for m in methods if any(r["method"] == m for r in rows)]
     fig.legend(handles=handles, loc="upper left", ncol=len(handles), frameon=False, fontsize=9.5, bbox_to_anchor=(0.01, 1.0))
     fig.text(0.01, 0.01, "왼쪽 숫자: 기준 설정의 첫 발화 지연 중앙값. A4 는 A1 기준 설정에만 있음.", fontsize=8.5, color=MUTED)
     fig.tight_layout(rect=(0.16, 0.04, 1, 0.9))
@@ -734,11 +748,11 @@ def write_paired(rows: list[dict]) -> None:
         if r["scope"].startswith("pooled:"):
             fams = r["scope"].split(":", 1)[1].split("+")
             names = ", ".join(FAMILY_NAME.get(f, f) for f in fams)
-            who = f"빠른 설정 4개 합산 ({names})" if r["condition"] in ("C", "CK") else f"모델 합산 ({names})"
+            who = f"빠른 설정 {r['n_settings']}개 합산 ({names})" if r["condition"] in ("C", "CK", "CA", "CH") else f"모델 합산 ({names})"
             cond = COND_NAME.get(r["condition"], r["condition"])
         else:
             who = FAMILY_NAME.get(r["scope"], r["scope"])
-            cond = cond_label(r) if r["condition"] in ("X", "C", "CK") else COND_NAME.get(r["condition"], r["condition"])
+            cond = cond_label(r) if r["condition"] in ("X", "C", "CK", "CA", "CH") else COND_NAME.get(r["condition"], r["condition"])
         sign = "+" if r["delta_acc"] > 0 else ""
         lat = r["delta_first_p50_ms"]
         lines.append(

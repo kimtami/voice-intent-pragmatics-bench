@@ -62,6 +62,8 @@ def done_keys(path: Path) -> set[tuple[str, int]]:
 
 
 PROFILE = ROOT / "data" / "profile.json"
+AUTO = ROOT / "data" / "auto_context.json"
+HYPS = ROOT / "data" / "hypotheses.json"
 
 
 def run_one(arm: Arm, item: dict, rep: int) -> dict:
@@ -99,6 +101,12 @@ def run_one(arm: Arm, item: dict, rep: int) -> dict:
         extra = prompts.PRAGMATIC_CHECKLIST
     elif mode == "context":
         extra = prompts.common_ground(json.loads(PROFILE.read_text(encoding="utf-8")), item["events"])
+    elif mode in ("auto", "auto_hyp"):
+        log = json.loads(AUTO.read_text(encoding="utf-8"))["logs"][item["id"]]
+        extra = prompts.auto_context(json.loads(PROFILE.read_text(encoding="utf-8")), log)
+        if mode == "auto_hyp":
+            hyps = json.loads(HYPS.read_text(encoding="utf-8"))["hypotheses"][item["id"]]
+            extra += "\n\n" + prompts.hypotheses_block(hyps)
     elif mode == "context_checklist":
         cg = prompts.common_ground(json.loads(PROFILE.read_text(encoding="utf-8")), item["events"])
         extra = prompts.PRAGMATIC_CHECKLIST + "\n\n" + cg
