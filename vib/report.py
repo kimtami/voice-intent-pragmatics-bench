@@ -558,6 +558,8 @@ def main() -> None:
     write_paired(paired_vs_a1(table, per_item_by_arm))
     write_models(paired_vs_base(table, per_item_by_arm))
     hypothesis_checks(per_item_by_arm, items)
+    screening()
+    chart_screen()
     gap = gap_closure(table, per_item_by_arm)
     write_gap(gap, table)
     for fname, methods, colors, note in GAP_CHARTS:
@@ -565,7 +567,7 @@ def main() -> None:
     chart_overview(table, RES / "overview_default_settings.png")
     chart_scatter(table, RES / "latency_vs_accuracy.png")
     chart_heatmap(table, by_cat, RES / "accuracy_by_category.png")
-    for name in ("summary.md", "paired.md", "models_vs_base.md", "gap.md", "hypothesis_checks.md"):
+    for name in ("summary.md", "paired.md", "models_vs_base.md", "gap.md", "hypothesis_checks.md", "screen/summary.md"):
         p = RES / name
         print(p.read_text(encoding="utf-8") if p.exists() else f"no {name}")
 
@@ -732,6 +734,123 @@ def hypothesis_checks(per_item_by_arm: dict, items: dict) -> None:
         m, lo, hi, _ = _boot_diff({k: diffs[k] for k in keys})
         lines.append(f"| {name} | {len(keys)} | {'+' if m > 0 else ''}{m * 100:.1f}%p ({lo * 100:.1f}–{hi * 100:.1f}) |")
     (RES / "hypothesis_checks.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+SCREEN_DESC = {
+    "M1": ("발화 전 상황 10개 (Gemini 3.8 Flash 생성)", "m1_situations", "발화 전"),
+    "M2": ("발화 전 상황 10개 (Mercury 3 low 생성)", "m2_situations", "발화 전"),
+    "M3": ("로그를 관련 사실 요약으로 다시 쓰기 (Mercury 3 low)", "m3_facts", "발화 전"),
+    "M4": ("발화 후 해석 3~5개 쓰고 골라 답하기 (숨김)", None, "발화 시점"),
+    "M5": ("M1 후보 중 '이 의도면 이렇게 말했을까'로 고르기", "m1_situations", "발화 전 + 발화 시점"),
+    "M6": ("발화 앞 절반으로 가설 5개 (Mercury 3 instant)", "m6_prefix", "말하는 중"),
+}
+
+
+def screening() -> None:
+    """4차 선별 실험(M1~M6, Mercury 3 기본, 24문항 × 1회)을 같은 24문항의 기존 기준선과 비교한다."""
+    sdir = RES / "screen"
+    if not (sdir / "raw").exists():
+        return
+    items = {q["id"]: q for q in json.loads((ROOT / "data" / "queries.json").read_text(encoding="utf-8"))}
+
+    def per_item(path: Path) -> dict[str, float]:
+        d = defaultdict(list)
+        for j in _jsonl(path):
+            if not j.get("judge_error"):
+                d[j["item_id"]].append(j["score"] / 2)
+        return {k: statistics.mean(v) for k, v in d.items()}
+
+    ids = sorted(per_item(sdir / "judged" / "mercury.A1+M1.jsonl"))
+    refs = {"Mercury 3 기본": "mercury.A1", "C-auto 선별 없는 로그": "mercury.A1+CA",
+            "C-auto+H 자동 가설 5개": "mercury.A1+CH", "Gemini 3.8 Flash 기본": "gemini38.A1"}
+    ref_item = {name: per_item(RES / "judged" / f"{arm}.jsonl") for name, arm in refs.items()}
+    base = ref_item["Mercury 3 기본"]
+    ctl = [r["e2e_first_ms"] for r in _jsonl(sdir / "latency_control" / "mercury.A1.jsonl") if not r.get("error")]
+    ctl_p50 = _pct(ctl, 0.5)
+
+    def gen_stats(name: str | None) -> tuple[float | None, float | None, float]:
+        if not name:
+            return None, None, 0.0
+        d = json.loads((ROOT / "data" / "screen" / f"{name}.json").read_text(encoding="utf-8"))
+        model = d["meta"]["generator"]["model"]
+        ms = [c["total_ms"] for c in d["calls"].values()]
+        cost = statistics.mean(c for c in (_call_cost(model, x["usage"]) for x in d["calls"].values()) if c is not None)
+        return _pct(ms, 0.5), _pct(ms, 0.9), cost
+
+    rows = []
+    for code, (desc, gen, when) in SCREEN_DESC.items():
+        raw = [r for r in _jsonl(sdir / "raw" / f"mercury.A1+{code}.jsonl") if not r.get("error")]
+        a = per_item(sdir / "judged" / f"mercury.A1+{code}.jsonl")
+        m, lo, hi, _ = _boot_diff({k: a[k] - base[k] for k in ids})
+        mc, _, _, _ = _boot_diff({k: a[k] - ref_item["C-auto 선별 없는 로그"][k] for k in ids})
+        g50, g90, gcost = gen_stats(gen)
+        resp_cost = statistics.mean(c for c in (_call_cost(r["model"], r.get("usage") or {}) for r in raw) if c is not None)
+        p50 = _pct([r["e2e_first_ms"] for r in raw], 0.5)
+        rows.append({
+            "code": code, "desc": desc, "when": when, "acc": round(statistics.mean(a[k] for k in ids) * 100, 1),
+            "d_base": round(m * 100, 1), "lo": round(lo * 100, 1), "hi": round(hi * 100, 1), "d_cauto": round(mc * 100, 1),
+            "first_p50": round(p50), "d_first": round(p50 - ctl_p50), "gen_p50": None if g50 is None else round(g50),
+            "gen_p90": None if g90 is None else round(g90), "cost_1k": round((resp_cost + gcost) * 1000, 2),
+            "format_fail": sum(1 for r in raw if code == "M4" and r.get("hidden") is None),
+        })
+    lines = [
+        f"Mercury 3 기본 응답 모델, 24문항 × 1회 (간접 요청·전제·음성 인식 오류 6문항 제외). 같은 24문항 기준값: "
+        + ", ".join(f"{n} {statistics.mean(v[k] for k in ids) * 100:.1f}%" for n, v in ref_item.items())
+        + f". 같은 시각 기준 첫 발화 p50 {ctl_p50:,.0f}ms. 1회 측정이라 신뢰구간이 넓은 선별용 결과입니다.",
+        "",
+        "| 방법 | 계산 시점 | 정확도 | 기본 대비 (95% CI) | 선별 없는 로그 대비 | 첫 발화 p50 (변화) | 생성 시간 p50 / p90 | 1,000턴당 비용 |",
+        "|---|---|---|---|---|---|---|---|",
+    ]
+    for r in rows:
+        gen = "–" if r["gen_p50"] is None else f"{r['gen_p50'] / 1000:.1f}s / {r['gen_p90'] / 1000:.1f}s"
+        fmt = f" (형식 실패 {r['format_fail']}건)" if r["format_fail"] else ""
+        lines.append(
+            f"| {r['code']} {r['desc']}{fmt} | {r['when']} | {r['acc']}% | {'+' if r['d_base'] > 0 else ''}{r['d_base']}%p "
+            f"({r['lo']}–{r['hi']}) | {'+' if r['d_cauto'] > 0 else ''}{r['d_cauto']}%p | {r['first_p50']:,}ms "
+            f"({'+' if r['d_first'] > 0 else ''}{r['d_first']:,}) | {gen} | ${r['cost_1k']:.2f} |"
+        )
+    (sdir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    with open(sdir / "summary.csv", "w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=list(rows[0]))
+        w.writeheader()
+        w.writerows(rows)
+
+
+def chart_screen() -> None:
+    """선별 실험 XY: 첫 발화 지연 대비 정확도. 방법 이름을 점 옆에 직접 쓰고(색 하나), 기준선은 가로선으로."""
+    sdir = RES / "screen"
+    if not (sdir / "summary.csv").exists():
+        return
+    rows = list(csv.DictReader(open(sdir / "summary.csv", encoding="utf-8")))
+    head = (sdir / "summary.md").read_text(encoding="utf-8").splitlines()[0]
+    refs = dict(re.findall(r"(Mercury 3 기본|C-auto 선별 없는 로그|C-auto\+H 자동 가설 5개|Gemini 3.8 Flash 기본) ([\d.]+)%", head))
+    ctl = float(re.search(r"첫 발화 p50 ([\d,]+)ms", head).group(1).replace(",", ""))
+    plt = _setup_mpl()
+    fig, ax = plt.subplots(figsize=(8.8, 5.4))
+    for name, val in refs.items():
+        if name == "Mercury 3 기본":
+            continue
+        ax.axhline(float(val), color=CONTEXT, lw=1, zorder=0)
+        ax.text(1.0, float(val), f" {name} {val}%", transform=ax.get_yaxis_transform(), va="center", ha="left",
+                fontsize=8.5, color=INK2, clip_on=False)
+    ax.scatter([ctl], [float(refs["Mercury 3 기본"])], s=90, color=SURFACE, edgecolors=INK2, linewidths=1.6, zorder=3)
+    ax.annotate("Mercury 3 기본", (ctl, float(refs["Mercury 3 기본"])), xytext=(8, -14), textcoords="offset points",
+                fontsize=9, color=INK2)
+    for r in rows:
+        x, y = float(r["first_p50"]), float(r["acc"])
+        ax.scatter([x], [y], s=100, color=ACCENT, edgecolors=SURFACE, linewidths=2, zorder=4)
+        ax.annotate(r["code"], (x, y), xytext=(8, 5), textcoords="offset points", fontsize=10, color=INK, zorder=5)
+    ax.set_xlabel("첫 발화까지 지연 (중앙값)  ← 빠름", fontsize=10)
+    ax.set_ylabel("의도 파악 정확도 (24문항 × 1회)  ↑ 정확", fontsize=10)
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v:g}%"))
+    ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v:,.0f}ms"))
+    ax.tick_params(length=0, labelsize=9)
+    ax.set_title("방법 후보 선별: Mercury 3 기본 + M1~M6", fontsize=12, loc="left", pad=10, fontweight="semibold")
+    fig.text(0.01, 0.01, "가로선: 같은 24문항의 기존 결과(3회 반복). 1회 측정이라 점마다 ±10%p 안팎의 불확실성이 있음.",
+             fontsize=8.5, color=MUTED)
+    fig.tight_layout(rect=(0, 0.04, 0.8, 1))
+    fig.savefig(sdir / "screen_xy.png", dpi=160)
+    plt.close(fig)
 
 
 BASE_ARM = "mercury.A1"  # 모델 간 비교의 기준: Inception 공식 음성 가이드 설정
