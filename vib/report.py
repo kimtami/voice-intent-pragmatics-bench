@@ -106,6 +106,17 @@ def _call_cost(model: str, usage: dict) -> float | None:
 MARKDOWN = re.compile(r"(\*\*|^#|^\s*[-*] |^\s*\d+\. )", re.M)
 
 
+def hypothesis_cost_per_turn() -> float:
+    """C-auto+H 의 가설 생성 비용(턴당 평균). data/hypotheses.json 에 기록된 실제 사용량으로 계산한다."""
+    path = ROOT / "data" / "hypotheses.json"
+    if not path.exists():
+        return 0.0
+    d = json.loads(path.read_text(encoding="utf-8"))
+    model = d["meta"]["generator"]["model"]
+    costs = [c for c in (_call_cost(model, u) for u in d["usage"]) if c is not None]
+    return statistics.mean(costs) if costs else 0.0
+
+
 def _jsonl(path: Path) -> list[dict]:
     if not path.exists():
         return []
@@ -181,8 +192,11 @@ def summarize(arms: dict, items: dict) -> tuple[list[dict], dict, dict]:
             if v is not None:
                 out_tok.append(v)
         costs = []
+        hyp_cost = hypothesis_cost_per_turn() if any_row["condition"] == "CH" else 0.0
         for r in rows.values():
             c = _call_cost(r["model"], r.get("usage") or {})
+            if c is not None:
+                c += hyp_cost  # 자동 가설은 매 턴 미리 생성하므로 그 비용을 턴마다 더한다
             if c is not None and r.get("analyzer"):
                 ca = _call_cost(r["analyzer"]["model"], (r.get("analysis_call") or {}).get("usage") or {})
                 c = None if ca is None else c + ca
@@ -545,8 +559,8 @@ def main() -> None:
     write_models(paired_vs_base(table, per_item_by_arm))
     gap = gap_closure(table, per_item_by_arm)
     write_gap(gap, table)
-    for fname, methods, colors in GAP_CHARTS:
-        chart_gap(gap, table, RES / fname, methods, colors)
+    for fname, methods, colors, note in GAP_CHARTS:
+        chart_gap(gap, table, RES / fname, methods, colors, note)
     chart_overview(table, RES / "overview_default_settings.png")
     chart_scatter(table, RES / "latency_vs_accuracy.png")
     chart_heatmap(table, by_cat, RES / "accuracy_by_category.png")
@@ -560,8 +574,10 @@ GAP_METHODS = ["A4", "C", "CK", "CA", "CH"]  # 추가 호출 없이 지연을 �
 # 방법별 색: 기본 팔레트 처음 세 슬롯 (모든 쌍 CVD·정상 시각 기준 통과, references/palette.md)
 # 차트마다 세 가지 방법만 그리고(모든 쌍 기준을 통과하는 처음 세 슬롯), C 는 두 차트에서 같은 색을 쓴다
 GAP_CHARTS = [
-    ("gap_to_strong_model.png", ["A4", "C", "CK"], {"A4": "#2a78d6", "C": "#eb6834", "CK": "#1baf7a"}),
-    ("gap_auto_context.png", ["C", "CA", "CH"], {"C": "#eb6834", "CA": "#2a78d6", "CH": "#1baf7a"}),
+    ("gap_to_strong_model.png", ["A4", "C", "CK"], {"A4": "#2a78d6", "C": "#eb6834", "CK": "#1baf7a"},
+     "왼쪽 숫자: 기준 설정의 첫 발화 지연 중앙값. A4 는 A1 기준 설정에만 있음."),
+    ("gap_auto_context.png", ["C", "CA", "CH"], {"C": "#eb6834", "CA": "#2a78d6", "CH": "#1baf7a"},
+     "왼쪽 숫자: 기준 설정의 첫 발화 지연 중앙값. C-auto+H 의 가설은 상위 모델이 발화 전에 미리 생성 (응답 지연 미포함, 생성 비용은 표에 포함)."),
 ]
 
 
@@ -624,7 +640,7 @@ def write_gap(rows: list[dict], table: list[dict]) -> None:
     ref = by_arm[REF_ARMS[0]]
     lines = [
         f"목표선: {FAMILY_NAME['gemini38']} 기본 설정 {ref['accuracy']}% (첫 발화 {ref['first_p50_ms']:,}ms). "
-        "격차 해소율 = 정확도 변화 ÷ (목표 − 기준). 음수는 격차가 벌어졌다는 뜻.",
+        "격차 해소율 = 정확도 변화 ÷ (목표 − 기준). 음수는 격차가 벌어졌다는 뜻, 100% 초과는 목표선을 넘었다는 뜻 (2·3차 통합 표).",
         "",
         "| 빠른 설정 (기준 정확도 · 첫 발화) | 방법 | 정확도 | 기준 대비 변화 (95% CI) | 격차 해소율 | 목표선과의 차이 (95% CI) | 첫 발화 변화 |",
         "|---|---|---|---|---|---|---|",
@@ -641,7 +657,8 @@ def write_gap(rows: list[dict], table: list[dict]) -> None:
     (RES / "gap.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def chart_gap(rows: list[dict], table: list[dict], path: Path, methods: list[str], colors: dict[str, str]) -> None:
+def chart_gap(rows: list[dict], table: list[dict], path: Path, methods: list[str], colors: dict[str, str],
+              note: str) -> None:
     """빠른 설정마다 한 줄: 기준 정확도에서 각 화용 방법으로 얼마나 이동하는지, 상위 모델 목표선과 함께."""
     rows = [r for r in rows if r["method"] in methods]
     bases = list(dict.fromkeys(r["base_arm"] for r in rows if r["method"] == methods[-1]))
@@ -687,7 +704,7 @@ def chart_gap(rows: list[dict], table: list[dict], path: Path, methods: list[str
     handles += [Line2D([], [], marker=COND_MARKER[m], color=colors[m], linestyle="", markersize=9, label=COND_NAME[m])
                 for m in methods if any(r["method"] == m for r in rows)]
     fig.legend(handles=handles, loc="upper left", ncol=len(handles), frameon=False, fontsize=9.5, bbox_to_anchor=(0.01, 1.0))
-    fig.text(0.01, 0.01, "왼쪽 숫자: 기준 설정의 첫 발화 지연 중앙값. A4 는 A1 기준 설정에만 있음.", fontsize=8.5, color=MUTED)
+    fig.text(0.01, 0.01, note, fontsize=8.5, color=MUTED)
     fig.tight_layout(rect=(0.16, 0.04, 1, 0.9))
     fig.savefig(path, dpi=160)
     plt.close(fig)

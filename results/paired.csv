@@ -5,6 +5,8 @@ luna,luna.A4,A4,luna.A1,3.9,-3.9,11.1,0.833,-71,1
 luna,x.mercury>luna,X,luna.A1,5.6,0.0,11.1,0.982,4422,1
 luna,luna.A1+C,C,luna.A1,6.1,0.6,12.2,0.98,-10,1
 luna,luna.A1+CK,CK,luna.A1,7.2,-0.0,15.0,0.968,-46,1
+luna,luna.A1+CA,CA,luna.A1,2.2,-4.4,8.3,0.745,-11,1
+luna,luna.A1+CH,CH,luna.A1,8.9,2.8,15.6,0.999,-4,1
 mercury,mercury.A0,A0,mercury.A1,-3.3,-11.1,5.0,0.178,-284,1
 mercury,mercury.A2,A2,mercury.A1,0.6,-5.0,6.7,0.541,90,1
 mercury,mercury.A3,A3,mercury.A1,5.0,-2.2,13.3,0.902,3977,1
@@ -14,6 +16,10 @@ mercury,mercury.A0+C,C,mercury.A0,3.9,-3.9,11.7,0.875,16,1
 mercury,mercury.A1+C,C,mercury.A1,4.4,-1.1,11.1,0.922,6,1
 mercury,mercury.A0+CK,CK,mercury.A0,2.8,-1.7,7.8,0.896,23,1
 mercury,mercury.A1+CK,CK,mercury.A1,5.0,0.0,11.1,0.972,-1,1
+mercury,mercury.A0+CA,CA,mercury.A0,1.7,-6.7,10.0,0.681,-16,1
+mercury,mercury.A1+CA,CA,mercury.A1,3.9,-1.1,8.9,0.959,-31,1
+mercury,mercury.A0+CH,CH,mercury.A0,7.8,1.7,14.4,0.999,-4,1
+mercury,mercury.A1+CH,CH,mercury.A1,7.2,2.2,13.3,0.999,13,1
 haiku,haiku.A2,A2,haiku.A1,2.2,-2.8,7.8,0.786,368,1
 haiku,haiku.A3,A3,haiku.A1,2.2,-6.7,12.2,0.678,4640,1
 haiku,haiku.A4,A4,haiku.A1,-3.3,-8.9,1.7,0.102,-13,1
@@ -31,3 +37,5 @@ pooled:gemini+gemini38+haiku+luna+mercury,*.A4,A4,,1.6,-1.1,4.3,0.874,-13,5
 pooled:luna+mercury,*.X,X,,2.8,-1.4,7.8,0.883,4270,2
 pooled:gemini+luna+mercury,*.C,C,,3.9,-0.3,9.2,0.965,11,4
 pooled:gemini+luna+mercury,*.CK,CK,,3.5,-1.1,8.5,0.93,-2,4
+pooled:luna+mercury,*.CA,CA,,2.6,-1.3,6.7,0.9,-16,3
+pooled:luna+mercury,*.CH,CH,,8.0,3.9,12.6,1.0,-4,3
