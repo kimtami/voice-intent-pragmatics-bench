@@ -1,0 +1,24 @@
+arm,family,condition,model,params,n_rows,n_judged,errors,accuracy,acc_ci_lo,acc_ci_hi,strict_accuracy,understood_rate,first_p50_ms,first_p25_ms,first_p75_ms,first_p90_ms,sentence_p50_ms,analysis_p50_ms,total_p50_ms,avg_chars,markdown_rate,avg_output_tokens,analysis_accuracy,cost_per_1k_turns_usd
+luna.A1,luna,A1,gpt-6-luna,"{""effort"": ""none"", ""max_output_tokens"": 4096}",90,90,0,85.6,76.7,92.8,74.4,88.9,851,731,1082,1773,996,,1172,33.3,0.0,25.8,,0.036
+luna.A2,luna,A2,gpt-6-luna,"{""effort"": ""low"", ""max_output_tokens"": 4096}",90,90,0,84.4,75.6,91.7,73.3,84.4,1815,1470,2453,4210,1954,,2113,31.0,0.0,119.1,,0.083
+luna.A3,luna,A3,gpt-6-luna,"{""effort"": ""none"", ""max_output_tokens"": 4096}",90,90,0,89.4,82.2,95.0,80.0,92.2,5092,4339,6608,10393,5262,4172,1073,30.7,0.0,24.3,87.2,0.242
+luna.A4,luna,A4,gpt-6-luna,"{""effort"": ""none"", ""max_output_tokens"": 4096}",90,90,0,89.4,80.6,96.7,82.2,90.0,780,683,1045,1825,905,,1081,30.7,0.0,24.4,,0.057
+x.mercury>luna,luna,X,gpt-6-luna,"{""effort"": ""none"", ""max_output_tokens"": 4096}",90,90,0,91.1,83.3,96.7,85.6,93.3,5273,3840,7846,12187,5369,4252,1086,31.4,0.0,24.3,94.4,0.903
+mercury.A0,mercury,A0,mercury-3,"{""reasoning_effort"": ""instant"", ""temperature"": 0.75, ""realtime"": true, ""diffusing"": false, ""max_completion_tokens"": 8192}",90,90,0,85.6,76.7,93.3,81.1,82.2,474,400,542,641,483,,493,30.5,0.0,23.8,,0.034
+mercury.A1,mercury,A1,mercury-3,"{""reasoning_effort"": ""medium"", ""temperature"": 0.75, ""realtime"": true, ""diffusing"": false, ""max_completion_tokens"": 8192}",90,90,0,88.9,79.4,96.1,82.2,93.3,758,595,1129,1446,792,,808,29.2,0.0,232.0,,0.107
+mercury.A2,mercury,A2,mercury-3,"{""reasoning_effort"": ""high"", ""temperature"": 0.75, ""realtime"": true, ""diffusing"": false, ""max_completion_tokens"": 8192}",90,90,0,89.4,81.7,95.6,85.6,91.1,848,698,1055,1517,854,,870,30.2,0.0,261.2,,0.117
+mercury.A3,mercury,A3,mercury-3,"{""reasoning_effort"": ""medium"", ""temperature"": 0.75, ""realtime"": true, ""diffusing"": false, ""max_completion_tokens"": 8192}",90,90,0,93.9,89.4,97.8,90.0,93.3,4735,3533,8063,12610,4748,3799,710,29.5,0.0,196.6,93.9,0.985
+mercury.A4,mercury,A4,mercury-3,"{""reasoning_effort"": ""medium"", ""temperature"": 0.75, ""realtime"": true, ""diffusing"": false, ""max_completion_tokens"": 8192}",90,90,0,92.8,86.7,97.2,88.9,92.2,933,719,1209,1541,936,,949,27.3,0.0,299.1,,0.153
+x.luna>mercury,mercury,X,mercury-3,"{""reasoning_effort"": ""medium"", ""temperature"": 0.75, ""realtime"": true, ""diffusing"": false, ""max_completion_tokens"": 8192}",90,90,0,88.9,80.6,95.6,82.2,91.1,4877,4066,5646,7628,4877,4138,716,29.1,0.0,238.7,89.4,0.319
+haiku.A1,haiku,A1,claude-haiku-5-5,"{""effort"": ""low"", ""thinking"": ""disabled"", ""max_tokens"": 4096}",90,90,0,86.1,77.8,93.3,75.6,93.3,777,698,896,1324,949,,1040,43.2,0.0,48.4,,0.06
+haiku.A2,haiku,A2,claude-haiku-5-5,"{""effort"": ""medium"", ""thinking"": ""adaptive"", ""max_tokens"": 4096}",90,90,0,88.3,81.7,94.4,78.9,97.8,1145,722,1891,2412,1287,,1376,97.2,0.0,175.1,,0.123
+haiku.A3,haiku,A3,claude-haiku-5-5,"{""effort"": ""low"", ""thinking"": ""disabled"", ""max_tokens"": 4096}",90,90,0,88.3,81.1,94.4,81.1,88.9,5417,3850,6119,7326,5504,4331,945,34.0,0.0,38.5,91.7,0.488
+haiku.A4,haiku,A4,claude-haiku-5-5,"{""effort"": ""low"", ""thinking"": ""disabled"", ""max_tokens"": 4096}",90,90,0,82.8,72.8,91.1,72.2,92.2,764,688,1160,1758,948,,1019,34.5,0.0,39.1,,0.091
+gemini.A1,gemini,A1,gemini-3.5-flash-lite,"{""thinking_level"": ""MINIMAL"", ""max_output_tokens"": 4096}",90,90,0,90.6,82.2,97.2,84.4,96.7,628,549,852,983,704,,777,28.9,0.0,16.9,,0.109
+gemini.A2,gemini,A2,gemini-3.5-flash-lite,"{""thinking_level"": ""LOW"", ""max_output_tokens"": 4096}",90,90,0,86.7,77.8,93.9,77.8,92.2,615,549,788,911,685,,766,29.4,0.0,17.1,,0.109
+gemini.A3,gemini,A3,gemini-3.5-flash-lite,"{""thinking_level"": ""MINIMAL"", ""max_output_tokens"": 4096}",90,90,0,91.7,83.9,97.8,86.7,94.4,1907,1741,2108,2373,1962,1230,759,28.5,0.0,16.9,94.4,0.8
+gemini.A4,gemini,A4,gemini-3.5-flash-lite,"{""thinking_level"": ""MINIMAL"", ""max_output_tokens"": 4096}",90,90,0,91.7,86.7,96.1,83.3,96.7,614,550,804,921,669,,758,26.0,0.0,15.6,,0.17
+gemini38.A1,gemini38,A1,gemini-3.8-flash,"{""thinking_level"": ""LOW"", ""max_output_tokens"": 4096}",90,90,0,95.0,90.0,99.4,90.0,96.7,2020,1860,2400,2874,2080,,2192,32.8,0.0,20.0,,0.279
+gemini38.A2,gemini38,A2,gemini-3.8-flash,"{""thinking_level"": ""MEDIUM"", ""max_output_tokens"": 4096}",90,90,0,97.8,94.4,100.0,95.6,97.8,3269,2870,4142,4713,3295,,3412,30.7,0.0,18.8,,0.859
+gemini38.A3,gemini38,A3,gemini-3.8-flash,"{""thinking_level"": ""LOW"", ""max_output_tokens"": 4096}",90,90,0,97.2,92.8,100.0,94.4,100.0,8415,7756,9137,10201,8483,5950,2499,34.3,0.0,21.0,95.6,2.65
+gemini38.A4,gemini38,A4,gemini-3.8-flash,"{""thinking_level"": ""LOW"", ""max_output_tokens"": 4096}",90,90,0,97.2,92.8,100.0,94.4,100.0,2674,2135,2955,3570,2690,,2803,28.2,0.0,17.2,,0.646
