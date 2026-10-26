@@ -115,7 +115,7 @@ def run_one(arm: Arm, item: dict, rep: int) -> dict:
         if mode == "auto_hyp":
             hyps = json.loads(HYPS.read_text(encoding="utf-8"))["hypotheses"][item["id"]]
             extra += "\n\n" + prompts.hypotheses_block(hyps)
-    elif mode in ("m1", "m2", "m3", "m4", "m5", "m6"):
+    elif mode in ("m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m5b", "m5c"):
         profile = json.loads(PROFILE.read_text(encoding="utf-8"))
         log = json.loads(AUTO.read_text(encoding="utf-8"))["logs"][item["id"]]
         base = prompts.auto_context(profile, log)
@@ -125,8 +125,13 @@ def run_one(arm: Arm, item: dict, rep: int) -> dict:
             extra = prompts.facts_block(profile, _screen("m3_facts")[item["id"]])
         elif mode == "m4":
             extra = base + "\n\n" + prompts.INTERPRET_INLINE
-        elif mode == "m5":  # M1 의 상황 10개를 후보로 쓰고, 발화를 보고 고른다
-            extra = base + "\n\n" + prompts.candidates_block(_screen("m1_situations")[item["id"]])
+        elif mode == "m7":
+            extra = base + "\n\n" + prompts.INTERPRET_INLINE_10
+        elif mode == "m8":
+            extra = base + "\n\n" + prompts.INTERPRET_SILENT_10
+        elif mode in ("m5", "m5b", "m5c"):  # 미리 만든 후보를 두고 발화를 보고 고른다 (후보 출처만 다름)
+            source = {"m5": "m1_situations", "m5b": "m2_situations", "m5c": "m6_prefix"}[mode]
+            extra = base + "\n\n" + prompts.candidates_block(_screen(source)[item["id"]])
         else:  # m6: 발화 앞부분으로 만든 가설
             extra = base + "\n\n" + prompts.hypotheses_block(_screen("m6_prefix")[item["id"]])
     elif mode == "context_checklist":
@@ -201,7 +206,7 @@ def main() -> None:
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--check", action="store_true")
     ap.add_argument("--no-warmup", action="store_true")
-    ap.add_argument("--screen", action="store_true", help="4차 선별 실험 (M1~M6, 24문항)")
+    ap.add_argument("--screen", action="store_true", help="4차 선별 실험 (M1~M8, 24문항)")
     args = ap.parse_args()
 
     load_dotenv(ROOT / ".env", override=True)

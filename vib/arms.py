@@ -180,8 +180,9 @@ def fake_arms() -> dict[str, Arm]:
     }
 
 
-# 4차 선별 실험: Mercury 3 기본(A1) 응답 모델에 M1~M6 을 붙인다 (24문항 × 1회)
-SCREEN_METHODS = ["M1", "M2", "M3", "M4", "M5", "M6"]
+# 4차 선별 실험: Mercury 3 기본(A1) 응답 모델에 M1~M8 을 붙인다 (24문항 × 1회)
+# M5b·M5c 는 M5 의 '후보 중 고르기' 지시에 싼 후보(M2 목록)·빠른 후보(M6 목록)를 넣은 것
+SCREEN_METHODS = ["M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M5b", "M5c"]
 
 
 def screen_arms() -> dict[str, Arm]:
@@ -189,7 +190,7 @@ def screen_arms() -> dict[str, Arm]:
     arms = {}
     for code in SCREEN_METHODS:
         params = dict(m["A1"])
-        if code == "M4":
+        if code in ("M4", "M7"):
             params["hide_until"] = "</해석>"  # 해석 부분은 들리지 않고, 첫 발화는 그 뒤부터 잰다
         arms[f"mercury.A1+{code}"] = Arm(f"mercury.A1+{code}", "mercury", code, m["provider"], m["model"], params, [m["key"]],
                                          extra={"mode": code.lower(), "base_arm": "mercury.A1"})

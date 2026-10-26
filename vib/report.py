@@ -743,11 +743,19 @@ SCREEN_DESC = {
     "M4": ("발화 후 해석 3~5개 쓰고 골라 답하기 (숨김)", None, "발화 시점"),
     "M5": ("M1 후보 중 '이 의도면 이렇게 말했을까'로 고르기", "m1_situations", "발화 전 + 발화 시점"),
     "M6": ("발화 앞 절반으로 가설 5개 (Mercury 3 instant)", "m6_prefix", "말하는 중"),
+    "M7": ("발화 후 해석 10개 쓰고 골라 답하기 (숨김)", None, "발화 시점"),
+    "M8": ("발화 후 해석 10개를 속으로만 떠올리고 답하기", None, "발화 시점"),
+    "M5b": ("M2 후보(싼 생성기) 중 고르기", "m2_situations", "발화 전 + 발화 시점"),
+    "M5c": ("M6 후보(말하는 중, 빠른 생성기) 중 고르기", "m6_prefix", "말하는 중 + 발화 시점"),
 }
+HIDDEN_CODES = {"M4", "M7"}  # <해석> 을 닫지 않으면 형식 실패
+# 지연 대조군: 묶음마다 같은 실행에서 다시 잰 Mercury 3 기본 (results/screen/<폴더>/mercury.A1.jsonl)
+SCREEN_BATCH = {c: "latency_control" for c in ("M1", "M2", "M3", "M4", "M5", "M6")} | \
+    {c: "latency_control_b2" for c in ("M7", "M8", "M5b", "M5c")}
 
 
 def screening() -> None:
-    """4차 선별 실험(M1~M6, Mercury 3 기본, 24문항 × 1회)을 같은 24문항의 기존 기준선과 비교한다."""
+    """4차 선별 실험(M1~M8, Mercury 3 기본, 24문항 × 1회)을 같은 24문항의 기존 기준선과 비교한다."""
     sdir = RES / "screen"
     if not (sdir / "raw").exists():
         return
@@ -765,8 +773,11 @@ def screening() -> None:
             "C-auto+H 자동 가설 5개": "mercury.A1+CH", "Gemini 3.8 Flash 기본": "gemini38.A1"}
     ref_item = {name: per_item(RES / "judged" / f"{arm}.jsonl") for name, arm in refs.items()}
     base = ref_item["Mercury 3 기본"]
-    ctl = [r["e2e_first_ms"] for r in _jsonl(sdir / "latency_control" / "mercury.A1.jsonl") if not r.get("error")]
-    ctl_p50 = _pct(ctl, 0.5)
+    ctl_p50 = {}
+    for batch in sorted(set(SCREEN_BATCH.values())):
+        p = sdir / batch / "mercury.A1.jsonl"
+        if p.exists():
+            ctl_p50[batch] = _pct([r["e2e_first_ms"] for r in _jsonl(p) if not r.get("error")], 0.5)
 
     def gen_stats(name: str | None) -> tuple[float | None, float | None, float]:
         if not name:
@@ -779,6 +790,8 @@ def screening() -> None:
 
     rows = []
     for code, (desc, gen, when) in SCREEN_DESC.items():
+        if not (sdir / "judged" / f"mercury.A1+{code}.jsonl").exists() or SCREEN_BATCH[code] not in ctl_p50:
+            continue
         raw = [r for r in _jsonl(sdir / "raw" / f"mercury.A1+{code}.jsonl") if not r.get("error")]
         a = per_item(sdir / "judged" / f"mercury.A1+{code}.jsonl")
         m, lo, hi, _ = _boot_diff({k: a[k] - base[k] for k in ids})
@@ -789,14 +802,18 @@ def screening() -> None:
         rows.append({
             "code": code, "desc": desc, "when": when, "acc": round(statistics.mean(a[k] for k in ids) * 100, 1),
             "d_base": round(m * 100, 1), "lo": round(lo * 100, 1), "hi": round(hi * 100, 1), "d_cauto": round(mc * 100, 1),
-            "first_p50": round(p50), "d_first": round(p50 - ctl_p50), "gen_p50": None if g50 is None else round(g50),
+            "first_p50": round(p50), "d_first": round(p50 - ctl_p50[SCREEN_BATCH[code]]),
+            "gen_p50": None if g50 is None else round(g50),
             "gen_p90": None if g90 is None else round(g90), "cost_1k": round((resp_cost + gcost) * 1000, 2),
-            "format_fail": sum(1 for r in raw if code == "M4" and r.get("hidden") is None),
+            "format_fail": sum(1 for r in raw if code in HIDDEN_CODES and r.get("hidden") is None),
         })
+    batches = {"latency_control": "M1~M6", "latency_control_b2": "M7·M8·M5b·M5c"}
     lines = [
         f"Mercury 3 기본 응답 모델, 24문항 × 1회 (간접 요청·전제·음성 인식 오류 6문항 제외). 같은 24문항 기준값: "
         + ", ".join(f"{n} {statistics.mean(v[k] for k in ids) * 100:.1f}%" for n, v in ref_item.items())
-        + f". 같은 시각 기준 첫 발화 p50 {ctl_p50:,.0f}ms. 1회 측정이라 신뢰구간이 넓은 선별용 결과입니다.",
+        + ". 첫 발화 변화는 묶음마다 같은 실행에서 다시 잰 Mercury 3 기본 대비이며, 그 p50 은 "
+        + ", ".join(f"{batches[b]} 묶음 {v:,.0f}ms" for b, v in ctl_p50.items())
+        + " 입니다. 1회 측정이라 신뢰구간이 넓은 선별용 결과입니다.",
         "",
         "| 방법 | 계산 시점 | 정확도 | 기본 대비 (95% CI) | 선별 없는 로그 대비 | 첫 발화 p50 (변화) | 생성 시간 p50 / p90 | 1,000턴당 비용 |",
         "|---|---|---|---|---|---|---|---|",
@@ -824,7 +841,7 @@ def chart_screen() -> None:
     rows = list(csv.DictReader(open(sdir / "summary.csv", encoding="utf-8")))
     head = (sdir / "summary.md").read_text(encoding="utf-8").splitlines()[0]
     refs = dict(re.findall(r"(Mercury 3 기본|C-auto 선별 없는 로그|C-auto\+H 자동 가설 5개|Gemini 3.8 Flash 기본) ([\d.]+)%", head))
-    ctl = float(re.search(r"첫 발화 p50 ([\d,]+)ms", head).group(1).replace(",", ""))
+    ctl = 0.0  # 가로축은 묶음별 같은 시각 기본 설정 대비 변화
     plt = _setup_mpl()
     fig, ax = plt.subplots(figsize=(8.8, 5.4))
     for name, val in refs.items():
@@ -834,18 +851,33 @@ def chart_screen() -> None:
         ax.text(1.0, float(val), f" {name} {val}%", transform=ax.get_yaxis_transform(), va="center", ha="left",
                 fontsize=8.5, color=INK2, clip_on=False)
     ax.scatter([ctl], [float(refs["Mercury 3 기본"])], s=90, color=SURFACE, edgecolors=INK2, linewidths=1.6, zorder=3)
-    ax.annotate("Mercury 3 기본", (ctl, float(refs["Mercury 3 기본"])), xytext=(8, -14), textcoords="offset points",
+    ax.annotate("Mercury 3 기본", (ctl, float(refs["Mercury 3 기본"])), xytext=(10, 4), textcoords="offset points",
                 fontsize=9, color=INK2)
-    for r in rows:
-        x, y = float(r["first_p50"]), float(r["acc"])
-        ax.scatter([x], [y], s=100, color=ACCENT, edgecolors=SURFACE, linewidths=2, zorder=4)
-        ax.annotate(r["code"], (x, y), xytext=(8, 5), textcoords="offset points", fontsize=10, color=INK, zorder=5)
-    ax.set_xlabel("첫 발화까지 지연 (중앙값)  ← 빠름", fontsize=10)
+    # 정확도가 같고 지연이 가까운 점들은 라벨을 위로 쌓고 가는 선으로 잇는다 (왼쪽 점일수록 위, 선이 라벨을 지나지 않게)
+    pts = sorted(rows, key=lambda r: (float(r["acc"]), float(r["d_first"])))
+    clusters: list[list[dict]] = []
+    for r in pts:
+        last = clusters[-1][-1] if clusters else None
+        if last and float(last["acc"]) == float(r["acc"]) and float(r["d_first"]) - float(last["d_first"]) < 150:
+            clusters[-1].append(r)
+        else:
+            clusters.append([r])
+    for group in clusters:
+        for rank, r in enumerate(group):
+            x, y = float(r["d_first"]), float(r["acc"])
+            ax.scatter([x], [y], s=100, color=ACCENT, edgecolors=SURFACE, linewidths=2, zorder=4)
+            if len(group) == 1:
+                ax.annotate(r["code"], (x, y), xytext=(8, 5), textcoords="offset points", fontsize=10, color=INK, zorder=5)
+            else:
+                ax.annotate(r["code"], (x, y), xytext=(3, 12 + 15 * (len(group) - 1 - rank)), textcoords="offset points",
+                            fontsize=10, color=INK, ha="left", va="bottom", zorder=5,
+                            arrowprops=dict(arrowstyle="-", color=MUTED, lw=0.8, shrinkA=0, shrinkB=6))
+    ax.set_xlabel("첫 발화 지연 변화 (같은 시각 Mercury 3 기본 대비, 중앙값)  ← 빠름", fontsize=10)
     ax.set_ylabel("의도 파악 정확도 (24문항 × 1회)  ↑ 정확", fontsize=10)
     ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v:g}%"))
-    ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v:,.0f}ms"))
+    ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v:+,.0f}ms" if v else "0"))
     ax.tick_params(length=0, labelsize=9)
-    ax.set_title("방법 후보 선별: Mercury 3 기본 + M1~M6", fontsize=12, loc="left", pad=10, fontweight="semibold")
+    ax.set_title("방법 후보 선별: Mercury 3 기본 + M1~M8", fontsize=12, loc="left", pad=10, fontweight="semibold")
     fig.text(0.01, 0.01, "가로선: 같은 24문항의 기존 결과(3회 반복). 1회 측정이라 점마다 ±10%p 안팎의 불확실성이 있음.",
              fontsize=8.5, color=MUTED)
     fig.tight_layout(rect=(0, 0.04, 0.8, 1))
