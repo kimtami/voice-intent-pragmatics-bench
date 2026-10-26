@@ -749,6 +749,8 @@ SCREEN_DESC = {
     "M5c": ("M6 후보(말하는 중, 빠른 생성기) 중 고르기", "m6_prefix", "말하는 중 + 발화 시점"),
 }
 HIDDEN_CODES = {"M4", "M7"}  # <해석> 을 닫지 않으면 형식 실패
+# 정답 기준에 논란이 있는 문항 (README '채점 검수'). 선별 표에 이 3문항을 뺀 정확도를 함께 싣는다
+CONTESTED = {"REP-01", "HON-01", "QFR-02"}
 # 지연 대조군: 묶음마다 같은 실행에서 다시 잰 Mercury 3 기본 (results/screen/<폴더>/mercury.A1.jsonl)
 SCREEN_BATCH = {c: "latency_control" for c in ("M1", "M2", "M3", "M4", "M5", "M6")} | \
     {c: "latency_control_b2" for c in ("M7", "M8", "M5b", "M5c")}
@@ -773,6 +775,7 @@ def screening() -> None:
             "C-auto+H 자동 가설 5개": "mercury.A1+CH", "Gemini 3.8 Flash 기본": "gemini38.A1"}
     ref_item = {name: per_item(RES / "judged" / f"{arm}.jsonl") for name, arm in refs.items()}
     base = ref_item["Mercury 3 기본"]
+    keep = [k for k in ids if k not in CONTESTED]
     ctl_p50 = {}
     for batch in sorted(set(SCREEN_BATCH.values())):
         p = sdir / batch / "mercury.A1.jsonl"
@@ -801,6 +804,7 @@ def screening() -> None:
         p50 = _pct([r["e2e_first_ms"] for r in raw], 0.5)
         rows.append({
             "code": code, "desc": desc, "when": when, "acc": round(statistics.mean(a[k] for k in ids) * 100, 1),
+            "acc_uncontested": round(statistics.mean(a[k] for k in keep) * 100, 1),
             "d_base": round(m * 100, 1), "lo": round(lo * 100, 1), "hi": round(hi * 100, 1), "d_cauto": round(mc * 100, 1),
             "first_p50": round(p50), "d_first": round(p50 - ctl_p50[SCREEN_BATCH[code]]),
             "gen_p50": None if g50 is None else round(g50),
@@ -813,16 +817,19 @@ def screening() -> None:
         + ", ".join(f"{n} {statistics.mean(v[k] for k in ids) * 100:.1f}%" for n, v in ref_item.items())
         + ". 첫 발화 변화는 묶음마다 같은 실행에서 다시 잰 Mercury 3 기본 대비이며, 그 p50 은 "
         + ", ".join(f"{batches[b]} 묶음 {v:,.0f}ms" for b, v in ctl_p50.items())
-        + " 입니다. 1회 측정이라 신뢰구간이 넓은 선별용 결과입니다.",
+        + " 입니다. 1회 측정이라 신뢰구간이 넓은 선별용 결과입니다. 정답 기준에 논란이 있는 3문항("
+        + "·".join(sorted(CONTESTED)) + f")을 뺀 {len(keep)}문항 기준값: "
+        + ", ".join(f"{s} {statistics.mean(ref_item[n][k] for k in keep) * 100:.1f}%" for n, s in
+                    zip(refs, ["기본", "C-auto", "C-auto+H", "Gemini 3.8 Flash"])) + ".",
         "",
-        "| 방법 | 계산 시점 | 정확도 | 기본 대비 (95% CI) | 선별 없는 로그 대비 | 첫 발화 p50 (변화) | 생성 시간 p50 / p90 | 1,000턴당 비용 |",
-        "|---|---|---|---|---|---|---|---|",
+        "| 방법 | 계산 시점 | 정확도 | 논란 3문항 제외 | 기본 대비 (95% CI) | 선별 없는 로그 대비 | 첫 발화 p50 (변화) | 생성 시간 p50 / p90 | 1,000턴당 비용 |",
+        "|---|---|---|---|---|---|---|---|---|",
     ]
     for r in rows:
         gen = "–" if r["gen_p50"] is None else f"{r['gen_p50'] / 1000:.1f}s / {r['gen_p90'] / 1000:.1f}s"
         fmt = f" (형식 실패 {r['format_fail']}건)" if r["format_fail"] else ""
         lines.append(
-            f"| {r['code']} {r['desc']}{fmt} | {r['when']} | {r['acc']}% | {'+' if r['d_base'] > 0 else ''}{r['d_base']}%p "
+            f"| {r['code']} {r['desc']}{fmt} | {r['when']} | {r['acc']}% | {r['acc_uncontested']}% | {'+' if r['d_base'] > 0 else ''}{r['d_base']}%p "
             f"({r['lo']}–{r['hi']}) | {'+' if r['d_cauto'] > 0 else ''}{r['d_cauto']}%p | {r['first_p50']:,}ms "
             f"({'+' if r['d_first'] > 0 else ''}{r['d_first']:,}) | {gen} | ${r['cost_1k']:.2f} |"
         )
