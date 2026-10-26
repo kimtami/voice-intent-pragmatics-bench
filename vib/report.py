@@ -557,6 +557,7 @@ def main() -> None:
     write_tables(table, by_cat)
     write_paired(paired_vs_a1(table, per_item_by_arm))
     write_models(paired_vs_base(table, per_item_by_arm))
+    hypothesis_checks(per_item_by_arm, items)
     gap = gap_closure(table, per_item_by_arm)
     write_gap(gap, table)
     for fname, methods, colors, note in GAP_CHARTS:
@@ -564,7 +565,7 @@ def main() -> None:
     chart_overview(table, RES / "overview_default_settings.png")
     chart_scatter(table, RES / "latency_vs_accuracy.png")
     chart_heatmap(table, by_cat, RES / "accuracy_by_category.png")
-    for name in ("summary.md", "paired.md", "models_vs_base.md", "gap.md"):
+    for name in ("summary.md", "paired.md", "models_vs_base.md", "gap.md", "hypothesis_checks.md"):
         p = RES / name
         print(p.read_text(encoding="utf-8") if p.exists() else f"no {name}")
 
@@ -708,6 +709,29 @@ def chart_gap(rows: list[dict], table: list[dict], path: Path, methods: list[str
     fig.tight_layout(rect=(0.16, 0.04, 1, 0.9))
     fig.savefig(path, dpi=160)
     plt.close(fig)
+
+
+def hypothesis_checks(per_item_by_arm: dict, items: dict) -> None:
+    """3차 확인: (1) 미리 만든 추정이 정답 의도를 담은 정도별, (2) 직전 비서 발화 유무별 C-auto+H 효과."""
+    hj = RES / "judged" / "hypotheses.analysis.jsonl"
+    bases = [b for b in ("mercury.A0", "mercury.A1", "luna.A1") if f"{b}+CH" in per_item_by_arm and b in per_item_by_arm]
+    if not hj.exists() or not bases:
+        return
+    hit = {r["item_id"]: r["score"] for r in _jsonl(hj)}
+    diffs = {k: statistics.mean(per_item_by_arm[f"{b}+CH"][k] - per_item_by_arm[b][k] for b in bases) for k in hit}
+    groups = [
+        ("추정이 정답 의도를 명시 (2점)", [k for k in hit if hit[k] == 2]),
+        ("추정이 정답 의도를 부분 포함 (1점)", [k for k in hit if hit[k] == 1]),
+        ("추정에 정답 의도 없음 (0점)", [k for k in hit if hit[k] == 0]),
+        ("직전 비서 발화 있음 (발화 뒤에야 추정 가능)", [k for k in hit if items[k]["context"]]),
+        ("직전 비서 발화 없음 (상태만으로 미리 추정 가능)", [k for k in hit if not items[k]["context"]]),
+    ]
+    lines = [f"C-auto+H 의 기준 대비 효과를 문항 묶음별로 나눈 값 (빠른 설정 {len(bases)}개 평균, 문항 단위 부트스트랩).", "",
+             "| 문항 묶음 | 문항 수 | C-auto+H 효과 (95% CI) |", "|---|---|---|"]
+    for name, keys in groups:
+        m, lo, hi, _ = _boot_diff({k: diffs[k] for k in keys})
+        lines.append(f"| {name} | {len(keys)} | {'+' if m > 0 else ''}{m * 100:.1f}%p ({lo * 100:.1f}–{hi * 100:.1f}) |")
+    (RES / "hypothesis_checks.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 BASE_ARM = "mercury.A1"  # 모델 간 비교의 기준: Inception 공식 음성 가이드 설정
