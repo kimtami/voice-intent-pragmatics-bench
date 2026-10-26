@@ -29,33 +29,53 @@ class CallResult:
     total_ms: float | None = None
     usage: dict = field(default_factory=dict)
     error: str | None = None
+    hidden: str | None = None  # M4: 사용자에게 들리지 않는 앞부분 (<해석> … </해석>)
 
     def to_dict(self) -> dict:
         return asdict(self)
 
 
 class _Clock:
-    def __init__(self) -> None:
+    def __init__(self, hide_until: str | None = None) -> None:
         self.t0 = time.perf_counter()
         self.result = CallResult()
         self._buf: list[str] = []
+        # hide_until 이 있으면 그 표지까지는 들리지 않는 부분이고, 첫 발화는 표지 뒤 첫 글자부터 잰다
+        self.hide_until = hide_until
 
     def ms(self) -> float:
         return round((time.perf_counter() - self.t0) * 1000, 1)
 
+    def _visible(self) -> str:
+        raw = "".join(self._buf)
+        if not self.hide_until:
+            return raw
+        return raw.split(self.hide_until, 1)[1] if self.hide_until in raw else ""
+
     def on_text(self, piece: str | None) -> None:
         if not piece:
             return
-        if self.result.ttft_ms is None and piece.strip():
-            self.result.ttft_ms = self.ms()
         self._buf.append(piece)
-        if self.result.first_sentence_ms is None and SENTENCE_END.search("".join(self._buf)):
+        visible = self._visible()
+        if self.result.ttft_ms is None and visible.strip():
+            self.result.ttft_ms = self.ms()
+        if self.result.first_sentence_ms is None and SENTENCE_END.search(visible):
             self.result.first_sentence_ms = self.ms()
 
     def finish(self, usage: dict | None = None) -> CallResult:
         r = self.result
         r.total_ms = self.ms()
-        r.text = "".join(self._buf)
+        raw = "".join(self._buf)
+        if self.hide_until:
+            if self.hide_until in raw:
+                r.hidden, r.text = raw.split(self.hide_until, 1)
+                r.text = r.text.strip()
+            else:  # 표지를 닫지 않으면 전부 들린다고 보고 기록한다
+                r.hidden, r.text = None, raw
+                if r.ttft_ms is None and raw.strip():
+                    r.ttft_ms = r.total_ms
+        else:
+            r.text = raw
         if r.first_sentence_ms is None and r.text.strip():
             r.first_sentence_ms = r.total_ms
         r.usage = usage or {}
@@ -130,7 +150,7 @@ def _gemini_contents(messages: list[dict]):
 
 # ---------- 스트리밍 응답 ----------
 def stream_reply(provider: str, model: str, system: str, messages: list[dict], params: dict) -> CallResult:
-    clock = _Clock()
+    clock = _Clock(params.get("hide_until"))
     try:
         if provider == "openai":
             stream = _openai().responses.create(

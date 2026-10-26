@@ -1,0 +1,1324 @@
+{
+  "meta": {
+    "generator": {
+      "provider": "inception",
+      "model": "mercury-3",
+      "params": {
+        "reasoning_effort": "low",
+        "temperature": 0.75,
+        "realtime": true,
+        "max_completion_tokens": 4096
+      }
+    },
+    "system": "m2_situations",
+    "created_at": "2026-10-26T17:25:56.495840+00:00"
+  },
+  "data": {
+    "QFR-01": [
+      {
+        "text": "음악 다시 틀어줘",
+        "confidence": 0.8
+      },
+      {
+        "text": "휴대폰 배터리 낮아서 충전해야겠다",
+        "confidence": 0.6
+      },
+      {
+        "text": "동기 모임 투표 결과 확인하고 싶다",
+        "confidence": 0.7
+      },
+      {
+        "text": "공기청정기 필터 새로 사야겠다",
+        "confidence": 0.5
+      },
+      {
+        "text": "주간 보고서 오늘까지 제출해야지",
+        "confidence": 0.6
+      },
+      {
+        "text": "운전 중이라서 답장하기 힘들다",
+        "confidence": 0.4
+      },
+      {
+        "text": "김 대리한테 회의록 잘 받았다고 인사해야지",
+        "confidence": 0.5
+      },
+      {
+        "text": "택배 보관함에서 물건 찾아야지",
+        "confidence": 0.6
+      },
+      {
+        "text": "세탁기 탈수가 끝났으니 빨래를 널어야 한다",
+        "confidence": 0.4
+      },
+      {
+        "text": "영어 메일 번역 내용 확인해야지",
+        "confidence": 0.4
+      }
+    ],
+    "QFR-02": [
+      {
+        "text": "사용자는 지수와의 저녁 약속에 맞춰 강남역으로 출발하려 할 것이다.",
+        "confidence": 0.95
+      },
+      {
+        "text": "사용자는 길찾기 앱을 켜서 강남역까지 경로를 확인하려 할 것이다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 강남역 주변 교통 체증이나 주차 문제를 걱정할 수 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 김 대리가 올린 회의록을 아직 확인하지 못해 불안해할 수 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 오늘 저녁 약속을 위해 강남역 11번 출구에서 지수를 만날 것이다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "사용자는 방금 도착한 택배 보관함의 생활용품을 언급할 수 있다.",
+        "confidence": 0.4
+      },
+      {
+        "text": "사용자는 성수동에서 강남역까지 가는 경로를 당연히 안다고 생각할 것이다.",
+        "confidence": 0.8
+      },
+      {
+        "text": "사용자는 하루 일과 후 피곤하지만 저녁 약속 때문에 기분이 좋을 것이다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 지수에게 존댓말보다는 편한 말투를 쓸 것이다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "사용자는 김 대리의 회의록 메시지를 확인하고 답장할 것이다.",
+        "confidence": 0.5
+      }
+    ],
+    "QFR-03": [
+      {
+        "text": "내일 아침에 늦지 않게 알람을 맞추고 싶다고 말할 것이다.",
+        "confidence": 0.85
+      },
+      {
+        "text": "자동차 보험 갱신 기한이 다가와서 어떻게 해야 할지 물어볼 수 있다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "이번 주말 캠핑 계획에 대해 이야기할 수 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사진 앱의 1년 전 오늘 추억을 보면서 그때 일을 회상할 수 있다.",
+        "confidence": 0.65
+      },
+      {
+        "text": "내일이 평일이므로 6시 30분에 일어나야 한다고 당연히 여길 것이다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "오늘 운동을 해서 몸이 피곤하다고 말할 수 있다.",
+        "confidence": 0.55
+      },
+      {
+        "text": "엄마께 전화를 드려야겠다고 말할 수 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "김 대리가 보낸 회의록을 확인해야겠다고 말할 수 있다.",
+        "confidence": 0.75
+      },
+      {
+        "text": "공기청정기 필터를 교체해야겠다고 말할 수 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "체중이 늘어서 다이어트를 시작해야겠다고 말할 수 있다.",
+        "confidence": 0.4
+      }
+    ],
+    "IMP-01": [
+      {
+        "text": "오늘 저녁 7시 예약을 확정해줘.",
+        "confidence": 0.72
+      },
+      {
+        "text": "파스타부오노 메뉴를 미리 확인해서 추천해줘.",
+        "confidence": 0.6
+      },
+      {
+        "text": "김 대리가 올린 회의록을 요약해줘.",
+        "confidence": 0.65
+      },
+      {
+        "text": "다음 주 음원 서비스 구독 갱신 요금제를 바꿀 수 있을까?",
+        "confidence": 0.55
+      },
+      {
+        "text": "다음 주 화요일 친구 생일인데 선물 아이디어를 알려줘.",
+        "confidence": 0.6
+      },
+      {
+        "text": "오늘 걸음 수가 적은데 저녁 전에 산책을 다녀올까?",
+        "confidence": 0.5
+      },
+      {
+        "text": "집에 와서 좀 쉬고 싶어. 수면 음악을 틀어줘.",
+        "confidence": 0.55
+      },
+      {
+        "text": "할머니께 전화 드려야 하는데 지금 괜찮을까?",
+        "confidence": 0.45
+      },
+      {
+        "text": "이번 주말 캠핑 장소를 예약해줘.",
+        "confidence": 0.5
+      },
+      {
+        "text": "파스타부오노 대신 을지면옥에서 먹을까?",
+        "confidence": 0.4
+      }
+    ],
+    "IMP-02": [
+      {
+        "text": "내일 치과 예약을 확정하려 할 것이다. (근거: 비서가 확인 문자를 보여줌)",
+        "confidence": 0.7
+      },
+      {
+        "text": "휴대폰 배터리가 20%뿐이라 충전이 필요할 것이다. (근거: 배터리 상태)",
+        "confidence": 0.8
+      },
+      {
+        "text": "동기 모임 투표에 응답해야 할 것이다. (근거: 메신저 투표 알림)",
+        "confidence": 0.6
+      },
+      {
+        "text": "주식 관심 종목이 2% 올라서 확인하고 싶어 할 것이다. (근거: 주식 앱 알림)",
+        "confidence": 0.5
+      },
+      {
+        "text": "내일 오전 10시 팀 회의가 있다는 것을 알고 있을 것이다. (근거: 캘린더 일정)",
+        "confidence": 0.9
+      },
+      {
+        "text": "저녁 9시에 집에 있으므로 피곤함을 느낄 것이다. (근거: 기기 상태 시간)",
+        "confidence": 0.6
+      },
+      {
+        "text": "할머니와 통화할 때 높임말을 사용해야 할 것이다. (근거: 프로필의 높임말 대상)",
+        "confidence": 0.8
+      },
+      {
+        "text": "치과 예약 시간을 변경하거나 취소하고 싶어 할 것이다. (근거: 비서의 확정 질문)",
+        "confidence": 0.5
+      },
+      {
+        "text": "운동화 배송 출발 알림을 확인하고 싶어 할 것이다. (근거: 택배 알림)",
+        "confidence": 0.6
+      },
+      {
+        "text": "앱 업데이트 후 오류가 없는지 확인해야 할 것이다. (근거: 앱 업데이트 기록)",
+        "confidence": 0.4
+      }
+    ],
+    "IMP-03": [
+      {
+        "text": "토요일 비가 온다고 하니 캠핑을 일요일로 바꿔 달라고 요청할 것 같다.",
+        "confidence": 0.8
+      },
+      {
+        "text": "예약을 진행해 달라고 긍정적으로 답할 가능성이 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "주말 캠핑 계획이 이미 있어서 날씨 때문에 고민할 것 같다.",
+        "confidence": 0.75
+      },
+      {
+        "text": "가평 캠핑장의 위치나 시설에 대해 물어볼 수 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "편의점 쿠폰이 도착했으니 오늘 저녁에 쓸지 생각할 것 같다.",
+        "confidence": 0.4
+      },
+      {
+        "text": "수요일 저녁이라 피곤해서 단순히 예약을 맡기려 할 수 있다.",
+        "confidence": 0.55
+      },
+      {
+        "text": "평소 비서에게 반말을 쓰는지 존댓말을 쓰는지에 따라 말투가 달라질 것이다.",
+        "confidence": 0.3
+      },
+      {
+        "text": "친구 생일이 다음 주라 선물을 준비해야 한다는 생각을 떠올릴 수 있다.",
+        "confidence": 0.45
+      },
+      {
+        "text": "1년 전 오늘의 추억 사진을 보고 추억에 잠길 가능성이 있다.",
+        "confidence": 0.35
+      },
+      {
+        "text": "헬스장 출석이 6회뿐이라 이번 달 목표를 채우지 못한 것에 대한 불안이 있을 수 있다.",
+        "confidence": 0.5
+      }
+    ],
+    "ELL-01": [
+      {
+        "text": "사용자가 어제 방문한 할매순대국을 다시 찾아갈 것이다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자가 점심으로 순대국을 배달 주문할 것이다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자가 다음 달 건강검진 일정을 확인할 것이다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자가 음원 서비스 구독 갱신 여부를 결정할 것이다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자가 관심 종목의 주가 상승에 대해 물어볼 것이다.",
+        "confidence": 0.4
+      },
+      {
+        "text": "사용자가 차량 주차나 이동 경로에 대해 물어볼 것이다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자가 비서가 자신의 현재 위치를 알고 있다고 전제할 것이다.",
+        "confidence": 0.8
+      },
+      {
+        "text": "사용자가 지금 기분이 좋거나 편안한 상태일 것이다.",
+        "confidence": 0.4
+      },
+      {
+        "text": "사용자가 엄마나 할머니에게 전화를 걸 것이다.",
+        "confidence": 0.3
+      },
+      {
+        "text": "사용자가 아까 답변받은 식당 이름에 대해 추가 정보를 요청할 것이다.",
+        "confidence": 0.6
+      }
+    ],
+    "ELL-02": [
+      {
+        "text": "사용자가 다음 곡으로 넘기거나 재생 목록을 바꾸고 싶어 할 수 있다 (음악 재생 중, 볼륨 조절).",
+        "confidence": 0.5
+      },
+      {
+        "text": "길 안내를 위해 내비게이션 앱을 열거나 목적지를 말할 수 있다 (주행 중, 집/회사 위치 프로필).",
+        "confidence": 0.6
+      },
+      {
+        "text": "주행 중이라 핸즈프리 통화가 필요할 수 있다 (차량 주행 중, 메신저 알림).",
+        "confidence": 0.4
+      },
+      {
+        "text": "주말 캠핑 준비를 위해 날씨나 장비를 확인할 수 있다 (주말 캠핑 습관).",
+        "confidence": 0.5
+      },
+      {
+        "text": "최근 공유된 주간 보고 양식을 언급할 수 있다 (팀 채널에서 양식 공유).",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 자신의 출퇴근 경로를 비서가 알고 있다고 생각할 수 있다 (집/회사 주소 프로필).",
+        "confidence": 0.7
+      },
+      {
+        "text": "피로감을 느껴 조용한 음악이나 무음을 원할 수 있다 (볼륨을 낮춤).",
+        "confidence": 0.4
+      },
+      {
+        "text": "김 대리에게 회의록 관련 답장을 보내려 할 수 있다 (김 대리의 회의록 메시지).",
+        "confidence": 0.5
+      },
+      {
+        "text": "볼륨 조절에 대해 짧게 감사 인사를 하거나 추가 조정을 요청할 수 있다 (직전 대화).",
+        "confidence": 0.6
+      },
+      {
+        "text": "음악 볼륨이 너무 낮아졌다고 느끼고 다시 높이라고 말할 수 있다 (방금 35→20 변경).",
+        "confidence": 0.3
+      }
+    ],
+    "ELL-03": [
+      {
+        "text": "택배 보관함에 도착한 생활용품을 확인하고 싶어 할 수 있다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "저녁 6시 반에 회사에서 배가 고파 저녁 식사 메뉴를 추천받고 싶어 할 수 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "동기 모임 투표에 참여해 '다음 주 금요일' 일정을 확정하고 싶어 할 수 있다.",
+        "confidence": 0.65
+      },
+      {
+        "text": "장바구니에 담아둔 상품의 가격이 내렸다는 알림을 보고 구매를 결정하고 싶어 할 수 있다.",
+        "confidence": 0.55
+      },
+      {
+        "text": "어머니께 보낸 문자에 답장이 왔을 거라고 생각하고 확인을 요청할 수 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "하루 일과가 끝나고 피곤한 상태로 퇴근 준비를 하고 있을 수 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "할머니께 안부 문자를 높임말로 보내 달라고 요청할 수 있다.",
+        "confidence": 0.4
+      },
+      {
+        "text": "방금 보낸 문자를 취소하거나 수정하고 싶어 할 수 있다.",
+        "confidence": 0.3
+      },
+      {
+        "text": "음원 서비스 구독 갱신 예정이라 해지 또는 유지 여부를 확인하고 싶어 할 수 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "주말 캠핑 계획을 세우기 위해 날씨나 장비를 확인하고 싶어 할 수 있다.",
+        "confidence": 0.45
+      }
+    ],
+    "REP-01": [
+      {
+        "text": "대출 도서 반납 예정일이 3일 남았으니 연장을 요청할 수 있다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "단톡방 메시지 23개가 쌓여 있어 답장하기 귀찮다고 말할 수 있다.",
+        "confidence": 0.55
+      },
+      {
+        "text": "다음 달 3일 건강검진 일정에 대해 물어볼 수 있다.",
+        "confidence": 0.65
+      },
+      {
+        "text": "운동화 택배 배송 출발 알림을 보고 언제 도착하는지 물어볼 수 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "로봇청소기가 이미 청소를 끝냈으니 집이 깨끗하다는 걸 전제로 말할 수 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "오전 9시에 집에 있으니 주말이고, 캠핑 갈 준비를 이야기할 수 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "할머니께 전화하거나 드릴 말씀을 준비할 수 있다.",
+        "confidence": 0.45
+      },
+      {
+        "text": "직전 대화가 없으니 '오늘 뭐 할까' 같은 개시형 발화를 할 수 있다.",
+        "confidence": 0.35
+      },
+      {
+        "text": "관심 단지 시세가 갱신됐으니 부동산 정보를 확인하고 싶어할 수 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "세탁기 탈수가 끝났으니 빨래를 널어달라고 요청할 수 있다.",
+        "confidence": 0.5
+      }
+    ],
+    "REP-02": [
+      {
+        "text": "회의 장소까지 가는 교통 상황이나 최적 경로를 물어볼 것 같다.",
+        "confidence": 0.85
+      },
+      {
+        "text": "10시 회의에 늦을까 봐 불안해하며 현재 위치와 도착 예정 시간을 확인할 수 있다.",
+        "confidence": 0.75
+      },
+      {
+        "text": "음원 서비스 갱신 예정일을 확인하거나 자동 갱신 설정을 변경하려 할 수 있다.",
+        "confidence": 0.65
+      },
+      {
+        "text": "로봇청소기의 청소 완료 상태를 확인하거나 먼지통을 비워야 하는지 물어볼 수 있다.",
+        "confidence": 0.55
+      },
+      {
+        "text": "성수동에서 을지로까지의 통근 경로를 비서가 이미 알고 있다고 전제할 것이다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "심박수 72bpm으로 평온한 상태이지만 회의 준비에 대한 긴장감이 약간 있을 수 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "박 과장에게 회의 관련 메시지를 보내거나 회의 자료 확인을 요청할 수 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "자동차 보험 갱신 안내 메일에 대해 질문하고 보험료 비교나 다음 절차를 확인할 수 있다.",
+        "confidence": 0.55
+      },
+      {
+        "text": "가계부 앱의 이번 주 지출 요약을 확인하고 항목별 지출 내역을 정리하려 할 수 있다.",
+        "confidence": 0.45
+      },
+      {
+        "text": "카드 포인트 1,200점을 어떻게 사용할지 추천을 받거나 적립 내역을 확인하려 할 수 있다.",
+        "confidence": 0.4
+      }
+    ],
+    "REP-03": [
+      {
+        "text": "사용자는 다음 주 음원 서비스 구독 갱신 전에 구독료를 확인하거나 해지 여부를 결정하려 할 것이다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "배터리가 20%라서 충전기를 찾거나 충전을 시작할 것이다.",
+        "confidence": 0.8
+      },
+      {
+        "text": "걸음 수가 4,300보로 적어서 오늘 운동을 하지 못한 것에 대한 불편함을 언급할 수 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "다음 달 3일 건강검진에 대해 일정을 확인하거나 준비물을 물어볼 수 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "환율 상승 뉴스를 보고 해외여행이나 투자에 대해 질문할 수 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "관심 종목이 2% 상승했으니 주식 매도·매수에 대한 조언을 구할 수 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "이번 주 지출 요약을 보고 소비 패턴에 대해 얘기하거나 절약 팁을 물어볼 수 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "단톡방 메시지 23개를 확인하지 못해 대학 동기 모임이나 안건에 대해 물어볼 수 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "평일 아침 알람이 설정되어 있으니 내일 일정이나 기상 시간을 확인할 수 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "주말 캠핑 계획을 세우기 위해 날씨나 장비 관련 정보를 물어볼 수 있다.",
+        "confidence": 0.6
+      }
+    ],
+    "AMB-01": [
+      {
+        "text": "응, 문자로 보내줘",
+        "confidence": 0.85
+      },
+      {
+        "text": "주말 캠핑 날씨 좀 알려줘",
+        "confidence": 0.6
+      },
+      {
+        "text": "방금",
+        "confidence": 0.5
+      }
+    ],
+    "AMB-02": [
+      {
+        "text": "가습기를 켜 달라고 요청할 것이다 (근거: 실내 습도 28%, 직전 비서 질문)",
+        "confidence": 0.85
+      },
+      {
+        "text": "공기청정기 필터 교체에 대해 물어볼 것이다 (근거: 필터 교체 권장 알림)",
+        "confidence": 0.7
+      },
+      {
+        "text": "다음 달 건강검진 일정을 다시 확인하거나 알림을 설정할 것이다 (근거: 캘린더 건강검진)",
+        "confidence": 0.75
+      },
+      {
+        "text": "가습기 물통 잔량이나 상태를 물어볼 것이다 (근거: 가습기 물통 40%)",
+        "confidence": 0.6
+      },
+      {
+        "text": "회사 도착 사실을 전제로 업무 관련 질문을 할 것이다 (근거: 출입 게이트 통과)",
+        "confidence": 0.55
+      },
+      {
+        "text": "피곤하거나 스트레스를 받았다고 말할 것이다 (근거: 심박 72bpm, 출근 직후)",
+        "confidence": 0.5
+      },
+      {
+        "text": "할머니께 전화를 걸어 달라고 부탁할 것이다 (근거: 할머니 연락처, 82세)",
+        "confidence": 0.45
+      },
+      {
+        "text": "직전 비서의 가습기 질문에 답하며 건조함을 언급할 것이다 (근거: 직전 대화)",
+        "confidence": 0.9
+      },
+      {
+        "text": "운동화 배송 상태를 확인할 것이다 (근거: 택배 알림)",
+        "confidence": 0.6
+      },
+      {
+        "text": "카드 포인트 사용 방법을 물어볼 것이다 (근거: 카드 포인트 1,200점)",
+        "confidence": 0.4
+      }
+    ],
+    "AMB-03": [
+      {
+        "text": "사용자는 비서가 제안한 7시 30분 예약을 수락할 것이다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 7시 자리가 없으니 다른 시간대나 식당을 물어볼 것이다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 김 대리가 올린 회의록에 대해 물어볼 것이다.",
+        "confidence": 0.4
+      },
+      {
+        "text": "사용자는 운동화 배송 상태를 확인할 것이다.",
+        "confidence": 0.3
+      },
+      {
+        "text": "사용자는 배터리가 20%뿐이라 충전을 요청할 것이다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 도서 반납 예정일이 3일 남았다고 언급할 것이다.",
+        "confidence": 0.4
+      },
+      {
+        "text": "사용자는 동기 모임 투표에 대해 의견을 말할 것이다.",
+        "confidence": 0.4
+      },
+      {
+        "text": "사용자는 다음 달 건강검진 일정에 대해 물어볼 것이다.",
+        "confidence": 0.3
+      },
+      {
+        "text": "사용자는 환율 상승 소식에 대해 물어보거나 언급할 것이다.",
+        "confidence": 0.2
+      },
+      {
+        "text": "사용자는 저녁 식사 후 수면 음악을 틀어달라고 할 것이다.",
+        "confidence": 0.2
+      }
+    ],
+    "SAR-01": [
+      {
+        "text": "사용자는 공사로 막힌 골목을 피해 다른 경로를 안내받고 싶어할 것이다.",
+        "confidence": 0.8
+      },
+      {
+        "text": "사용자는 지하철에서 공사 구간 안내가 반복되어 불편함을 느낄 수 있다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 다음 달 건강검진을 앞두고 병원에 문의하거나 준비 사항을 확인하려 할 것이다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 주식 앱에서 관심 종목의 상승률을 확인하며 이야기할 수 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 오늘이 1년 전 사진의 추억이 있는 날임을 알고 있을 것이다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 퇴근 중이라 피곤한 상태일 가능성이 높다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 엄마에게 전화를 걸어 안부를 물을 수 있다.",
+        "confidence": 0.4
+      },
+      {
+        "text": "사용자는 내비게이션의 공사 안내에 대해 불만을 표현하거나 대체 경로를 요청할 수 있다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 가계부 앱의 이번 주 지출 요약을 확인하고 지출 내역을 점검할 수 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 도서 반납 예정일이 다가와서 책을 반납하러 도서관에 갈 계획을 세울 수 있다.",
+        "confidence": 0.6
+      }
+    ],
+    "SAR-02": [
+      {
+        "text": "수면 음악을 요청했는데 헤비메탈이 재생되고 있어 '왜 이런 음악이 나와?'라고 항의할 것이다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "재생 중인 곡이 잠드는 데 방해가 되어 음악을 끄거나 다른 곡으로 바꾸고 싶어할 것이다.",
+        "confidence": 0.8
+      },
+      {
+        "text": "실제 수면에 적합한 잔잔한 플레이리스트로 다시 재생해 달라고 요청할 것이다.",
+        "confidence": 0.75
+      },
+      {
+        "text": "새벽 1시까지 잠이 들지 못해 초조하고 피곤한 상태로 불면증을 호소할 것이다.",
+        "confidence": 0.75
+      },
+      {
+        "text": "배송 출발한 운동화 택배의 현재 위치나 도착 예정일을 확인하려 할 것이다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "내일도 평일이라 출근해야 한다는 것을 당연히 알고 있다고 전제하고 아침 일정을 물어볼 것이다.",
+        "confidence": 0.65
+      },
+      {
+        "text": "이번 주 가계부 지출 요약을 보고 김밥집 결제 등 소비 내역에 대해 물어볼 것이다.",
+        "confidence": 0.55
+      },
+      {
+        "text": "주말 캠핑 계획을 확인하거나 관련 장비나 장소 정보를 찾을 것이다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "엄마에게 전화하거나 문자를 보내려 할 것이며 높임말을 사용할 것이다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "관심 단지의 시세 갱신 소식을 보고 부동산 매매나 전세 관련 질문을 할 것이다.",
+        "confidence": 0.45
+      }
+    ],
+    "SAR-03": [
+      {
+        "text": "배달 음식이 너무 늦게 오고 있는데, 지금 어디쯤인지 확인해줘.",
+        "confidence": 0.9
+      },
+      {
+        "text": "배달이 70분이나 걸렸는데 라이더 위치도 안 보여서 불만이야.",
+        "confidence": 0.85
+      },
+      {
+        "text": "도서 반납 예정일이 3일 남았으니 반납 일정을 알려줘.",
+        "confidence": 0.7
+      },
+      {
+        "text": "환율이 올랐다는 뉴스를 봤는데, 이게 내 지출에 영향이 있을까?",
+        "confidence": 0.55
+      },
+      {
+        "text": "회사 주차장 정산이 완료됐으니 오늘 출근 준비는 끝났어.",
+        "confidence": 0.6
+      },
+      {
+        "text": "배달이 늦어져서 기분이 안 좋고 빨리 해결됐으면 좋겠어.",
+        "confidence": 0.8
+      },
+      {
+        "text": "엄마한테 전화해서 안부를 여쭤봐야겠어.",
+        "confidence": 0.5
+      },
+      {
+        "text": "오늘 하루는 어땠는지 정리해서 말해줘.",
+        "confidence": 0.4
+      },
+      {
+        "text": "잠들기 전에 수면 음악을 틀어줘.",
+        "confidence": 0.65
+      },
+      {
+        "text": "세탁기 탈수가 끝났으니 빨래를 정리해야겠어.",
+        "confidence": 0.6
+      }
+    ],
+    "POL-01": [
+      {
+        "text": "str",
+        "confidence": 0.5
+      }
+    ],
+    "POL-02": [
+      {
+        "text": "사용자는 피자 주문을 취소하고 싶어할 수 있다. 근거: 피자 주문이 2분 전에 이루어졌고 아직 조리 전이라 취소가 가능하다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 도서 반납 기한이 다가오는 것을 걱정할 수 있다. 근거: 대출 도서 반납 예정일이 3일 남았다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 동기 모임 투표에 참여해야 할 수 있다. 근거: 메신저에 '다음 주 금요일?' 투표가 도착했다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 방금 주문한 피자의 배달 상태를 물어볼 수 있다. 근거: 비서가 피자 주문 완료를 알렸다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 비서가 자신의 집 주소를 알고 있다고 전제할 수 있다. 근거: 피자를 집으로 주문했으므로 주소가 저장되어 있을 것.",
+        "confidence": 0.8
+      },
+      {
+        "text": "사용자는 관심 종목이 상승해서 기분이 좋을 수 있다. 근거: 주식 앱에서 관심 종목이 2% 올랐다.",
+        "confidence": 0.4
+      },
+      {
+        "text": "사용자는 친구 민수나 지수에게 반말로 연락할 수 있다. 근거: 친구 생일이 다음 주 화요일이라 축하 메시지를 보낼 가능성.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 피자 주문을 확인하거나 취소 요청을 할 수 있다. 근거: 직전에 비서가 주문 완료를 알렸다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 부동산 시세 변동을 확인하고 싶어할 수 있다. 근거: 관심 단지 시세가 갱신되었다.",
+        "confidence": 0.4
+      },
+      {
+        "text": "사용자는 친구 생일 선물을 준비해야 할 수 있다. 근거: 생일이 다음 주 화요일이다.",
+        "confidence": 0.5
+      }
+    ],
+    "HON-01": [
+      {
+        "text": "운동화 배송이 출발했다는 알림을 보고 배송 상태를 확인하려 할 것이다. (근거: 택배 알림 - 운동화 배송 출발)",
+        "confidence": 0.7
+      },
+      {
+        "text": "공기청정기 필터 교체 권장 알림을 보고 필터 교체 방법이나 주문을 문의할 것이다. (근거: 필터 교체 권장 시스템 로그)",
+        "confidence": 0.65
+      },
+      {
+        "text": "주말이 다가와서 캠핑 계획을 세우려 할 것이다. (근거: 프로필 - 주말에 캠핑 자주 감)",
+        "confidence": 0.55
+      },
+      {
+        "text": "장바구니에 담아둔 상품의 가격 인하 소식을 확인하고 구매 여부를 결정하려 할 것이다. (근거: 쇼핑몰 가격 인하 알림)",
+        "confidence": 0.6
+      },
+      {
+        "text": "방금 퇴근해서 집에 도착했다는 것을 비서가 당연히 알고 있다고 전제할 것이다. (근거: 지하철 승차, 엘리베이터 호출, 집에서 저녁 7시)",
+        "confidence": 0.75
+      },
+      {
+        "text": "하루 업무를 마치고 돌아온 피로감을 표현하며 쉬고 싶다고 말할 것이다. (근거: 저녁 7시 귀가, 회사 출입 기록)",
+        "confidence": 0.5
+      },
+      {
+        "text": "어제 짧게 통화한 할머니께 안부를 묻기 위해 다시 전화하고 싶어 할 것이다. (근거: 어제 5분 통화 기록, 할머니는 높임말 대상)",
+        "confidence": 0.45
+      },
+      {
+        "text": "김 대리가 올린 회의록을 확인하고 내용에 대해 언급할 것이다. (근거: 메신저 알림 '회의록 올렸어요')",
+        "confidence": 0.6
+      },
+      {
+        "text": "잠들기 전에 수면 음악을 틀어달라고 요청할 것이다. (근거: 프로필 - 잠들기 전 수면 음악 자주 틂)",
+        "confidence": 0.4
+      },
+      {
+        "text": "휴대폰 배터리가 20%뿐이라 충전기를 찾거나 충전 상태를 확인할 것이다. (근거: 배터리 20% 시스템 알림)",
+        "confidence": 0.55
+      }
+    ],
+    "MUL-01": [
+      {
+        "text": "내일 비 예보 때문에 세차 예약을 취소하거나 날짜를 변경하고 싶어 할 수 있다. (근거: 내일 10:00 세차 예약 + 내일 비 예보)",
+        "confidence": 0.85
+      },
+      {
+        "text": "환율 상승 뉴스에 반응하여 해외 주식이나 여행 계획에 미치는 영향을 물어볼 수 있다. (근거: 뉴스 알림: 환율 상승)",
+        "confidence": 0.55
+      },
+      {
+        "text": "대학 동기 모임 투표에 참여하기 위해 다음 주 금요일 일정을 확인하고 투표를 하려 할 수 있다. (근거: 메신저 동기 모임 투표 '다음 주 금요일?')",
+        "confidence": 0.7
+      },
+      {
+        "text": "택배 보관함에 도착한 생활용품 택배를 찾아가거나 내용물을 확인하려 할 수 있다. (근거: 택배 보관함 도착: 생활용품)",
+        "confidence": 0.75
+      },
+      {
+        "text": "잠들기 전 수면 음악을 틀어달라고 요청할 수 있으며, 이는 사용자의 평소 습관임을 전제한다. (근거: 잠들기 전 수면 음악을 자주 틂)",
+        "confidence": 0.65
+      },
+      {
+        "text": "밤 10시에 집에 있으므로 피곤한 상태로 휴식을 취하거나 잠들 준비를 하고 있을 수 있다. (근거: 기기 상태: 집, 밤 10시)",
+        "confidence": 0.6
+      },
+      {
+        "text": "할머니께 안부 전화를 드리려 할 수 있으며, 높임말을 사용할 것으로 예상된다. (근거: 연락처에 할머니(82세, 높임말 대상))",
+        "confidence": 0.45
+      },
+      {
+        "text": "직전 대화가 없으므로, 시스템 알림(환율 상승 등)에 대해 반응하여 추가 질문을 할 수 있다. (근거: 뉴스 알림: 환율 상승)",
+        "confidence": 0.5
+      },
+      {
+        "text": "가계부 앱의 이번 주 지출 요약을 자세히 확인하고 싶어 할 수 있다. (근거: 가계부 앱: 이번 주 지출 요약 도착)",
+        "confidence": 0.6
+      },
+      {
+        "text": "1년 전 오늘의 추억 사진을 열어보고 그때의 일을 회상하며 이야기할 수 있다. (근거: 사진 앱: 1년 전 오늘의 추억)",
+        "confidence": 0.4
+      }
+    ],
+    "PHA-01": [
+      {
+        "text": "집에 도착했으니 탈수가 끝난 세탁기의 빨래를 꺼내 정리하고 싶을 것이다 (근거: 세탁기 탈수 완료 로그).",
+        "confidence": 0.7
+      },
+      {
+        "text": "잠들기 전 수면 음악을 자주 틀었으니 오늘도 취침 전 음악 재생을 요청할 것이다 (근거: 생활 패턴 중 수면 음악 습관).",
+        "confidence": 0.65
+      },
+      {
+        "text": "단톡방에 메시지가 23개나 쌓여 있어 확인하는 것이 부담스러울 수 있다 (근거: 단톡방 메시지 23개).",
+        "confidence": 0.6
+      },
+      {
+        "text": "동기 모임 투표에 응답해야 하므로 다음 주 금요일 일정을 확인하려 할 것이다 (근거: 메신저 동기 모임 투표).",
+        "confidence": 0.75
+      },
+      {
+        "text": "다음 달 3일 건강검진이 다가오니 준비 사항이나 일정을 물어볼 것이다 (근거: 캘린더 건강검진 일정).",
+        "confidence": 0.55
+      },
+      {
+        "text": "쇼핑몰 장바구니 상품 가격이 인하됐다는 알림을 보고 구매 여부를 결정하려 할 것이다 (근거: 가격 인하 알림).",
+        "confidence": 0.6
+      },
+      {
+        "text": "관리비 자동이체가 완료된 것은 이미 알고 있을 것이므로 별도로 확인하지 않을 것이다 (근거: 관리비 자동이체 완료).",
+        "confidence": 0.8
+      },
+      {
+        "text": "오늘 일정 9개를 모두 마치고 밤 9시에 귀가했으니 피곤하지만 홀가분한 상태일 것이다 (근거: 일정 9개 완료, 21:00 귀가).",
+        "confidence": 0.7
+      },
+      {
+        "text": "82세 할머니께 안부 전화를 드려야 할 상황이라 높임말을 쓸 가능성이 있다 (근거: 할머니 82세, 높임말 대상).",
+        "confidence": 0.5
+      },
+      {
+        "text": "직전 대화가 없으니 사용자가 먼저 대화를 시작하며 오늘 있었던 일이나 내일 일정을 말할 것이다 (근거: 직전 대화 없음).",
+        "confidence": 0.6
+      }
+    ],
+    "PHA-02": [
+      {
+        "text": "사용자는 퇴근길에 마트에 들러 우유를 구매하고 싶어 할 것이다 (냉장고에 우유가 없음).",
+        "confidence": 0.9
+      },
+      {
+        "text": "사용자는 도서 반납 예정일이 3일 남아 반납이나 연장을 고민할 것이다 (도서 앱 알림).",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 다음 달 3일 건강검진을 앞두고 일정을 확인하거나 준비할 것이다 (캘린더 등록).",
+        "confidence": 0.8
+      },
+      {
+        "text": "사용자는 관심 종목이 2% 상승한 것을 언급할 것이다 (주식 앱).",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 지금 퇴근길에 성수역 근처에 있으며 곧 집에 도착할 것이라고 알고 있을 것이다 (기기 위치).",
+        "confidence": 0.95
+      },
+      {
+        "text": "사용자는 단톡방에 쌓인 23개의 메시지를 보고 부담스러워할 것이다 (메신저 알림).",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 할머니께 높임말로 안부를 물을 수도 있을 것이다 (프로필 상 할머니가 높임 대상).",
+        "confidence": 0.4
+      },
+      {
+        "text": "사용자는 동기 모임 투표 결과에 대해 궁금해하며 이야기를 시작할 것이다 (메신저 투표).",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 잠들기 전 수면 음악을 틀고 싶어 할 것이다 (평소 습관).",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 주말 캠핑을 위해 장비나 날씨를 확인할 것이다 (주말 캠핑 패턴).",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "calls": {
+    "QFR-01": {
+      "total_ms": 8263.5,
+      "usage": {
+        "completion_tokens": 3305,
+        "prompt_tokens": 712,
+        "total_tokens": 4017,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2975
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 255
+        }
+      },
+      "prefix": null
+    },
+    "QFR-02": {
+      "total_ms": 6501.2,
+      "usage": {
+        "completion_tokens": 3249,
+        "prompt_tokens": 734,
+        "total_tokens": 3983,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2833
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 257
+        }
+      },
+      "prefix": null
+    },
+    "QFR-03": {
+      "total_ms": 3860.0,
+      "usage": {
+        "completion_tokens": 2016,
+        "prompt_tokens": 721,
+        "total_tokens": 2737,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1628
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 257
+        }
+      },
+      "prefix": null
+    },
+    "IMP-01": {
+      "total_ms": 3637.6,
+      "usage": {
+        "completion_tokens": 1990,
+        "prompt_tokens": 776,
+        "total_tokens": 2766,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1581
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 262
+        }
+      },
+      "prefix": null
+    },
+    "IMP-02": {
+      "total_ms": 4239.8,
+      "usage": {
+        "completion_tokens": 2492,
+        "prompt_tokens": 800,
+        "total_tokens": 3292,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2007
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 260
+        }
+      },
+      "prefix": null
+    },
+    "IMP-03": {
+      "total_ms": 3299.8,
+      "usage": {
+        "completion_tokens": 1110,
+        "prompt_tokens": 755,
+        "total_tokens": 1865,
+        "completion_tokens_details": {
+          "reasoning_tokens": 678
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 255
+        }
+      },
+      "prefix": null
+    },
+    "ELL-01": {
+      "total_ms": 8760.7,
+      "usage": {
+        "completion_tokens": 3296,
+        "prompt_tokens": 760,
+        "total_tokens": 4056,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2945
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "prefix": null
+    },
+    "ELL-02": {
+      "total_ms": 5621.4,
+      "usage": {
+        "completion_tokens": 2958,
+        "prompt_tokens": 751,
+        "total_tokens": 3709,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2457
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 259
+        }
+      },
+      "prefix": null
+    },
+    "ELL-03": {
+      "total_ms": 3899.1,
+      "usage": {
+        "completion_tokens": 1951,
+        "prompt_tokens": 747,
+        "total_tokens": 2698,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1499
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 253
+        }
+      },
+      "prefix": null
+    },
+    "REP-01": {
+      "total_ms": 4950.0,
+      "usage": {
+        "completion_tokens": 2957,
+        "prompt_tokens": 725,
+        "total_tokens": 3682,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2500
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 259
+        }
+      },
+      "prefix": null
+    },
+    "REP-02": {
+      "total_ms": 4361.3,
+      "usage": {
+        "completion_tokens": 2372,
+        "prompt_tokens": 718,
+        "total_tokens": 3090,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1902
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 254
+        }
+      },
+      "prefix": null
+    },
+    "REP-03": {
+      "total_ms": 1449.7,
+      "usage": {
+        "completion_tokens": 477,
+        "prompt_tokens": 725,
+        "total_tokens": 1202,
+        "completion_tokens_details": {
+          "reasoning_tokens": 4
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "prefix": null
+    },
+    "AMB-01": {
+      "total_ms": 8277.8,
+      "usage": {
+        "completion_tokens": 3936,
+        "prompt_tokens": 722,
+        "total_tokens": 4658,
+        "completion_tokens_details": {
+          "reasoning_tokens": 3829
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 255
+        }
+      },
+      "prefix": null
+    },
+    "AMB-02": {
+      "total_ms": 3529.6,
+      "usage": {
+        "completion_tokens": 1863,
+        "prompt_tokens": 693,
+        "total_tokens": 2556,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1409
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 254
+        }
+      },
+      "prefix": null
+    },
+    "AMB-03": {
+      "total_ms": 10190.4,
+      "usage": {
+        "completion_tokens": 3745,
+        "prompt_tokens": 768,
+        "total_tokens": 4513,
+        "completion_tokens_details": {
+          "reasoning_tokens": 3362
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": null
+    },
+    "SAR-01": {
+      "total_ms": 3791.6,
+      "usage": {
+        "completion_tokens": 2231,
+        "prompt_tokens": 729,
+        "total_tokens": 2960,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1781
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 257
+        }
+      },
+      "prefix": null
+    },
+    "SAR-02": {
+      "total_ms": 5448.4,
+      "usage": {
+        "completion_tokens": 2618,
+        "prompt_tokens": 767,
+        "total_tokens": 3385,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2148
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 253
+        }
+      },
+      "prefix": null
+    },
+    "SAR-03": {
+      "total_ms": 1591.3,
+      "usage": {
+        "completion_tokens": 677,
+        "prompt_tokens": 726,
+        "total_tokens": 1403,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 255
+        }
+      },
+      "prefix": null
+    },
+    "POL-01": {
+      "total_ms": 7167.6,
+      "usage": {
+        "completion_tokens": 3964,
+        "prompt_tokens": 715,
+        "total_tokens": 4679,
+        "completion_tokens_details": {
+          "reasoning_tokens": 3964
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 257
+        }
+      },
+      "prefix": null
+    },
+    "POL-02": {
+      "total_ms": 5199.6,
+      "usage": {
+        "completion_tokens": 2861,
+        "prompt_tokens": 761,
+        "total_tokens": 3622,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2338
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 260
+        }
+      },
+      "prefix": null
+    },
+    "HON-01": {
+      "total_ms": 5990.9,
+      "usage": {
+        "completion_tokens": 3579,
+        "prompt_tokens": 701,
+        "total_tokens": 4280,
+        "completion_tokens_details": {
+          "reasoning_tokens": 3000
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 255
+        }
+      },
+      "prefix": null
+    },
+    "MUL-01": {
+      "total_ms": 5400.3,
+      "usage": {
+        "completion_tokens": 2875,
+        "prompt_tokens": 726,
+        "total_tokens": 3601,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2230
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 253
+        }
+      },
+      "prefix": null
+    },
+    "PHA-01": {
+      "total_ms": 5641.8,
+      "usage": {
+        "completion_tokens": 3326,
+        "prompt_tokens": 720,
+        "total_tokens": 4046,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2673
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 257
+        }
+      },
+      "prefix": null
+    },
+    "PHA-02": {
+      "total_ms": 5888.2,
+      "usage": {
+        "completion_tokens": 3499,
+        "prompt_tokens": 774,
+        "total_tokens": 4273,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2995
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 518
+        }
+      },
+      "prefix": null
+    }
+  }
+}

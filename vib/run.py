@@ -25,7 +25,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from . import prompts
-from .arms import Arm, all_arms, fake_arms
+from .arms import Arm, all_arms, fake_arms, screen_arms
 from .providers import json_call, stream_reply
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -38,7 +38,14 @@ def load_items(limit: int | None = None) -> list[dict]:
     return items[:limit] if limit else items
 
 
-def select_arms(spec: str, dry_run: bool) -> list[Arm]:
+def _screen(name: str) -> dict:
+    return json.loads((SCREEN / f"{name}.json").read_text(encoding="utf-8"))["data"]
+
+
+def select_arms(spec: str, dry_run: bool, screen: bool = False) -> list[Arm]:
+    if screen:  # 선별 실험: M1~M6 + 같은 시각 지연 대조용 기준 설정
+        pool = screen_arms() | {"mercury.A1": all_arms()["mercury.A1"]}
+        return list(pool.values()) if spec == "all" else [a for a in pool.values() if a.arm_id in spec.split(",")]
     pool = fake_arms() if dry_run else all_arms()
     if spec == "all":
         return list(pool.values())
@@ -64,6 +71,7 @@ def done_keys(path: Path) -> set[tuple[str, int]]:
 PROFILE = ROOT / "data" / "profile.json"
 AUTO = ROOT / "data" / "auto_context.json"
 HYPS = ROOT / "data" / "hypotheses.json"
+SCREEN = ROOT / "data" / "screen"
 
 
 def run_one(arm: Arm, item: dict, rep: int) -> dict:
@@ -107,6 +115,20 @@ def run_one(arm: Arm, item: dict, rep: int) -> dict:
         if mode == "auto_hyp":
             hyps = json.loads(HYPS.read_text(encoding="utf-8"))["hypotheses"][item["id"]]
             extra += "\n\n" + prompts.hypotheses_block(hyps)
+    elif mode in ("m1", "m2", "m3", "m4", "m5", "m6"):
+        profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+        log = json.loads(AUTO.read_text(encoding="utf-8"))["logs"][item["id"]]
+        base = prompts.auto_context(profile, log)
+        if mode in ("m1", "m2"):
+            extra = base + "\n\n" + prompts.hypotheses_block(_screen(f"{mode}_situations")[item["id"]])
+        elif mode == "m3":  # 다시 쓴 사실 요약이 로그를 대신한다
+            extra = prompts.facts_block(profile, _screen("m3_facts")[item["id"]])
+        elif mode == "m4":
+            extra = base + "\n\n" + prompts.INTERPRET_INLINE
+        elif mode == "m5":  # M1 의 상황 10개를 후보로 쓰고, 발화를 보고 고른다
+            extra = base + "\n\n" + prompts.candidates_block(_screen("m1_situations")[item["id"]])
+        else:  # m6: 발화 앞부분으로 만든 가설
+            extra = base + "\n\n" + prompts.hypotheses_block(_screen("m6_prefix")[item["id"]])
     elif mode == "context_checklist":
         cg = prompts.common_ground(json.loads(PROFILE.read_text(encoding="utf-8")), item["events"])
         extra = prompts.PRAGMATIC_CHECKLIST + "\n\n" + cg
@@ -127,6 +149,8 @@ def run_one(arm: Arm, item: dict, rep: int) -> dict:
             "error": res.error,
         }
     )
+    if res.hidden is not None:
+        row["hidden"] = res.hidden
     if not res.error and not res.text.strip():
         row["error"] = "empty_response"
     return row
@@ -177,6 +201,7 @@ def main() -> None:
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--check", action="store_true")
     ap.add_argument("--no-warmup", action="store_true")
+    ap.add_argument("--screen", action="store_true", help="4차 선별 실험 (M1~M6, 24문항)")
     args = ap.parse_args()
 
     load_dotenv(ROOT / ".env", override=True)
@@ -192,7 +217,7 @@ def main() -> None:
         sys.exit("dry-run 결과는 results/ 밖에 저장해야 합니다 (--out 지정)")
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    arms = select_arms(args.arms, args.dry_run)
+    arms = select_arms(args.arms, args.dry_run, args.screen)
     runnable, skipped = [], []
     for a in arms:
         (runnable if all(present.get(k) for k in a.keys) else skipped).append(a)
@@ -202,6 +227,9 @@ def main() -> None:
         sys.exit("실행할 조건이 없습니다")
 
     items = load_items(args.limit)
+    if args.screen:
+        from .screen_prep import SATURATED
+        items = [it for it in items if it["category"] not in SATURATED]
     groups: dict[str, list[Arm]] = defaultdict(list)
     for a in runnable:
         groups[a.provider].append(a)

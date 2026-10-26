@@ -1,0 +1,532 @@
+{
+  "meta": {
+    "generator": {
+      "provider": "inception",
+      "model": "mercury-3",
+      "params": {
+        "reasoning_effort": "low",
+        "temperature": 0.75,
+        "realtime": true,
+        "max_completion_tokens": 4096
+      }
+    },
+    "system": "m3_facts",
+    "created_at": "2026-10-26T17:26:47.805854+00:00"
+  },
+  "data": {
+    "QFR-01": [
+      "차량 주행 중",
+      "음악 꺼짐",
+      "운전 중 평소 재생: 'Drive' 플레이리스트",
+      "휴대폰 배터리 20%",
+      "택배 보관함 도착: 생활용품"
+    ],
+    "QFR-02": [
+      "현재 시각 18:02",
+      "차량이 성수동에 정차 중",
+      "오늘 18:30 지수와 강남역 11번 출구에서 저녁 약속",
+      "김 대리가 회의록을 올렸음",
+      "사용자의 집은 성수동"
+    ],
+    "QFR-03": [
+      "집. 밤 11시.",
+      "내일 알람 없음.",
+      "내일 일정: 09:30 출근.",
+      "평일 평소 기상 06:30.",
+      "직전 대화 없음."
+    ],
+    "IMP-01": [
+      "현재 위치: 집",
+      "현재 시간: 오후 3시",
+      "오늘 저녁 7시에 민수와 '파스타부오노' 예약을 제안받음",
+      "친구 생일이 다음 주 화요일",
+      "김 대리가 회의록을 올렸음"
+    ],
+    "IMP-02": [
+      "내일 오전 10시~11시 팀 회의가 예정되어 있음",
+      "치과 예약 확인 문자가 내일 오전 10시로 도착했으며, 회의와 겹침",
+      "치과 예약 가능 대안 시간은 내일 15:00와 16:00임",
+      "내일 14:00 이후 일정 없음",
+      "사용자는 현재 집에 있으며 저녁 9시임"
+    ],
+    "IMP-03": [
+      "토요일 강수확률 90%",
+      "일요일 맑음",
+      "가평 캠핑장: 일요일에도 자리 있음",
+      "사용자는 주말에 캠핑을 자주 감",
+      "기기 상태: 집, 수요일 저녁"
+    ],
+    "ELL-01": [
+      "현재 위치는 성수동이고 차량은 정차 중이며 오후 1시이다.",
+      "어제 12:30에 '할매순대국 성수점'에서 결제했다.",
+      "'할매순대국 성수점'의 영업시간은 11:00–21:00이다."
+    ],
+    "ELL-02": [
+      "사용자는 차량 주행 중이다",
+      "음악이 재생 중이다",
+      "현재 볼륨은 20이다",
+      "사용자는 방금 볼륨을 낮추라고 요청했다",
+      "비서가 볼륨을 20으로 낮췄다"
+    ],
+    "ELL-03": [
+      "사용자는 현재 회사에 있으며, 저녁 6시 30분이다.",
+      "1분 전 어머니께 '오늘 늦어요' 문자를 보냈다.",
+      "오늘 지하철 2호선 성수역에서 승차했다."
+    ],
+    "REP-01": [
+      "현재 집에 있으며 오전 9시다",
+      "로봇청소기 청소 완료 (거실·주방)",
+      "세탁기 탈수 완료",
+      "대출 도서 반납 예정일 3일 남음",
+      "다음 달 3일 건강검진 예정"
+    ],
+    "REP-02": [
+      "현재 시간은 오전 9시 50분이다",
+      "차량 주행 중이다",
+      "10시에 박 과장이 주관하는 회의가 예정되어 있다",
+      "자동차 보험 갱신 안내 메일을 수신했다",
+      "오늘 점심으로 김밥집에서 7,500원을 결제했다"
+    ],
+    "REP-03": [
+      "집에 있으며 평일 알람이 월~금 06:30으로 설정되어 있음",
+      "휴대폰 배터리가 20%임",
+      "오늘 걸음 수는 4,300보임",
+      "스마트워치 심박수는 72bpm임",
+      "음원 서비스 구독 갱신이 다음 주로 예정되어 있음"
+    ],
+    "AMB-01": [
+      "편의점에서 카드로 4,500원 결제가 방금 완료됨",
+      "비서가 영수증을 문자로 보내 드릴까요라고 물은 상태",
+      "사용자는 아직 결제 관련 질문에 응답하지 않음"
+    ],
+    "AMB-02": [
+      "비서가 방금 가습기를 켜 드릴까요라고 물음",
+      "실내 습도가 28%로 낮음",
+      "가습기 물통 잔량은 40%임",
+      "사용자는 집 거실에 있음"
+    ],
+    "AMB-03": [
+      "사용자가 오늘 저녁 7시에 '우리식당' 2인 예약을 요청했다.",
+      "비서가 7시는 자리가 없다고 하며 7시 반을 제안했다.",
+      "현재 기기 상태는 집, 오후 4시다."
+    ],
+    "SAR-01": [
+      "차량 길안내 중",
+      "방금 안내한 골목이 공사로 막혀 있음"
+    ],
+    "SAR-02": [
+      "현재 시각은 새벽 1시이다.",
+      "현재 위치는 집 침실이다.",
+      "직전 대화에서 사용자가 잠 잘 오는 음악을 요청했다.",
+      "비서는 수면 플레이리스트를 재생하겠다고 답변했다.",
+      "현재 재생 중인 곡은 헤비메탈 'Thunder Riot' (168 BPM)이다."
+    ],
+    "SAR-03": [
+      "배달 주문 후 70분 경과, 최초 예상 도착 30분",
+      "지하철 2호선 을지로입구역 승차",
+      "지하철 2호선 성수역 승차"
+    ],
+    "POL-01": [
+      "사용자는 현재 을지로에서 근무 중이며 오후 5시이다.",
+      "휴대폰 배터리가 20%로 낮다.",
+      "오늘 지하철 2호선 성수역에서 승차했다.",
+      "가계부 앱에서 이번 주 지출 요약이 도착했다.",
+      "공기청정기 필터 교체가 권장된다."
+    ],
+    "POL-02": [
+      "사용자는 현재 집에 있다.",
+      "피자 주문은 2분 전에 완료됐고, 가게는 아직 조리를 시작하지 않아 취소가 가능하다.",
+      "피자는 40분 후 도착 예정이다."
+    ],
+    "HON-01": [
+      "현재 집에 있으며 저녁 7시이다.",
+      "휴대폰 배터리가 20%이다.",
+      "공기청정기 필터 교체 권장 알림이 있다.",
+      "어제 할머니와 전화 통화를 했다.",
+      "택배로 운동화가 배송 출발했다."
+    ],
+    "MUL-01": [
+      "집에 있으며 밤 10시이다",
+      "내일 오전 10시에 스팀세차 성수점에서 세차 예약이 있다",
+      "내일 비 예보가 있다",
+      "체중계 기록 72.4kg",
+      "택배 보관함에 생활용품이 도착했다"
+    ],
+    "PHA-01": [
+      "현재 시각은 밤 9시이며, 집 현관에 도착한 상태다.",
+      "오늘 21:00에 귀가 기록이 있다.",
+      "캘린더에 다음 달 3일 건강검진 일정이 있다.",
+      "동기 모임 투표가 '다음 주 금요일?'로 진행 중이다.",
+      "오늘 일정 9개가 완료되었다."
+    ],
+    "PHA-02": [
+      "퇴근길 차량 신호 대기 중",
+      "경로상 3분 거리에 마트 있음",
+      "냉장고에 우유 없음 (어제 소진)",
+      "다음 달 3일 건강검진 예정",
+      "대출 도서 반납 예정일 3일 전"
+    ]
+  },
+  "calls": {
+    "QFR-01": {
+      "total_ms": 2746.8,
+      "usage": {
+        "completion_tokens": 1469,
+        "prompt_tokens": 618,
+        "total_tokens": 2087,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1356
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "prefix": null
+    },
+    "QFR-02": {
+      "total_ms": 749.0,
+      "usage": {
+        "completion_tokens": 222,
+        "prompt_tokens": 634,
+        "total_tokens": 856,
+        "completion_tokens_details": {
+          "reasoning_tokens": 2
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": null
+    },
+    "QFR-03": {
+      "total_ms": 430.7,
+      "usage": {
+        "completion_tokens": 65,
+        "prompt_tokens": 623,
+        "total_tokens": 688,
+        "completion_tokens_details": {
+          "reasoning_tokens": 3
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": null
+    },
+    "IMP-01": {
+      "total_ms": 2060.1,
+      "usage": {
+        "completion_tokens": 1052,
+        "prompt_tokens": 675,
+        "total_tokens": 1727,
+        "completion_tokens_details": {
+          "reasoning_tokens": 917
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": null
+    },
+    "IMP-02": {
+      "total_ms": 1660.7,
+      "usage": {
+        "completion_tokens": 955,
+        "prompt_tokens": 717,
+        "total_tokens": 1672,
+        "completion_tokens_details": {
+          "reasoning_tokens": 780
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": null
+    },
+    "IMP-03": {
+      "total_ms": 2228.4,
+      "usage": {
+        "completion_tokens": 1251,
+        "prompt_tokens": 686,
+        "total_tokens": 1937,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1093
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": null
+    },
+    "ELL-01": {
+      "total_ms": 1489.5,
+      "usage": {
+        "completion_tokens": 676,
+        "prompt_tokens": 692,
+        "total_tokens": 1368,
+        "completion_tokens_details": {
+          "reasoning_tokens": 598
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": null
+    },
+    "ELL-02": {
+      "total_ms": 1080.4,
+      "usage": {
+        "completion_tokens": 367,
+        "prompt_tokens": 656,
+        "total_tokens": 1023,
+        "completion_tokens_details": {
+          "reasoning_tokens": 258
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": null
+    },
+    "ELL-03": {
+      "total_ms": 4370.1,
+      "usage": {
+        "completion_tokens": 2004,
+        "prompt_tokens": 666,
+        "total_tokens": 2670,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1868
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "prefix": null
+    },
+    "REP-01": {
+      "total_ms": 3426.6,
+      "usage": {
+        "completion_tokens": 1784,
+        "prompt_tokens": 643,
+        "total_tokens": 2427,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1634
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": null
+    },
+    "REP-02": {
+      "total_ms": 1773.3,
+      "usage": {
+        "completion_tokens": 545,
+        "prompt_tokens": 641,
+        "total_tokens": 1186,
+        "completion_tokens_details": {
+          "reasoning_tokens": 389
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": null
+    },
+    "REP-03": {
+      "total_ms": 2229.9,
+      "usage": {
+        "completion_tokens": 984,
+        "prompt_tokens": 614,
+        "total_tokens": 1598,
+        "completion_tokens_details": {
+          "reasoning_tokens": 852
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": null
+    },
+    "AMB-01": {
+      "total_ms": 2348.9,
+      "usage": {
+        "completion_tokens": 1010,
+        "prompt_tokens": 634,
+        "total_tokens": 1644,
+        "completion_tokens_details": {
+          "reasoning_tokens": 853
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": null
+    },
+    "AMB-02": {
+      "total_ms": 2111.3,
+      "usage": {
+        "completion_tokens": 918,
+        "prompt_tokens": 623,
+        "total_tokens": 1541,
+        "completion_tokens_details": {
+          "reasoning_tokens": 814
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": null
+    },
+    "AMB-03": {
+      "total_ms": 3410.2,
+      "usage": {
+        "completion_tokens": 1214,
+        "prompt_tokens": 693,
+        "total_tokens": 1907,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1135
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": null
+    },
+    "SAR-01": {
+      "total_ms": 2789.7,
+      "usage": {
+        "completion_tokens": 1195,
+        "prompt_tokens": 647,
+        "total_tokens": 1842,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1095
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": null
+    },
+    "SAR-02": {
+      "total_ms": 1539.2,
+      "usage": {
+        "completion_tokens": 563,
+        "prompt_tokens": 707,
+        "total_tokens": 1270,
+        "completion_tokens_details": {
+          "reasoning_tokens": 410
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": null
+    },
+    "SAR-03": {
+      "total_ms": 5329.1,
+      "usage": {
+        "completion_tokens": 1736,
+        "prompt_tokens": 657,
+        "total_tokens": 2393,
+        "completion_tokens_details": {
+          "reasoning_tokens": 1622
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "prefix": null
+    },
+    "POL-01": {
+      "total_ms": 1774.1,
+      "usage": {
+        "completion_tokens": 451,
+        "prompt_tokens": 615,
+        "total_tokens": 1066,
+        "completion_tokens_details": {
+          "reasoning_tokens": 294
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": null
+    },
+    "POL-02": {
+      "total_ms": 3029.6,
+      "usage": {
+        "completion_tokens": 938,
+        "prompt_tokens": 647,
+        "total_tokens": 1585,
+        "completion_tokens_details": {
+          "reasoning_tokens": 768
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": null
+    },
+    "HON-01": {
+      "total_ms": 1776.8,
+      "usage": {
+        "completion_tokens": 433,
+        "prompt_tokens": 621,
+        "total_tokens": 1054,
+        "completion_tokens_details": {
+          "reasoning_tokens": 249
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": null
+    },
+    "MUL-01": {
+      "total_ms": 460.4,
+      "usage": {
+        "completion_tokens": 78,
+        "prompt_tokens": 638,
+        "total_tokens": 716,
+        "completion_tokens_details": {
+          "reasoning_tokens": 3
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": null
+    },
+    "PHA-01": {
+      "total_ms": 899.4,
+      "usage": {
+        "completion_tokens": 324,
+        "prompt_tokens": 636,
+        "total_tokens": 960,
+        "completion_tokens_details": {
+          "reasoning_tokens": 164
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": null
+    },
+    "PHA-02": {
+      "total_ms": 1590.2,
+      "usage": {
+        "completion_tokens": 797,
+        "prompt_tokens": 650,
+        "total_tokens": 1447,
+        "completion_tokens_details": {
+          "reasoning_tokens": 640
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": null
+    }
+  }
+}

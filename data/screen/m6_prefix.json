@@ -1,0 +1,908 @@
+{
+  "meta": {
+    "generator": {
+      "provider": "inception",
+      "model": "mercury-3",
+      "params": {
+        "reasoning_effort": "instant",
+        "temperature": 0.75,
+        "realtime": true,
+        "max_completion_tokens": 4096
+      }
+    },
+    "system": "m6_prefix",
+    "created_at": "2026-10-26T17:27:16.487117+00:00"
+  },
+  "data": {
+    "QFR-01": [
+      {
+        "text": "운전 중이므로 평소 재생하던 'Drive' 플레이리스트를 틀어달라고 할 것이다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "음악 종류나 분위기를 지정하며 특정 플레이리스트나 장르를 요청할 것이다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "차량 내 내비게이션이나 목적지 설정을 함께 요청할 수도 있다.",
+        "confidence": 0.3
+      },
+      {
+        "text": "음악을 틀면서 볼륨이나 재생 방식을 조절하라고 지시할 것이다.",
+        "confidence": 0.4
+      },
+      {
+        "text": "최근 메신저 내용과 관련해 회의록이나 주간 보고를 음성으로 확인하려 할 수도 있다.",
+        "confidence": 0.2
+      }
+    ],
+    "QFR-02": [
+      {
+        "text": "사용자가 지금 출발하면 강남역에 18:30 전에 도착할 수 있는지 시간을 계산하고 있다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "사용자가 강남역 11번 출구까지 가는 최적 경로를 확인하거나 내비게이션 목적지를 설정하려 한다.",
+        "confidence": 0.8
+      },
+      {
+        "text": "사용자가 현재 교통 상황이나 지연 가능성을 물어보려 한다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자가 지수와의 저녁 약속에 늦지 않도록 출발 시각을 조정하려 한다.",
+        "confidence": 0.85
+      },
+      {
+        "text": "사용자가 도착 예상 시각을 미리 알려달라고 요청하려 한다.",
+        "confidence": 0.7
+      }
+    ],
+    "QFR-03": [
+      {
+        "text": "내일 아침에 깨워달라고 요청하며, 평소 기상 시간인 06:30에 맞춰 알람을 설정해달라고 할 것이다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "내일 아침에 일찍 일어나야 할 일이 있어서, 평소보다 이른 시간에 깨워달라고 요청할 것이다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "수면 음악을 틀어달라고 요청하면서, 동시에 아침에 깨워달라고 부탁할 것이다.",
+        "confidence": 0.4
+      },
+      {
+        "text": "내일 아침 일정이 변경되어 출근 시간이 달라졌는지 확인하고, 그에 맞춰 깨워달라고 요청할 것이다.",
+        "confidence": 0.3
+      },
+      {
+        "text": "아침에 중요한 약속이나 회의가 있어서, 여러 번 깨워달라고 요청할 것이다.",
+        "confidence": 0.2
+      }
+    ],
+    "IMP-01": [
+      {
+        "text": "사용자가 민수의 최근 근황(예: 일, 건강, 취미)을 공유하며 저녁 약속의 분위기나 주제를 정하려 할 수 있다.",
+        "confidence": 0.85
+      },
+      {
+        "text": "사용자가 민수의 일정이 바빠 약속 시간을 조정하거나 다른 날로 미뤄야 할지 상의하려 할 수 있다.",
+        "confidence": 0.75
+      },
+      {
+        "text": "사용자가 민수와의 약속에 대해 민수가 선호하는 음식이나 장소를 언급하며 예약 변경을 제안할 수 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자가 민수의 생일이나 특별한 일이 다가와 선물이나 이벤트를 준비해야 하는지 이야기할 수 있다.",
+        "confidence": 0.45
+      },
+      {
+        "text": "사용자가 민수와의 과거 대화나 일정을 회상하며 비서에게 관련 기록을 확인해 달라고 요청할 수 있다.",
+        "confidence": 0.3
+      }
+    ],
+    "IMP-02": [
+      {
+        "text": "사용자가 내일 오전 10시 팀 회의 때문에 치과 예약을 다른 시간으로 변경하고 싶어 한다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "사용자가 내일 오전 팀 회의 일정을 확인하며 치과 예약을 오후로 미루려 한다.",
+        "confidence": 0.85
+      },
+      {
+        "text": "사용자가 내일 오전 팀 회의가 있어서 치과 예약을 취소하고 싶어 한다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자가 내일 오전 팀 회의 시간을 비서에게 알려주며 치과 예약 가능 시간을 다시 확인하려 한다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자가 내일 오전 팀 회의가 끝난 후 치과에 갈 수 있는지 비서에게 물어보려 한다.",
+        "confidence": 0.75
+      }
+    ],
+    "IMP-03": [
+      {
+        "text": "사용자가 토요일 비 소식에 대해 확인하려 한다.",
+        "confidence": 0.85
+      },
+      {
+        "text": "사용자가 비 때문에 캠핑 예약을 취소하려 한다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자가 일요일로 캠핑을 옮길 수 있는지 묻는다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자가 비 오는 토요일에 대체 활동을 추천받으려 한다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자가 비가 와도 캠핑을 가겠다고 말하려 한다.",
+        "confidence": 0.3
+      }
+    ],
+    "ELL-01": [
+      {
+        "text": "사용자가 지금 할매순대국 성수점에 방문하려 하며, 영업 여부를 확인하려 한다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "사용자가 지금 할매순대국 성수점에 가려고 차량 이동 경로를 확인하려 할 수 있다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자가 할매순대국 성수점의 현재 혼잡도나 대기 시간을 궁금해할 수 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자가 할매순대국 성수점에서 결제나 주문에 필요한 정보를 미리 확인하려 할 수 있다.",
+        "confidence": 0.4
+      },
+      {
+        "text": "사용자가 할매순대국 성수점의 메뉴나 가격을 다시 확인하려 할 수 있다.",
+        "confidence": 0.3
+      }
+    ],
+    "ELL-02": [
+      {
+        "text": "사용자가 볼륨을 더 낮추길 원한다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자가 음악을 끄거나 일시정지하길 원한다.",
+        "confidence": 0.4
+      },
+      {
+        "text": "사용자가 음악을 다른 곡으로 바꾸길 원한다.",
+        "confidence": 0.3
+      },
+      {
+        "text": "사용자가 음량을 다시 35로 올리길 원한다.",
+        "confidence": 0.15
+      },
+      {
+        "text": "사용자가 조용히 하고 싶어서 음악을 완전히 끄길 원한다.",
+        "confidence": 0.25
+      }
+    ],
+    "ELL-03": [
+      {
+        "text": "아빠께도 '오늘 늦어요'라는 문자를 보내달라고 요청할 것이다",
+        "confidence": 0.9
+      },
+      {
+        "text": "아빠께 오늘 저녁 약속이나 일정이 늦어진다는 내용을 전달하려 할 것이다",
+        "confidence": 0.75
+      },
+      {
+        "text": "아빠께 문자를 보낸 후, 어머니께도 추가로 안내하거나 확인 요청을 할 것이다",
+        "confidence": 0.4
+      },
+      {
+        "text": "아빠께 캠핑 주말 일정에 대한 변경을 알리려 할 것이다",
+        "confidence": 0.25
+      },
+      {
+        "text": "아빠께 오늘 귀가 시간을 묻거나 저녁 식사 여부를 확인하려 할 것이다",
+        "confidence": 0.2
+      }
+    ],
+    "REP-01": [
+      {
+        "text": "모레 오후 3시에 건강검진 예약을 확인하거나 변경하려 할 수 있다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "내일 또는 모레 오후 3시에 치과 방문 일정을 확인하거나 조정하려 할 수 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "반납 예정일이 3일 남은 도서를 모레 오후 3시에 반납하려 할 수 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "친구(민수나 지수)와 모레 오후 3시에 만나기로 한 약속을 확인하려 할 수 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "주말 캠핑 준비를 위해 모레 오후 3시에 장비 대여나 예약을 하려 할 수 있다.",
+        "confidence": 0.4
+      }
+    ],
+    "REP-02": [
+      {
+        "text": "사용자가 박 과장님에게 회의 시작 전에 지각이나 지연 사실을 알리려고 한다.",
+        "confidence": 0.8
+      },
+      {
+        "text": "사용자가 김 대리에게 회의 자료나 준비 사항을 확인하는 문자를 보내려 한다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자가 박 과장님에게 회의 일정 변경이나 취소를 요청하려 한다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자가 김 대리에게 오늘 점심 약속이나 업무 관련 용건을 전달하려 한다.",
+        "confidence": 0.4
+      },
+      {
+        "text": "사용자가 박 과장님에게 차량 지연으로 인해 회의에 늦을 것임을 알리려 한다.",
+        "confidence": 0.7
+      }
+    ],
+    "REP-03": [
+      {
+        "text": "사용자가 평일 06:30 알람을 다른 시간으로 변경하려 한다.",
+        "confidence": 0.85
+      },
+      {
+        "text": "사용자가 주말이나 특정 요일에 새 알람을 추가하려 한다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자가 기존 알람을 삭제하고 싶어 한다.",
+        "confidence": 0.45
+      },
+      {
+        "text": "사용자가 알람 소리를 바꾸거나 볼륨을 조정하려 한다.",
+        "confidence": 0.3
+      },
+      {
+        "text": "사용자가 여러 알람을 한 번에 관리하거나 정리하려 한다.",
+        "confidence": 0.25
+      }
+    ],
+    "AMB-01": [
+      {
+        "text": "영수증은 문자로 보내 주세요.",
+        "confidence": 0.85
+      },
+      {
+        "text": "운동화 택배 언제 도착해요?",
+        "confidence": 0.75
+      },
+      {
+        "text": "자동차 보험 갱신 내용 좀 알려줘.",
+        "confidence": 0.7
+      },
+      {
+        "text": "이번 주말 캠핑 날씨 어때요?",
+        "confidence": 0.65
+      },
+      {
+        "text": "오늘 걸음 수랑 체중 기록 좀 보여줘.",
+        "confidence": 0.6
+      }
+    ],
+    "AMB-02": [
+      {
+        "text": "가습기는 켜지 말라고 거절하면서, 대신 창문을 열어달라고 요청할 것",
+        "confidence": 0.5
+      },
+      {
+        "text": "가습기 대신 공기청정기 필터를 교체해달라고 요청할 것",
+        "confidence": 0.35
+      },
+      {
+        "text": "실내 습도가 낮아서 피부가 건조하다고 불평하며, 보습제나 물을 추천해달라고 요청할 것",
+        "confidence": 0.3
+      },
+      {
+        "text": "건강검진 관련해서 예약 시간이나 준비사항을 물어볼 것",
+        "confidence": 0.25
+      },
+      {
+        "text": "환율 상승 소식을 듣고, 환전이나 해외 결제 관련 조언을 요청할 것",
+        "confidence": 0.2
+      }
+    ],
+    "AMB-03": [
+      {
+        "text": "7시 30분으로 예약을 확정해 달라고 요청할 것이다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "예약 확정 후 식당 위치나 주차 정보를 물어볼 것이다.",
+        "confidence": 0.4
+      },
+      {
+        "text": "예약 변경과 함께 다른 일정(예: 퇴근 후 이동 경로)을 확인할 것이다.",
+        "confidence": 0.3
+      },
+      {
+        "text": "예약 확정 후 상대방(동행자)에게 알림을 보내 달라고 할 것이다.",
+        "confidence": 0.2
+      },
+      {
+        "text": "7시 30분 예약이 확정되면 휴대폰 배터리 충전을 요청할 것이다.",
+        "confidence": 0.1
+      }
+    ],
+    "SAR-01": [
+      {
+        "text": "사용자가 공사로 막힌 골목을 발견하고 길이 막혀 불편하다는 불만을 표현하려 한다.",
+        "confidence": 0.85
+      },
+      {
+        "text": "사용자가 현재 길안내에 대해 대체 경로를 요청하려 한다.",
+        "confidence": 0.8
+      },
+      {
+        "text": "사용자가 목적지까지 도착 예정 시간이 지연될 것을 걱정하며 이를 확인하려 한다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자가 공사 구간을 피하기 위해 주변 주차 가능 여부를 물어보려 한다.",
+        "confidence": 0.55
+      },
+      {
+        "text": "사용자가 공사로 인해 다른 경로로 안내해 달라고 요청하려 한다.",
+        "confidence": 0.6
+      }
+    ],
+    "SAR-02": [
+      {
+        "text": "현재 재생 중인 헤비메탈 음악이 너무 시끄러워서 잠이 오지 않는다고 불만을 표현하려 한다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "수면 음악이 효과가 없다고 느껴 다른 수면 음악이나 볼륨 조절을 요청하려 한다.",
+        "confidence": 0.85
+      },
+      {
+        "text": "잠이 오지 않아 수면 유도 음악 대신 백색소음이나 자연의 소리를 요청하려 한다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "내일 일정이 있어서 지금 당장 자야 한다는 걱정을 말하며 음악을 꺼 달라고 요청하려 한다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "수면 음악을 들으면서도 잠이 안 와서 수면 보조제나 다른 방법을 추천해 달라고 요청하려 한다.",
+        "confidence": 0.5
+      }
+    ],
+    "SAR-03": [
+      {
+        "text": "배달이 너무 늦어서 주문 상태나 라이더 위치를 확인하려는 중이다.",
+        "confidence": 0.85
+      },
+      {
+        "text": "배달 지연에 대해 불만을 표현하며 환불이나 보상 요청을 하려는 중이다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "환율 상승 뉴스를 보고 해외 결제나 환전 관련 질문을 하려는 중이다.",
+        "confidence": 0.35
+      },
+      {
+        "text": "도서 반납 예정일이 가까워서 대출 도서를 반납하거나 연장하는 방법을 묻으는 중이다.",
+        "confidence": 0.3
+      },
+      {
+        "text": "주말 캠핑 준비와 관련해 날씨나 장비 확인을 요청하려는 중이다.",
+        "confidence": 0.25
+      }
+    ],
+    "POL-01": [
+      {
+        "text": "을지로 근처 한식당(을지면옥 등)을 추천해 달라고 요청할 것이다",
+        "confidence": 0.85
+      },
+      {
+        "text": "직장 동료 또는 상사와 오늘 저녁 식사 약속을 제안할 것이다",
+        "confidence": 0.7
+      },
+      {
+        "text": "매운 음식 위주로 저녁 메뉴를 추천해 달라고 물어볼 것이다",
+        "confidence": 0.6
+      },
+      {
+        "text": "저녁 식사 후 귀가할 교통편이나 시간을 확인할 것이다",
+        "confidence": 0.45
+      },
+      {
+        "text": "오늘 저녁 약속이 있는지 일정을 확인해 달라고 요청할 것이다",
+        "confidence": 0.4
+      }
+    ],
+    "POL-02": [
+      {
+        "text": "피자 주문을 취소하려 한다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "피자 배달 예상 시간이 너무 늦어서 시간을 확인하거나 변경하려 한다.",
+        "confidence": 0.55
+      },
+      {
+        "text": "피자 메뉴나 토핑을 변경하려 한다.",
+        "confidence": 0.45
+      },
+      {
+        "text": "배달 주소를 다른 곳으로 바꾸려 한다.",
+        "confidence": 0.35
+      },
+      {
+        "text": "결제 수단이나 쿠폰 적용을 변경하려 한다.",
+        "confidence": 0.25
+      }
+    ],
+    "HON-01": [
+      {
+        "text": "할머니께 저녁을 먹었는지 여쭤보고, 식사를 안 하셨다면 음식 배달이나 방문을 제안할 수 있다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "할머니의 건강 상태나 오늘 하루 일과를 물어보며 안부를 확인하려고 한다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "할머니와의 통화 중에 다음 주말에 방문할 계획을 이야기할 가능성이 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "할머니께 드릴 선물이나 필요한 물건이 있는지 물어보려고 한다.",
+        "confidence": 0.4
+      },
+      {
+        "text": "할머니의 휴대폰이나 기기 사용에 문제가 없는지 확인하려고 한다.",
+        "confidence": 0.3
+      }
+    ],
+    "MUL-01": [
+      {
+        "text": "사용자가 엄마에게 내일 비가 오니 우산을 챙기라고 전해 달라고 요청하고 있다.",
+        "confidence": 0.85
+      },
+      {
+        "text": "사용자가 아빠에게 내일 비가 오니 우산을 챙기라고 전해 달라고 요청하고 있다.",
+        "confidence": 0.75
+      },
+      {
+        "text": "사용자가 할머니에게 내일 비가 오니 우산을 챙기라고 전해 달라고 요청하고 있다.",
+        "confidence": 0.68
+      },
+      {
+        "text": "사용자가 내일 오전 10시 세차 예약을 비 때문에 취소하거나 연기하고 싶어 한다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자가 친구 민수나 지수에게 내일 비가 오니 우산을 챙기라고 알려주고 싶어 한다.",
+        "confidence": 0.4
+      }
+    ],
+    "PHA-01": [
+      {
+        "text": "사용자가 오늘 하루가 매우 힘들었다고 말하며 피로를 호소할 것이다",
+        "confidence": 0.85
+      },
+      {
+        "text": "사용자가 동기 모임 투표 결과나 다음 주 금요일 일정에 대해 이야기할 것이다",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자가 오늘 완료한 9개 일정 중 특정 업무나 회사 일에 대해 불만을 토로할 것이다",
+        "confidence": 0.55
+      },
+      {
+        "text": "사용자가 카드 포인트나 가계부 지출에 대해 언급하며 소비 관련 이야기를 할 것이다",
+        "confidence": 0.4
+      },
+      {
+        "text": "사용자가 내일이나 주말 계획(캠핑 등)에 대해 물어보거나 이야기할 것이다",
+        "confidence": 0.35
+      }
+    ],
+    "PHA-02": [
+      {
+        "text": "사용자가 퇴근길에 우유가 없다는 것을 떠올리고 경로상 마트에 들러 우유를 사려고 할 것이다.",
+        "confidence": 0.85
+      },
+      {
+        "text": "사용자가 다음 달 건강검진 일정을 확인하거나 예약을 변경하려고 할 것이다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자가 대출 도서 반납 예정일이 다가와 도서관에 들러 반납할 것을 생각났 것이다.",
+        "confidence": 0.55
+      },
+      {
+        "text": "사용자가 동기 모임 투표에 참여하지 않았다는 것을 떠올리고 투표하라고 할 것이다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자가 집에 도착한 후 로봇청소기 상태를 확인하거나 다른 집안일을 지시하려고 할 것이다.",
+        "confidence": 0.35
+      }
+    ]
+  },
+  "calls": {
+    "QFR-01": {
+      "total_ms": 1189.4,
+      "usage": {
+        "completion_tokens": 327,
+        "prompt_tokens": 637,
+        "total_tokens": 964,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "prefix": "음악 좀 틀"
+    },
+    "QFR-02": {
+      "total_ms": 1272.6,
+      "usage": {
+        "completion_tokens": 314,
+        "prompt_tokens": 667,
+        "total_tokens": 981,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": "지금 출발하면 강남역에 여섯 시"
+    },
+    "QFR-03": {
+      "total_ms": 1388.8,
+      "usage": {
+        "completion_tokens": 357,
+        "prompt_tokens": 642,
+        "total_tokens": 999,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": "혹시 내일 아침에 깨워 줄"
+    },
+    "IMP-01": {
+      "total_ms": 1386.2,
+      "usage": {
+        "completion_tokens": 365,
+        "prompt_tokens": 675,
+        "total_tokens": 1040,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": "음 민수 요즘"
+    },
+    "IMP-02": {
+      "total_ms": 1122.1,
+      "usage": {
+        "completion_tokens": 322,
+        "prompt_tokens": 720,
+        "total_tokens": 1042,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": "내일 오전엔 팀"
+    },
+    "IMP-03": {
+      "total_ms": 1342.7,
+      "usage": {
+        "completion_tokens": 343,
+        "prompt_tokens": 676,
+        "total_tokens": 1019,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": "토요일에 비"
+    },
+    "ELL-01": {
+      "total_ms": 1527.0,
+      "usage": {
+        "completion_tokens": 340,
+        "prompt_tokens": 702,
+        "total_tokens": 1042,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": "거기 지금 열었나"
+    },
+    "ELL-02": {
+      "total_ms": 750.5,
+      "usage": {
+        "completion_tokens": 231,
+        "prompt_tokens": 658,
+        "total_tokens": 889,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "prefix": "아니 좀"
+    },
+    "ELL-03": {
+      "total_ms": 928.8,
+      "usage": {
+        "completion_tokens": 279,
+        "prompt_tokens": 660,
+        "total_tokens": 939,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": "아빠한테도"
+    },
+    "REP-01": {
+      "total_ms": 992.3,
+      "usage": {
+        "completion_tokens": 325,
+        "prompt_tokens": 636,
+        "total_tokens": 961,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": "내일 어 아니 모레 오후 세"
+    },
+    "REP-02": {
+      "total_ms": 1125.1,
+      "usage": {
+        "completion_tokens": 303,
+        "prompt_tokens": 652,
+        "total_tokens": 955,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": "김 대리한테 아 아니다 박 과장님한테 문자"
+    },
+    "REP-03": {
+      "total_ms": 1191.1,
+      "usage": {
+        "completion_tokens": 311,
+        "prompt_tokens": 638,
+        "total_tokens": 949,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": "알람 여섯 시 반 아 그거 말고 그냥"
+    },
+    "AMB-01": {
+      "total_ms": 1150.1,
+      "usage": {
+        "completion_tokens": 294,
+        "prompt_tokens": 657,
+        "total_tokens": 951,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": "아"
+    },
+    "AMB-02": {
+      "total_ms": 1230.3,
+      "usage": {
+        "completion_tokens": 310,
+        "prompt_tokens": 622,
+        "total_tokens": 932,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": "됐어"
+    },
+    "AMB-03": {
+      "total_ms": 1128.7,
+      "usage": {
+        "completion_tokens": 294,
+        "prompt_tokens": 681,
+        "total_tokens": 975,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": "음 반이면 괜찮을"
+    },
+    "SAR-01": {
+      "total_ms": 1021.2,
+      "usage": {
+        "completion_tokens": 262,
+        "prompt_tokens": 643,
+        "total_tokens": 905,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": "와 길 진짜 잘"
+    },
+    "SAR-02": {
+      "total_ms": 1452.1,
+      "usage": {
+        "completion_tokens": 379,
+        "prompt_tokens": 704,
+        "total_tokens": 1083,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": "하 이거 들으면 잠"
+    },
+    "SAR-03": {
+      "total_ms": 1424.1,
+      "usage": {
+        "completion_tokens": 321,
+        "prompt_tokens": 650,
+        "total_tokens": 971,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": "와 빨리도"
+    },
+    "POL-01": {
+      "total_ms": 1061.1,
+      "usage": {
+        "completion_tokens": 314,
+        "prompt_tokens": 649,
+        "total_tokens": 963,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": "혹시 시간 괜찮으면 오늘 저녁 먹을 만한"
+    },
+    "POL-02": {
+      "total_ms": 1103.6,
+      "usage": {
+        "completion_tokens": 251,
+        "prompt_tokens": 683,
+        "total_tokens": 934,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": "아 근데 그거"
+    },
+    "HON-01": {
+      "total_ms": 1288.8,
+      "usage": {
+        "completion_tokens": 317,
+        "prompt_tokens": 620,
+        "total_tokens": 937,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": "할머니한테 저녁 먹었냐고"
+    },
+    "MUL-01": {
+      "total_ms": 930.1,
+      "usage": {
+        "completion_tokens": 389,
+        "prompt_tokens": 670,
+        "total_tokens": 1059,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": "내일 비 온다며 그럼 아침에 우산 챙기라고 말해"
+    },
+    "PHA-01": {
+      "total_ms": 1168.2,
+      "usage": {
+        "completion_tokens": 330,
+        "prompt_tokens": 638,
+        "total_tokens": 968,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "prefix": "아 오늘 진짜"
+    },
+    "PHA-02": {
+      "total_ms": 1502.8,
+      "usage": {
+        "completion_tokens": 356,
+        "prompt_tokens": 678,
+        "total_tokens": 1034,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "prefix": "아 맞다"
+    }
+  }
+}
