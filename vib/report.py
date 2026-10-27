@@ -567,6 +567,7 @@ def main() -> None:
     selfhyp_luna()
     selfhyp_persona()
     travel_summary()
+    travel_temp()
     gap = gap_closure(table, per_item_by_arm)
     write_gap(gap, table)
     for fname, methods, colors, note in GAP_CHARTS:
@@ -1258,6 +1259,60 @@ def travel_summary() -> None:
         lines += ["", "**게이트(Jev) 점검**", "", "| 대상 | 기준 | 관련 기록 재현율 | 관련 기록을 모두 남긴 문항 | 그 밖의 기록 통과율 | 아무것도 남지 않은 문항 | 게이트 시간 p50 / p90 |",
                   "|---|---|---|---|---|---|---|", *grows]
     (tdir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def travel_temp() -> None:
+    """온도 시험: 여행 20문항, 기억 전체 조건에서 응답 모델 temperature 를 바꿔 공식 음성 설정(0.75)과 같은 실행에서 3회씩 비교한다.
+    흔들림은 같은 문항·같은 입력의 반복끼리 점수와 응답 글자가 얼마나 다른지로 잰다."""
+    root = RES / "travel" / "temp"
+    if not (root / "judged").exists():
+        return
+    out = []
+    # 본 실행: 0.5(Mercury 3 최솟값) 대 0.75. 첫 실행은 0 을 보냈으나 범위(0.5~1) 밖이라 API 가 1 로 바꿨으므로 '1 대 0.75' 로 따로 싣는다
+    for tdir, arms, title in ((root, [("mercury.A0+TM", "0.75 (공식 음성 설정)"), ("mercury.A0+TM05", "0.5 (최솟값)")], "temperature 0.5 대 0.75"),
+                              (root / "run1_t0_reset_to_1", [("mercury.A0+TM", "0.75 (공식 음성 설정)"), ("mercury.A0+TM0", "1 (0 을 보냈으나 API 가 1 로 바꿈)")],
+                               "첫 실행: temperature 1 대 0.75")):
+        if (tdir / "judged").exists():
+            out += [f"**{title}**", "", *_temp_block(tdir, arms), ""]
+    (root / "summary.md").write_text("\n".join(out).rstrip() + "\n", encoding="utf-8")
+
+
+def _temp_block(tdir: Path, arms: list[tuple[str, str]]) -> list[str]:
+    from itertools import combinations
+    items = {x["id"]: x for x in json.loads((ROOT / "data" / "travel" / "items.json").read_text(encoding="utf-8"))}
+    paired = sorted(k for k, x in items.items() if x["pair"])
+    control = sorted(k for k, x in items.items() if not x["pair"])
+    per = {a: _per_item_judged(tdir / "judged" / f"{a}.jsonl") for a, _ in arms}
+    reps = max(r["rep"] for r in _jsonl(tdir / "raw" / f"{arms[0][0]}.jsonl"))
+    lines = [f"여행 20문항(짝 16, 대조 4), 기억 전체 조건, Mercury 3 instant 응답. temperature 만 다르고 두 조건을 같은 실행에서 문항마다 번갈아 {reps}회씩 돌림. "
+             "흔들림은 같은 문항의 반복끼리 비교합니다(반복 쌍은 문항마다 3개).", "",
+             "| temperature | 전체 | 짝 문항 | 대조 문항 | 반복끼리 점수가 다른 쌍 | 3회 점수가 모두 같지 않은 문항 | 반복끼리 응답 글자가 같은 쌍 | 문항당 서로 다른 응답 수 | 2점 응답 | 첫 발화 p50 / p90 |",
+             "|---|---|---|---|---|---|---|---|---|---|"]
+    for arm, info in arms:
+        sc, tx = defaultdict(dict), defaultdict(dict)
+        for j in _jsonl(tdir / "judged" / f"{arm}.jsonl"):
+            if not j.get("judge_error"):
+                sc[j["item_id"]][j["rep"]] = j["score"]
+        raw = [r for r in _jsonl(tdir / "raw" / f"{arm}.jsonl") if not r.get("error")]
+        for r in raw:
+            tx[r["item_id"]][r["rep"]] = r["text"].strip()
+        pairs = [(v[a], v[b]) for v in sc.values() for a, b in combinations(sorted(v), 2)]
+        tpairs = [(v[a], v[b]) for v in tx.values() for a, b in combinations(sorted(v), 2)]
+        split = sum(1 for v in sc.values() if len(set(v.values())) > 1)
+        distinct = statistics.mean(len(set(v.values())) for v in tx.values())
+        allsc = [x for v in sc.values() for x in v.values()]
+        acc = lambda ks: f"{statistics.mean(per[arm][k] for k in ks) * 100:.1f}%"
+        t = [r["e2e_first_ms"] for r in raw]
+        lines.append(f"| {info} | {acc(sorted(items))} | {acc(paired)} | {acc(control)} | {sum(a != b for a, b in pairs)}/{len(pairs)} | "
+                     f"{split}/{len(sc)} | {sum(a == b for a, b in tpairs)}/{len(tpairs)} | {distinct:.1f} | {allsc.count(2)}/{len(allsc)} | "
+                     f"{_pct(t, 0.5):,.0f} / {_pct(t, 0.9):,.0f}ms |")
+    a, b = per[arms[1][0]], per[arms[0][0]]
+    parts = []
+    for lab, ks in (("전체 20문항", sorted(items)), ("짝 16문항", paired)):
+        m, lo, hi, _ = _boot_diff({k: a[k] - b[k] for k in ks})
+        parts.append(f"{lab} {m * 100:+.1f}%p ({lo * 100:.1f}–{hi * 100:.1f})")
+    lines += ["", f"{arms[1][1].split(' (')[0]} 대 0.75 (같은 실행, 문항끼리 짝지음): " + ", ".join(parts) + "."]
+    return lines
 
 def _per_item_judged(path: Path) -> dict[str, float]:
     d = defaultdict(list)

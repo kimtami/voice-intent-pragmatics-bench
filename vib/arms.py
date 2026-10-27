@@ -251,7 +251,12 @@ TRAVEL_CONDS = {
     # 맥락 게이트: Jev 공통 상태에 프로필과 기억 전체를 더해 매긴 점수로 거른다 (질문은 그대로 기억 1개씩)
     "TK4": "맥락 게이트 0.4 (프로필·기억 전체를 보고 매긴 관련도 0.4 이상만)",
     "TK5": "맥락 게이트 0.5 (프로필·기억 전체를 보고 매긴 관련도 0.5 이상만)",
+    # 온도 시험: 기억 전체와 같고 응답 모델의 temperature 만 다르다 (공식 음성 설정 0.75 와 같은 실행에서 비교).
+    # Mercury 3 의 temperature 범위는 0.5~1 이고 범위 밖 값은 1 로 바뀐다(API 경고). TM0 은 0 을 보냈다가 실제로는 1 로 돈 첫 실행의 기록용이다.
+    "TM0": "기억 전체, temperature 0 을 보냄 (범위 밖이라 API 가 1 로 바꿈)",
+    "TM05": "기억 전체, temperature 0.5 (Mercury 3 최솟값)",
 }
+TRAVEL_PARAMS = {"TM0": {"temperature": 0.0}, "TM05": {"temperature": 0.5}}  # 조건별로 바꾸는 응답 파라미터
 
 
 def travel_arms() -> dict[str, Arm]:
@@ -259,6 +264,6 @@ def travel_arms() -> dict[str, Arm]:
     arms = {}
     for cond in TRAVEL_CONDS:
         keys = [m["key"]] + (["TYPESAFE_API_KEY"] if cond[:2] in ("TJ", "TK") else [])
-        arms[f"mercury.A0+{cond}"] = Arm(f"mercury.A0+{cond}", "mercury", cond, m["provider"], m["model"], m["A0"], keys,
+        arms[f"mercury.A0+{cond}"] = Arm(f"mercury.A0+{cond}", "mercury", cond, m["provider"], m["model"], m["A0"] | TRAVEL_PARAMS.get(cond, {}), keys,
                                          extra={"mode": "travel", "base_arm": "mercury.A0"})
     return arms

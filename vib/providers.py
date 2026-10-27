@@ -173,6 +173,8 @@ def stream_reply(provider: str, model: str, system: str, messages: list[dict], p
             return clock.finish(usage)
 
         if provider == "inception":
+            if model == "mercury-3" and not 0.5 <= params["temperature"] <= 1:  # 범위 밖이면 API 가 경고만 하고 1 로 바꾼다
+                raise ValueError(f"mercury-3 temperature 는 0.5~1 이어야 합니다: {params['temperature']}")
             stream = _inception().chat.completions.create(
                 model=model,
                 messages=[{"role": "system", "content": system}] + messages,
