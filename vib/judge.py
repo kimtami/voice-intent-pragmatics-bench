@@ -83,6 +83,7 @@ def main() -> None:
     ap.add_argument("--out", default=str(ROOT / "results" / "judged"))
     ap.add_argument("--judge", default="anthropic:claude-opus-5-5")
     ap.add_argument("--workers", type=int, default=8)
+    ap.add_argument("--analysis-only", action="store_true", help="analysis(화용 분석·추정 목록)만 채점 (응답 채점 건너뜀)")
     args = ap.parse_args()
     load_dotenv(ROOT / ".env", override=True)
 
@@ -104,7 +105,7 @@ def main() -> None:
                     rows[(r["item_id"], r["rep"])] = r
         for key, r in rows.items():
             item = items[r["item_id"]]
-            if key not in resp_done:
+            if key not in resp_done and not args.analysis_only:
                 jobs.append(("response", arm, r, item))
             if r.get("analysis") is not None and key not in ana_done:
                 jobs.append(("analysis", arm, r, item))

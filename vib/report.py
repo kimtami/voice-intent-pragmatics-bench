@@ -561,6 +561,7 @@ def main() -> None:
     screening()
     chart_screen()
     selfhyp()
+    selfhyp_diag()
     gap = gap_closure(table, per_item_by_arm)
     write_gap(gap, table)
     for fname, methods, colors, note in GAP_CHARTS:
@@ -983,6 +984,62 @@ def selfhyp() -> None:
             lines.append(f"| {info} | {_pct(t, 0.5):,.0f} / {_pct(t, 0.9):,.0f} / {max(t):,.0f}ms | "
                          f"{_pct([_tok(r['usage'])[0] for r in raw], 0.5):,.0f} |")
     (sdir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+# 추정이 어느 기록에서 나왔는지 가르는 키워드 대조 (근사치). 기록의 2글자 이상 낱말이 추정 문장에 나오면 그 기록을 쓴 것으로 본다.
+_HYP_STOP = {"메신저", "알림", "기록", "도착", "완료", "예정", "사용", "시청", "이번", "다음", "최근", "오늘", "어제", "설치",
+             "정보", "확인", "요약", "상태", "관심", "3개", "1년", "전"}
+
+
+def _refs(text: str, entries: list[str]) -> list[str]:
+    def keys(e: str) -> list[str]:
+        return [w for w in re.findall(r"[가-힣A-Za-z0-9.%,]+", e) if len(w) >= 2 and w not in _HYP_STOP]
+    return [e for e in entries if any(k in text for k in keys(e))]
+
+
+def hyp_sources(hyps: dict[str, list[dict]]) -> dict:
+    """추정 목록 묶음에서 잡음 추정 비율과 관련 기록을 짚은 문항 수를 센다."""
+    items = {q["id"]: q for q in json.loads((ROOT / "data" / "queries.json").read_text(encoding="utf-8"))}
+    logs = json.loads((ROOT / "data" / "auto_context.json").read_text(encoding="utf-8"))["logs"]
+    n = noise = covered = 0
+    for iid, hs in hyps.items():
+        rel = [e for e in logs[iid] if e in items[iid]["events"]]
+        other = [e for e in logs[iid] if e not in items[iid]["events"]]
+        hit_rel = False
+        for h in hs:
+            r, o = _refs(h["text"], rel), _refs(h["text"], other)
+            n += 1
+            noise += bool(o and not r)
+            hit_rel = hit_rel or bool(r)
+        covered += hit_rel
+    return {"n": n, "noise": noise, "covered": covered, "items": len(hyps)}
+
+
+def selfhyp_diag() -> None:
+    """5차 원인 분석: Mercury instant 추정을 원래 프롬프트(v1)와 고친 프롬프트(v2)로, 본 10문항과 못 본 14문항에서 비교한다."""
+    ddir = RES / "selfhyp" / "diag"
+    if not (ddir / "judged").exists():
+        return
+    lines = ["**원래 프롬프트(v1)로 만든 추정의 출처 (본 10문항)**", "",
+             "| 생성 모델·설정 | 추정 수 (문항당) | 잡음 추정 비율 | 관련 기록을 짚은 문항 |", "|---|---|---|---|"]
+    for name, fam in (("Mercury 3 medium", "mercury"), ("Mercury 3 instant", "mercury_instant"), ("GPT-6 Luna low", "luna")):
+        hyps = json.loads((ROOT / "data" / "hypotheses_self" / f"{fam}.json").read_text(encoding="utf-8"))["hypotheses"]
+        s = hyp_sources({i: hyps[i] for i in SELF_ITEMS})
+        lines.append(f"| {name} | {s['n']} ({s['n'] / s['items']:.1f}) | {s['noise'] / s['n']:.0%} | {s['covered']}/{s['items']} |")
+    lines += ["", "**프롬프트 v1 대 v2 (Mercury 3 instant)**", "",
+             "원래 프롬프트(v1)와, 관련성 기준을 넣고 0~5개를 허용한 프롬프트(v2) 비교. "
+             "v2 는 본 10문항의 결과를 보고 고쳤으므로, 못 본 14문항이 공정한 비교입니다. "
+             "잡음 추정은 관련 없는 기록에서만 나온 추정이며 키워드 대조로 센 근사치입니다.", "",
+             "| 프롬프트 | 문항 | 추정 수 (문항당) | 잡음 추정 비율 | 관련 기록을 짚은 문항 | 추정 적중 (0~2) |", "|---|---|---|---|---|---|"]
+    for prompt in ("v1", "v2"):
+        for split, label in (("insample", "본 10문항"), ("heldout", "못 본 14문항")):
+            name = f"instant_{prompt}_{split}"
+            hyps = json.loads((ddir / f"{name}.json").read_text(encoding="utf-8"))["hypotheses"]
+            s = hyp_sources(hyps)
+            hits = [j["score"] for j in _jsonl(ddir / "judged" / f"{name}.analysis.jsonl") if not j.get("judge_error")]
+            lines.append(f"| {prompt} | {label} | {s['n']} ({s['n'] / s['items']:.1f}) | {s['noise'] / s['n']:.0%} | "
+                         f"{s['covered']}/{s['items']} | {statistics.mean(hits):.2f} |")
+    (ddir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 BASE_ARM = "mercury.A1"  # 모델 간 비교의 기준: Inception 공식 음성 가이드 설정

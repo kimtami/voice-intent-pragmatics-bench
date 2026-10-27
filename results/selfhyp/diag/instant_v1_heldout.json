@@ -1,0 +1,696 @@
+{
+  "meta": {
+    "generator": {
+      "provider": "inception",
+      "model": "mercury-3",
+      "params": {
+        "reasoning_effort": "instant",
+        "temperature": 0.75,
+        "realtime": true,
+        "diffusing": false,
+        "max_completion_tokens": 8192
+      }
+    },
+    "prompt": "v1",
+    "created_at": "2026-10-27T02:26:51.751897+00:00",
+    "sees": "profile, device state, unselected log, prior dialogue (no utterance, no gold)"
+  },
+  "hypotheses": {
+    "QFR-02": [
+      {
+        "text": "사용자는 곧 강남역 11번 출구로 이동해야 하므로, 지금쯤 차량 출발을 준비할 것이다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "사용자는 김 대리가 올린 회의록을 지금 또는 이동 중에 확인할 가능성이 높다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 다음 주 화요일 친구 생일을 염두에 두고 선물이나 일정을 생각할 수 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 오늘 저녁 약속 전에 세탁기 탈수 완료된 빨래를 정리할 필요를 느낄 수 있다.",
+        "confidence": 0.4
+      },
+      {
+        "text": "사용자는 단톡방의 대학 동기 메시지 23개를 확인하고 싶어할 가능성이 있다.",
+        "confidence": 0.3
+      }
+    ],
+    "QFR-03": [
+      {
+        "text": "사용자는 내일이 주말이라고 생각하고 늦잠을 자려 하며, 다음 발화에서 주말 계획이나 캠핑 관련 이야기를 꺼낼 가능성이 높다.",
+        "confidence": 0.8
+      },
+      {
+        "text": "사용자는 자동차 보험 갱신 안내 메일을 보고 보험료 비교나 갱신 여부에 대해 물어볼 가능성이 있다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 공기청정기 필터 교체 권장 알림을 인지하고 필터 구매나 교체 방법을 문의할 가능성이 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 사진 앱의 1년 전 오늘 추억을 보고 과거 사진이나 추억 관련 이야기를 꺼낼 가능성이 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 헬스장 출석이 6회에 불과한 것을 의식하고 운동 계획이나 건강 상태에 대해 말할 가능성이 있다.",
+        "confidence": 0.4
+      }
+    ],
+    "IMP-02": [
+      {
+        "text": "사용자는 치과 예약을 내일 15:00 또는 16:00 중 하나로 확정하려 할 것이다.",
+        "confidence": 0.8
+      },
+      {
+        "text": "사용자는 배터리 20%로 인해 충전기를 찾거나 충전 요청을 할 것이다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 내일 10:00 팀 회의를 위해 준비 사항을 확인하거나 회의록을 검토할 것이다.",
+        "confidence": 0.65
+      },
+      {
+        "text": "사용자는 동기 모임 투표(다음 주 금요일)에 참여하려 할 것이다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 운동화 배송 상태나 이번 주 지출 요약을 확인하려 할 것이다.",
+        "confidence": 0.4
+      }
+    ],
+    "IMP-03": [
+      {
+        "text": "사용자는 토요일 비 예보 때문에 캠핑 일정을 일요일로 미루는 것을 고려할 가능성이 있다.",
+        "confidence": 0.8
+      },
+      {
+        "text": "사용자는 비서가 제안한 토요일 캠핑 예약을 거절하거나 일요일로 변경할 의사를 표현할 것이다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 다음 주 화요일 친구 생일을 위해 선물이나 연락 계획을 말할 가능성이 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 가평 캠핑장 일요일 자리를 문의하거나 예약을 요청할 수 있다.",
+        "confidence": 0.65
+      },
+      {
+        "text": "사용자는 오늘 저녁 간단한 식사나 휴식에 관한 말을 할 가능성이 있으나, 이는 로그와 직접 관련이 없다.",
+        "confidence": 0.3
+      }
+    ],
+    "ELL-02": [
+      {
+        "text": "사용자가 운전 중이므로 내비게이션 안내나 도로 상황에 대한 도움을 요청할 수 있다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "음악 볼륨을 낮춘 직후이므로 다음 곡이나 재생 목록 변경을 요청할 수 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "다음 주 화요일이 친구 생일이므로 선물이나 일정 관련 질문을 할 수 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "주말 캠핑 계획이 있을 수 있어 날씨나 장비 관련 질문을 할 수 있다.",
+        "confidence": 0.4
+      },
+      {
+        "text": "주식 관심 종목 상승 소식을 확인하거나 관련 질문을 할 수 있다.",
+        "confidence": 0.3
+      }
+    ],
+    "ELL-03": [
+      {
+        "text": "사용자는 곧 퇴근하여 지하철 2호선을 타고 성수역으로 이동할 가능성이 높다.",
+        "confidence": 0.85
+      },
+      {
+        "text": "사용자는 오늘 걷기 목표를 채우지 못한 것에 신경 쓰고 있을 수 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 다음 주 금요일 동기 모임 일정에 관심이 있을 수 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 다음 주 음원 서비스 구독 갱신을 확인하거나 변경할 의사가 있을 수 있다.",
+        "confidence": 0.55
+      },
+      {
+        "text": "사용자는 어머니께 문자를 보낸 후, 집에 늦게 도착하는 것에 대한 다른 준비(예: 저녁 식사)를 생각할 수 있다.",
+        "confidence": 0.4
+      }
+    ],
+    "REP-01": [
+      {
+        "text": "사용자는 오전 9시에 집에 있으므로 출근 전에 오늘 일정이나 준비물을 확인하려 할 것이다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "대출 도서 반납 예정일이 3일 남아 있어 반납 일정을 신경 쓰고 있을 가능성이 높다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "다음 달 3일 건강검진이 예정되어 있어 사전 준비나 금식 안내를 확인하려 할 수 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "운동화 배송이 출발했으므로 배송 상태나 도착 예정일을 확인하려 할 것이다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "관심 단지 시세가 갱신되었으므로 부동산 가격 변동을 확인하려 할 수 있다.",
+        "confidence": 0.4
+      }
+    ],
+    "REP-03": [
+      {
+        "text": "사용자는 휴대폰 배터리가 20%로 낮아 충전을 원하거나 신경 쓸 가능성이 높다.",
+        "confidence": 0.85
+      },
+      {
+        "text": "사용자는 다음 주 음원 서비스 갱신 결제에 대해 확인하거나 연장 여부를 결정하려 할 것이다.",
+        "confidence": 0.75
+      },
+      {
+        "text": "사용자는 다음 달 건강검진 일정을 확인하거나 준비 사항을 물어볼 가능성이 있다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 단톡방에 쌓인 23개의 대학 동기 메시지를 확인하거나 답장하려 할 것이다.",
+        "confidence": 0.65
+      },
+      {
+        "text": "사용자는 주식 관심 종목 상승과 환율 상승 뉴스에 관심을 가질 가능성이 있다.",
+        "confidence": 0.6
+      }
+    ],
+    "AMB-02": [
+      {
+        "text": "사용자는 방금 출근하여 업무를 시작하기 전에 오늘 일정이나 미팅을 확인하려 할 것이다.",
+        "confidence": 0.8
+      },
+      {
+        "text": "사용자는 공기청정기 필터 교체 권장 알림을 신경 쓸 수 있으며, 교체 방법이나 시기를 문의할 가능성이 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 다음 달 건강검진 일정을 염두에 두고, 준비사항이나 예약 변경 여부를 물어볼 수 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 환율 상승 뉴스와 관련해 환전이나 해외 결제에 대한 정보를 요청할 수 있다.",
+        "confidence": 0.4
+      },
+      {
+        "text": "사용자는 배송 중인 운동화의 도착 예정일이나 배송 상태를 확인하려 할 수 있다.",
+        "confidence": 0.5
+      }
+    ],
+    "AMB-03": [
+      {
+        "text": "사용자는 7시 반으로 예약을 수락할 가능성이 높다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 예약 대상인 동반자가 누구인지 언급할 수 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 7시 반이 불가하면 다른 시간이나 식당을 물어볼 수 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 배송 중인 운동화 상태를 확인할 수 있다.",
+        "confidence": 0.4
+      },
+      {
+        "text": "사용자는 내일 출근 준비나 지하철 이동을 고려할 수 있다.",
+        "confidence": 0.3
+      }
+    ],
+    "SAR-02": [
+      {
+        "text": "사용자는 현재 재생 중인 헤비메탈 곡이 수면에 방해된다고 느껴 곡을 변경하거나 재생을 중단할 것을 요청할 것이다.",
+        "confidence": 0.85
+      },
+      {
+        "text": "사용자는 내일 출근 준비를 위해 기상 알람을 설정하거나 확인할 가능성이 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 방금 받은 가계부 주간 지출 요약을 확인하거나 질문할 것이다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 수면 음악 외에 조용한 환경을 위해 볼륨을 낮추거나 다른 수면 보조 요청을 할 수 있다.",
+        "confidence": 0.45
+      },
+      {
+        "text": "사용자는 배송 시작된 운동화의 도착 일정을 확인할 가능성이 있다.",
+        "confidence": 0.35
+      }
+    ],
+    "SAR-03": [
+      {
+        "text": "사용자는 배달이 40분 이상 지연되고 라이더 위치가 갱신되지 않아 배달 상태를 확인하거나 취소를 고려할 가능성이 높다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "사용자는 성수역에서 하차한 후 집에 도착했을 것이며, 배달 도착을 기다리며 집안일이나 다른 개인 업무를 할 것이다.",
+        "confidence": 0.75
+      },
+      {
+        "text": "사용자는 대출 도서 반납 예정일이 3일 남아 도서관 방문이나 반납 일정을 염두에 두고 있을 수 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 세탁기 탈수가 완료된 것을 인지하고 빨래를 정리하거나 건조대에 널 가능성이 있다.",
+        "confidence": 0.55
+      },
+      {
+        "text": "사용자는 이번 주 지출 요약과 환율 상승 뉴스로 인해 가계부를 확인하거나 금전적 계획을 점검할 가능성이 있다.",
+        "confidence": 0.4
+      }
+    ],
+    "POL-02": [
+      {
+        "text": "사용자는 피자가 도착하기 전까지 집에서 대기하거나, 도착 시간에 맞춰 문을 열 준비를 할 것이다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "사용자는 피자 도착 전에 현관 도어락 상태나 정수기 살균 완료 여부를 확인할 가능성이 있다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 내일이나 주말에 있을 캠핑 계획에 대해 언급할 가능성이 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 다음 주 금요일 동기 모임 투표에 참여하거나 생일인 친구에게 선물을 준비하는 것을 신경 쓸 수 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 도서 반납 예정일이 3일 남았으므로 책을 읽거나 반납 계획을 말할 가능성이 있다.",
+        "confidence": 0.5
+      }
+    ],
+    "PHA-02": [
+      {
+        "text": "사용자는 퇴근길에 집 근처 마트에 들러 우유를 구매하려 할 것이다.",
+        "confidence": 0.85
+      },
+      {
+        "text": "사용자는 다음 주 금요일 동기 모임 투표에 응답할 예정이다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 다음 달 3일 건강검진 일정을 염두에 두고 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 3일 후인 도서 반납 예정일을 기억하고 반납을 준비할 것이다.",
+        "confidence": 0.55
+      },
+      {
+        "text": "사용자는 관심 종목의 2% 상승을 확인하고 주식 앱을 열어볼 가능성이 있다.",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "usage": [
+    {
+      "completion_tokens": 326,
+      "prompt_tokens": 711,
+      "total_tokens": 1037,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 257
+      }
+    },
+    {
+      "completion_tokens": 386,
+      "prompt_tokens": 698,
+      "total_tokens": 1084,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    {
+      "completion_tokens": 410,
+      "prompt_tokens": 778,
+      "total_tokens": 1188,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 260
+      }
+    },
+    {
+      "completion_tokens": 368,
+      "prompt_tokens": 764,
+      "total_tokens": 1132,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 265
+      }
+    },
+    {
+      "completion_tokens": 330,
+      "prompt_tokens": 736,
+      "total_tokens": 1066,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 261
+      }
+    },
+    {
+      "completion_tokens": 436,
+      "prompt_tokens": 730,
+      "total_tokens": 1166,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 255
+      }
+    },
+    {
+      "completion_tokens": 347,
+      "prompt_tokens": 713,
+      "total_tokens": 1060,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 263
+      }
+    },
+    {
+      "completion_tokens": 390,
+      "prompt_tokens": 710,
+      "total_tokens": 1100,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 262
+      }
+    },
+    {
+      "completion_tokens": 379,
+      "prompt_tokens": 695,
+      "total_tokens": 1074,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 263
+      }
+    },
+    {
+      "completion_tokens": 276,
+      "prompt_tokens": 744,
+      "total_tokens": 1020,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 254
+      }
+    },
+    {
+      "completion_tokens": 320,
+      "prompt_tokens": 744,
+      "total_tokens": 1064,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 252
+      }
+    },
+    {
+      "completion_tokens": 439,
+      "prompt_tokens": 720,
+      "total_tokens": 1159,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 260
+      }
+    },
+    {
+      "completion_tokens": 374,
+      "prompt_tokens": 751,
+      "total_tokens": 1125,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 264
+      }
+    },
+    {
+      "completion_tokens": 351,
+      "prompt_tokens": 745,
+      "total_tokens": 1096,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 261
+      }
+    }
+  ],
+  "calls": {
+    "QFR-02": {
+      "total_ms": 1600.3,
+      "usage": {
+        "completion_tokens": 326,
+        "prompt_tokens": 711,
+        "total_tokens": 1037,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 257
+        }
+      },
+      "failures": []
+    },
+    "QFR-03": {
+      "total_ms": 1143.0,
+      "usage": {
+        "completion_tokens": 386,
+        "prompt_tokens": 698,
+        "total_tokens": 1084,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "failures": []
+    },
+    "IMP-02": {
+      "total_ms": 1200.1,
+      "usage": {
+        "completion_tokens": 410,
+        "prompt_tokens": 778,
+        "total_tokens": 1188,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 260
+        }
+      },
+      "failures": []
+    },
+    "IMP-03": {
+      "total_ms": 1285.8,
+      "usage": {
+        "completion_tokens": 368,
+        "prompt_tokens": 764,
+        "total_tokens": 1132,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 265
+        }
+      },
+      "failures": []
+    },
+    "ELL-02": {
+      "total_ms": 873.7,
+      "usage": {
+        "completion_tokens": 330,
+        "prompt_tokens": 736,
+        "total_tokens": 1066,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 261
+        }
+      },
+      "failures": []
+    },
+    "ELL-03": {
+      "total_ms": 1137.6,
+      "usage": {
+        "completion_tokens": 436,
+        "prompt_tokens": 730,
+        "total_tokens": 1166,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 255
+        }
+      },
+      "failures": []
+    },
+    "REP-01": {
+      "total_ms": 1174.5,
+      "usage": {
+        "completion_tokens": 347,
+        "prompt_tokens": 713,
+        "total_tokens": 1060,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 263
+        }
+      },
+      "failures": []
+    },
+    "REP-03": {
+      "total_ms": 979.9,
+      "usage": {
+        "completion_tokens": 390,
+        "prompt_tokens": 710,
+        "total_tokens": 1100,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 262
+        }
+      },
+      "failures": []
+    },
+    "AMB-02": {
+      "total_ms": 1110.8,
+      "usage": {
+        "completion_tokens": 379,
+        "prompt_tokens": 695,
+        "total_tokens": 1074,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 263
+        }
+      },
+      "failures": []
+    },
+    "AMB-03": {
+      "total_ms": 987.6,
+      "usage": {
+        "completion_tokens": 276,
+        "prompt_tokens": 744,
+        "total_tokens": 1020,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 254
+        }
+      },
+      "failures": []
+    },
+    "SAR-02": {
+      "total_ms": 1090.1,
+      "usage": {
+        "completion_tokens": 320,
+        "prompt_tokens": 744,
+        "total_tokens": 1064,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 252
+        }
+      },
+      "failures": []
+    },
+    "SAR-03": {
+      "total_ms": 1709.0,
+      "usage": {
+        "completion_tokens": 439,
+        "prompt_tokens": 720,
+        "total_tokens": 1159,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 260
+        }
+      },
+      "failures": []
+    },
+    "POL-02": {
+      "total_ms": 1099.6,
+      "usage": {
+        "completion_tokens": 374,
+        "prompt_tokens": 751,
+        "total_tokens": 1125,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 264
+        }
+      },
+      "failures": []
+    },
+    "PHA-02": {
+      "total_ms": 892.5,
+      "usage": {
+        "completion_tokens": 351,
+        "prompt_tokens": 745,
+        "total_tokens": 1096,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 261
+        }
+      },
+      "failures": []
+    }
+  }
+}

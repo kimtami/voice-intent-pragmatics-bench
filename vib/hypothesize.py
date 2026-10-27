@@ -33,11 +33,14 @@ def main() -> None:
     ap.add_argument("--generator", default="gemini38", choices=sorted(GENERATORS))
     ap.add_argument("--items", default=None, help="문항 id 목록 (쉼표 구분)")
     ap.add_argument("--timing-out", default=None, help="생성 시간·실패만 다시 재서 이 경로에 쓴다 (추정 내용 파일은 그대로)")
+    ap.add_argument("--prompt", default="v1", choices=["v1", "v2"], help="v2: 관련성 기준 + 0~5개 (5차 원인 분석)")
+    ap.add_argument("--out", default=None, help="추정 저장 경로 (기본 경로를 덮어쓰지 않을 때)")
     args = ap.parse_args()
     gen = GENERATORS[args.generator]
     out_path = ROOT / "data" / ("hypotheses.json" if args.generator == "gemini38" else f"hypotheses_self/{args.generator}.json")
-    if args.timing_out:
-        out_path = Path(args.timing_out)
+    if args.timing_out or args.out:
+        out_path = Path(args.timing_out or args.out)
+    system = prompts.HYPOTHESIS_SYSTEM_V2 if args.prompt == "v2" else prompts.HYPOTHESIS_SYSTEM
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
     load_dotenv(ROOT / ".env", override=True)
@@ -52,8 +55,10 @@ def main() -> None:
         assert it["utterance"] not in user and it["gold_intent"] not in user  # 발화·정답 비노출 확인
         failures = []  # 오류·형식 어긋남(예: 객체 대신 목록)은 신뢰성 지표로 남기고 최대 두 번 다시 시도한다
         for _ in range(3):
-            parsed, res = json_call(gen["provider"], gen["model"], prompts.HYPOTHESIS_SYSTEM, user, gen["params"])
-            if not res.error and isinstance(parsed, dict) and parsed.get("hypotheses"):
+            parsed, res = json_call(gen["provider"], gen["model"], system, user, gen["params"])
+            # v2 는 빈 목록을 허용하므로, 목록이 비었는지가 아니라 형식이 맞는지만 본다
+            ok = isinstance(parsed, dict) and isinstance(parsed.get("hypotheses"), list)
+            if not res.error and ok and (parsed["hypotheses"] or args.prompt == "v2"):
                 break
             failures.append({"total_ms": res.total_ms, "error": res.error, "text": (res.text or "")[:300]})
         else:
@@ -63,7 +68,7 @@ def main() -> None:
         usage.append(res.usage)
         calls[it["id"]] = {"total_ms": res.total_ms, "usage": res.usage, "failures": failures}
         print(it["id"], len(out[it["id"]]), f"{res.total_ms:.0f}ms", flush=True)
-    meta = {"generator": gen, "created_at": datetime.now(timezone.utc).isoformat(),
+    meta = {"generator": gen, "prompt": args.prompt, "created_at": datetime.now(timezone.utc).isoformat(),
             "sees": "profile, device state, unselected log, prior dialogue (no utterance, no gold)"}
     if args.timing_out:
         meta["note"] = "생성 시간·실패만 다시 잰 값. 응답에 쓰는 추정 내용은 data/hypotheses_self/ 그대로"
