@@ -146,7 +146,8 @@ A4 는 요청 범위 밖이지만, A3 의 정확도 향상이 "분석을 따로 
 - 응답: `python -m vib.run --selfhyp --reps 2 --items …`. 8개 조건(Luna none·low, Luna low 와 Mercury 3 기본 각각에 로그만·로그+Gemini 추정·로그+자기 추정)을 같은 실행에서 돌립니다. 제공자별 스레드 안에서 조건 순서를 돌려 섞습니다.
 - 채점: 응답은 기존 채점기. 자기 추정 목록은 응답 행의 `analysis` 로 남겨, 화용 분석 채점기가 정답 의도를 담았는지 0~2점으로 채점합니다(3차 추정 적중 채점과 같은 기준).
 - 신뢰성 정의: 추정 생성 실패(재시도 횟수), 추정 적중, 잘못된 행동(과잉 행동·대상/값 오류 플래그), 첫 발화 꼬리(p90·최대).
-- 생성 시간 비교용으로 같은 추정 요청을 Mercury 3 instant 로도 10번 보냈습니다(`--generator mercury_instant --timing-out`). 이 추정은 응답에 쓰지 않았습니다.
+- instant 추정 조건(CI): 같은 추정 요청을 Mercury 3 instant 로 보내 만든 추정(`data/hypotheses_self/mercury_instant.json`)을 Mercury 3 medium 응답에 넣습니다. 생성 시간은 응답용 생성 10회와 시간만 다시 잰 10회(`--timing-out`)를 합칩니다.
+- CI 는 앞선 조건들 뒤에 따로 실행했습니다. 첫 발화는 그 실행에서 함께 돌린 로그만·medium 자기 추정 조건(각 20회, 채점 안 함, `results/selfhyp/latency_control_ci/`)과 비교합니다. 응답 정확도는 앞서 채점한 로그만·자기 추정 결과와 같은 문항끼리 짝지어 비교합니다.
 - 요약 표(`results/selfhyp/summary.md`)에서는 Gemini 3.8 Flash 추정 조건(CH)을 뺐습니다. 실행·채점 원본은 남아 있습니다.
 - 한계: 10문항 × 2회라 응답 하나 차이가 5%p 입니다. 정확도는 방향만 보고, 시간·실패·비용을 주 결과로 봅니다. 중단된 첫 생성 시도(Mercury 2회 호출 중 1회 형식 실패, Luna 10회 모두 성공)는 파일에 남지 않아 README 본문에만 적었습니다.
 

@@ -178,6 +178,10 @@ def selfhyp_arms() -> dict[str, Arm]:
         for mode in ("auto", "auto_hyp", "auto_selfhyp"):
             a = _pragmatic(fam, b, mode)
             arms[a.arm_id] = a
+    # CI: 응답은 Mercury 3 기본(medium), 추정은 같은 Mercury 3 를 생각 없이(instant) 만든 것
+    m = MODELS["mercury"]
+    arms["mercury.A1+CI"] = Arm("mercury.A1+CI", "mercury", "CI", m["provider"], m["model"], m["A1"], [m["key"]],
+                                extra={"mode": "auto_selfhyp", "hyp_source": "mercury_instant", "base_arm": "mercury.A1"})
     return arms
 
 

@@ -895,8 +895,9 @@ def chart_screen() -> None:
 
 SELF_ITEMS = ["QFR-01", "IMP-01", "ELL-01", "REP-02", "AMB-01", "SAR-01", "POL-01", "HON-01", "MUL-01", "PHA-01"]
 # 응답 단계에서 비교하는 조건 (Gemini 추정 조건 CH 도 실행했지만 5차 요약에서는 뺀다)
-SELF_RESP = [("mercury.A1+CA", "Mercury 3 medium", "로그만"), ("mercury.A1+CS", "Mercury 3 medium", "로그 + 자기 추정"),
-             ("luna.A2+CA", "GPT-6 Luna low", "로그만"), ("luna.A2+CS", "GPT-6 Luna low", "로그 + 자기 추정")]
+SELF_RESP = [("mercury.A1+CA", "Mercury 3 medium", "로그만"), ("mercury.A1+CS", "Mercury 3 medium", "로그 + 자기 추정 (medium)"),
+             ("mercury.A1+CI", "Mercury 3 medium", "로그 + instant 추정"),
+             ("luna.A2+CA", "GPT-6 Luna low", "로그만"), ("luna.A2+CS", "GPT-6 Luna low", "로그 + 자기 추정 (low)")]
 
 
 def _tok(u: dict) -> tuple[int, int]:
@@ -936,7 +937,7 @@ def selfhyp() -> None:
     lines += ["", "**B. 추정 생성 (사용자가 말하기 전, 별도 호출)**", "",
               "| 생성 모델·설정 | 생성 시간 p50 (최소~최대) | 생각 토큰 p50 | 보이는 출력 p50 | 초당 토큰 p50 | 생성 실패 / 요청 | 추정 적중 (0~2) |",
               "|---|---|---|---|---|---|---|"]
-    gens = [("Mercury 3 medium", "mercury", "mercury.A1+CS"), ("Mercury 3 instant (시간만 측정)", "mercury_instant", None),
+    gens = [("Mercury 3 medium", "mercury", "mercury.A1+CS"), ("Mercury 3 instant", "mercury_instant", "mercury.A1+CI"),
             ("GPT-6 Luna low", "luna", "luna.A2+CS")]
     for name, fam, arm in gens:
         # 응답에 쓴 추정의 생성 기록 + 같은 조건으로 생성 시간·실패만 다시 잰 기록
@@ -964,12 +965,23 @@ def selfhyp() -> None:
         bad = sum(1 for j in jd if j.get("over_action") or j.get("wrong_target_or_value"))
         t = [r["e2e_first_ms"] for r in raw]
         cmp = "–"
-        if arm.endswith("+CS"):
-            a, b = per_item(arm), per_item(arm.replace("+CS", "+CA"))
+        if arm.endswith(("+CS", "+CI")):
+            a, b = per_item(arm), per_item(arm[:-3] + "+CA")
             m, lo, hi, _ = _boot_diff({k: a[k] - b[k] for k in SELF_ITEMS})
             cmp = f"{m * 100:+.1f}%p ({lo * 100:.1f}–{hi * 100:.1f})"
         lines.append(f"| {model} | {info} | {statistics.mean(sc) / 2 * 100:.1f}% | {cmp} | {sc.count(2)}/{len(sc)} | {bad} | "
                      f"{_pct(t, 0.5):,.0f} / {_pct(t, 0.9):,.0f}ms |")
+    # instant 추정 조건은 나중에 따로 돌렸으므로, 그때 같은 실행에서 다시 잰 로그만·medium 추정(채점 안 함)과 지연을 비교한다
+    ctl = sdir / "latency_control_ci"
+    if ctl.exists():
+        lines += ["", "**D. 같은 시각 첫 발화 비교 (Mercury 3 medium 응답, instant 추정 조건을 돌릴 때 함께 잰 값)**", "",
+                  "| 넣은 정보 | 첫 발화 p50 / p90 / 최대 | 생각 토큰 p50 |", "|---|---|---|"]
+        for path, info in ((ctl / "mercury.A1+CA.jsonl", "로그만"), (ctl / "mercury.A1+CS.jsonl", "로그 + 자기 추정 (medium)"),
+                           (sdir / "raw" / "mercury.A1+CI.jsonl", "로그 + instant 추정")):
+            raw = [r for r in _jsonl(path) if not r.get("error")]
+            t = [r["e2e_first_ms"] for r in raw]
+            lines.append(f"| {info} | {_pct(t, 0.5):,.0f} / {_pct(t, 0.9):,.0f} / {max(t):,.0f}ms | "
+                         f"{_pct([_tok(r['usage'])[0] for r in raw], 0.5):,.0f} |")
     (sdir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
