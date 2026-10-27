@@ -200,6 +200,12 @@ def selfhyp_arms() -> dict[str, Arm]:
     arms["luna.A1+CIv2"] = Arm("luna.A1+CIv2", "luna", "CIv2", lu["provider"], lu["model"], lu["A1"], [lu["key"]],
                                extra={"mode": "auto_selfhyp", "judge_hyps": False, "base_arm": "luna.A1",
                                       "hyp_source": [f"results/selfhyp/diag/instant_v2_{s}.json" for s in ("insample", "heldout")]})
+    # 관점 2개 병렬 추정(CP): Mercury instant 에 v2 + 서로 다른 관점을 주고 동시에 불러 합친 목록을 두 약한 응답 설정에 넣는다
+    for fam, cond in (("mercury", "A0"), ("luna", "A1")):
+        f = MODELS[fam]
+        arms[f"{fam}.{cond}+CP"] = Arm(f"{fam}.{cond}+CP", fam, "CP", f["provider"], f["model"], f[cond], [f["key"]],
+                                       extra={"mode": "auto_selfhyp", "judge_hyps": False, "base_arm": f"{fam}.{cond}",
+                                              "hyp_source": "results/selfhyp/persona/instant_persona.json"})
     return arms
 
 

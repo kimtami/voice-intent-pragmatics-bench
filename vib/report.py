@@ -565,6 +565,7 @@ def main() -> None:
     selfhyp_heldout()
     selfhyp_instant()
     selfhyp_luna()
+    selfhyp_persona()
     gap = gap_closure(table, per_item_by_arm)
     write_gap(gap, table)
     for fname, methods, colors, note in GAP_CHARTS:
@@ -1083,6 +1084,90 @@ def selfhyp_luna() -> None:
     if lines:
         (RES / "selfhyp" / "luna_none" / "summary.md").write_text("\n".join(lines + _hyp_cost("luna_none", LUNA_ARMS)) + "\n", encoding="utf-8")
 
+
+
+def selfhyp_persona() -> None:
+    """관점 2개 병렬 추정(CP): v2 지시에 관점을 하나씩 준 Mercury instant 두 개를 동시에 불러 합친 추정을 두 약한 응답 설정에 넣는다.
+    로그만·v2 조건은 앞 실험의 값(다른 시각 실행)과 문항끼리 짝지어 비교한다."""
+    pdir = RES / "selfhyp" / "persona"
+    if not (pdir / "judged").exists():
+        return
+    cp = json.loads((pdir / "instant_persona.json").read_text(encoding="utf-8"))
+    v2s = [json.loads((RES / "selfhyp" / "diag" / f"instant_v2_{s}.json").read_text(encoding="utf-8")) for s in ("insample", "heldout")]
+
+    def hits(paths: list[Path]) -> float:
+        return statistics.mean(j["score"] for p in paths for j in _jsonl(p) if not j.get("judge_error"))
+
+    def gen_row(label: str, hyps: dict, calls: list[dict], hit: float) -> str:
+        ms = [c["total_ms"] for c in calls]
+        cost = statistics.mean(_call_cost("mercury-3", c["usage"]) for c in calls) * 1000
+        return (f"| {label} | {sum(map(len, hyps.values()))} ({sum(map(len, hyps.values())) / len(hyps):.1f}) | {hit:.2f} | "
+                f"{_pct(ms, 0.5) / 1000:.1f}s ({max(ms) / 1000:.1f}s) | {sum(len(c['failures']) for c in calls)} / {len(calls)} | ${cost:.2f} |")
+
+    dj = RES / "selfhyp" / "diag" / "judged"
+    views = {"task": "관점: 일을 처리하는 비서", "person": "관점: 오래 알아 온 가까운 사람"}
+    lines = ["관점 2개 병렬 추정: Mercury 3 instant 에 v2 지시와 서로 다른 관점 하나씩을 주고 동시에 불러, 각 0~3개를 확신도 순으로 "
+             "합쳤습니다(관점 꼬리표 없음). 관점 프롬프트는 결과를 보기 전에 고정했으므로 24문항 모두 못 본 문항입니다. "
+             "로그만·v2 추정 조건은 앞 실험에서 다른 시각에 잰 값이라, 같은 문항끼리 짝지어 비교합니다.", "",
+             "**추정 목록**", "",
+             "| 추정 | 추정 수 (문항당) | 추정 적중 (0~2) | 생성 시간 p50 (최대) | 생성 실패 / 요청 | 1,000턴당 생성 비용 |",
+             "|---|---|---|---|---|---|",
+             gen_row("v2 (관점 없음, 1회 호출)", {k: v for f in v2s for k, v in f["hypotheses"].items()},
+                     [c for f in v2s for c in f["calls"].values()], hits([dj / f"instant_v2_{s}.analysis.jsonl" for s in ("insample", "heldout")]))]
+    for v, label in views.items():
+        lines.append(gen_row(label, cp["by_view"][v], [c["views"][v] for c in cp["calls"].values()],
+                             hits([pdir / "diag" / "judged" / f"persona_{v}.analysis.jsonl"])))
+    lines.append(gen_row("두 관점 합침 (응답에 넣은 것, 시간은 늦은 쪽)", cp["hypotheses"], list(cp["calls"].values()),
+                         hits([pdir / "diag" / "judged" / "persona_merged.analysis.jsonl"])))
+    gen_cost = {"CIv2": statistics.mean(_call_cost("mercury-3", c["usage"]) for f in v2s for c in f["calls"].values()),
+                "CP": statistics.mean(_call_cost("mercury-3", c["usage"]) for c in cp["calls"].values())}
+    for sub, base, name in (("instant", "mercury.A0", "Mercury 3 instant"), ("luna_none", "luna.A1", "GPT-6 Luna none")):
+        arms = [(f"{base}+CA", sub, "로그만"), (f"{base}+CIv2", sub, "로그 + v2 추정"), (f"{base}+CP", "persona", "로그 + 관점 2개 추정")]
+        per = {a: _per_item_judged(RES / "selfhyp" / d / "judged" / f"{a}.jsonl") for a, d, _ in arms}
+        ids = sorted(per[arms[0][0]])
+        assert all(sorted(x) == ids for x in per.values())
+        keep = [k for k in ids if k not in CONTESTED]
+        reps = max(r["rep"] for r in _jsonl(pdir / "raw" / f"{base}+CP.jsonl"))
+        lines += ["", f"**{name} 응답, {len(ids)}문항 × {reps}회**", "",
+                  "| 넣은 정보 | 응답 정확도 | 논란 문항 제외 | 로그만 대비 (95% CI) | v2 추정 대비 (95% CI) | 2점 응답 | 잘못된 행동 | "
+                  "첫 발화 p50 / p90 | 1,000턴당 비용: 추정 생성 + 응답 |", "|---|---|---|---|---|---|---|---|---|"]
+        for arm, d, info in arms:
+            raw = [r for r in _jsonl(RES / "selfhyp" / d / "raw" / f"{arm}.jsonl") if not r.get("error")]
+            jd = [j for j in _jsonl(RES / "selfhyp" / d / "judged" / f"{arm}.jsonl") if not j.get("judge_error")]
+            sc = [j["score"] for j in jd]
+            bad = sum(1 for j in jd if j.get("over_action") or j.get("wrong_target_or_value"))
+            t = [r["e2e_first_ms"] for r in raw]
+            cmp = []
+            for ref in arms[:2]:
+                if arm == ref[0] or (arm.endswith("+CA") and ref[0].endswith("+CIv2")):
+                    cmp.append("–")
+                    continue
+                m, lo, hi, _ = _boot_diff({k: per[arm][k] - per[ref[0]][k] for k in ids})
+                cmp.append(f"{m * 100:+.1f}%p ({lo * 100:.1f}–{hi * 100:.1f})")
+            g = gen_cost.get(arm.split("+")[1], 0.0) * 1000
+            out = statistics.mean(_call_cost(r["model"], r["usage"]) for r in raw) * 1000
+            lines.append(f"| {info} | {statistics.mean(per[arm][k] for k in ids) * 100:.1f}% | "
+                         f"{statistics.mean(per[arm][k] for k in keep) * 100:.1f}% | {cmp[0]} | {cmp[1]} | {sc.count(2)}/{len(sc)} | {bad} | "
+                         f"{_pct(t, 0.5):,.0f} / {_pct(t, 0.9):,.0f}ms | ${g:.2f} + ${out:.2f} = ${g + out:.2f} |")
+        m, lo, hi, _ = _boot_diff({k: per[arms[2][0]][k] - per[arms[1][0]][k] for k in keep})
+        lines += ["", f"논란 문항({'·'.join(sorted(CONTESTED))})을 뺀 {len(keep)}문항만: 관점 2개 추정 대 v2 추정 "
+                      f"{m * 100:+.1f}%p ({lo * 100:.1f}–{hi * 100:.1f})."]
+        ctl = pdir / "latency_control"
+        if ctl.exists():  # 위 표의 첫 발화는 다른 시각 값이라, 같은 시각에 세 조건을 1회씩 돌린 대조(채점 안 함)를 따로 싣는다
+            cells = []
+            for arm, _, info in arms:
+                t = [r["e2e_first_ms"] for r in _jsonl(ctl / f"{arm}.jsonl") if not r.get("error")]
+                cells.append(f"{info} {_pct(t, 0.5):,.0f} / {_pct(t, 0.9):,.0f}ms ({len(t)}회)")
+            lines[-1] += " 같은 시각 지연 대조, 첫 발화 p50 / p90: " + ", ".join(cells) + "."
+    (pdir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _per_item_judged(path: Path) -> dict[str, float]:
+    d = defaultdict(list)
+    for j in _jsonl(path):
+        if not j.get("judge_error"):
+            d[j["item_id"]].append(j["score"] / 2)
+    return {k: statistics.mean(v) for k, v in d.items()}
 
 def _hyp_cost(sub: str, arms: list) -> list[str]:
     """추정 생성(Mercury 3 instant) 시간·실패와 1,000턴당 비용. 응답 비용은 응답 모델 단가로 잰다."""

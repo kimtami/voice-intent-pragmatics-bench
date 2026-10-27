@@ -85,6 +85,20 @@ HYPOTHESIS_SYSTEM_V2 = (
 )
 
 
+# 페르소나 2개 병렬: v2 지시에 관점 한 단락만 넣고, 각자 0~3개(합쳐 최대 6개, v2 는 평균 3.9개)를 낸다.
+# 관점만 주고 화용 현상 이름(반어·높임 등)은 쓰지 않는다. 그러면 점검표(A4)를 생성기로 옮긴 것이 되기 때문이다.
+_V2_HEAD = "직전 대화만 보고, 사용자가 다음에 말할 때 도움이 될 추정을 만든다.\n"
+PERSONA_VIEWS = {
+    "task": "관점: 너는 일을 처리하는 비서다. 사용자가 다음에 시키거나 결정할 일이 무엇인지에 집중한다. 기기 상태, 진행 중인 "
+            "일정·예약, 비서가 방금 한 질문에서 바로 이어지는 구체적인 행동과 그 대상을 추정한다.\n",
+    "person": "관점: 너는 사용자를 오래 알아 온 가까운 사람이다. 사용자가 지금 어떤 처지와 기분인지, 무엇이 불편하거나 마음에 "
+              "걸리는지, 비서가 방금 한 말을 사용자가 속으로 어떻게 받아들일지에 집중한다.\n",
+}
+assert _V2_HEAD in HYPOTHESIS_SYSTEM_V2 and "0~5개" in HYPOTHESIS_SYSTEM_V2
+HYPOTHESIS_PERSONA = {k: HYPOTHESIS_SYSTEM_V2.replace(_V2_HEAD, _V2_HEAD + v).replace("0~5개", "0~3개")
+                      for k, v in PERSONA_VIEWS.items()}
+
+
 def hypothesis_user_message(profile: dict, state: str, log: list[str], context: list[dict]) -> str:
     lines = [auto_context(profile, log), f"[기기 상태] {state}", "[직전 대화]"]
     if context:
