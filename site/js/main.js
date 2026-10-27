@@ -1,7 +1,7 @@
 import { T, Run, dur, hide, reveal, setSpeed, getSpeed, sleep, tween, isReduced } from "./motion.js";
 import { Plane } from "./plane.js";
 import { Turn } from "./turn.js";
-import { Stage } from "./stage.js";
+import { mountStage, stageList } from "./stage-player.js";
 
 const $ = (s) => document.querySelector(s);
 const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -13,6 +13,12 @@ const [M, D, C, S] = await Promise.all(["data/metrics.json", "data/methods.json"
 const metric = (k) => M.metrics[k];
 const method = (id) => D.methods.find((m) => m.id === id);
 const timingColor = (t) => css(`--series-${D.timings[t].slot}`);
+// 대화 무대: Codex 로 그린 방 위에 대본을 재생하는 Remotion Player. 움직임 줄이기면 끝 화면만 보여 준다
+const STAGES = stageList(S, D);
+const stageOf = (id) => STAGES.find((s) => s.id === id);
+const stageOpts = () => (isReduced() ? { end: true } : { play: true });
+const players = [];
+const player = (el) => { const p = mountStage(el, "media/", getSpeed()); players.push(p); return p; };
 
 function tooltipHtml(label, m, meth) {
   const lines = [`<b>${label}</b>`];
@@ -45,22 +51,8 @@ function legendHtml(timings, withBase = true, withRef = true) {
 const cancelled = (e) => e && e.message === "cancel";
 
 // ---------- 1. 문제 ----------
-const pStage = new Stage($("#p-stage"));
-const runP = new Run();
-async function playProblem() {
-  const id = runP.start();
-  try {
-    $("#p-cap").textContent = "빠른 비서: 글자 그대로 받아들임";
-    $("#p-src").textContent = "";
-    await pStage.play(S.problem.literal, runP, id);
-    $("#p-src").textContent = D.example.literal.source;
-    await sleep(dur(1600), runP, id);
-    $("#p-cap").textContent = "말뜻을 알아들으면";
-    $("#p-src").textContent = "";
-    await pStage.play(S.problem.pragmatic, runP, id);
-    $("#p-src").textContent = `${D.example.intended.source} · 생각 말풍선은 설명용`;
-  } catch (e) { if (!cancelled(e)) throw e; }
-}
+const pStage = player($("#p-stage"));
+function playProblem() { pStage.show(stageOf("problem"), stageOpts()); }
 
 // ---------- 2. 목표 ----------
 const goalPlane = new Plane($("#g-plane"), $("#g-tip"));
@@ -123,12 +115,12 @@ function renderFamilies() {
         <button data-method="${m.id}" class="${m.id === selected ? "on" : ""}"><i style="background:${timingColor(m.timing)}"></i>${m.name}</button>`).join("")}
     </div>`).join("");
   $("#m-families").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => {
-    // 좁은 화면에서는 목록이 무대 위에 있으므로, 누르면 무대로 내려간다
-    if (matchMedia("(max-width: 900px)").matches) $("#m-detail").scrollIntoView({ behavior: isReduced() ? "auto" : "smooth", block: "start" });
+    // 목록이 무대 위에 있으므로, 누르면 무대가 보이게 내려간다
+    $("#m-detail").scrollIntoView({ behavior: isReduced() ? "auto" : "smooth", block: "nearest" });
     showMethod(b.dataset.method, true);
   }));
 }
-const mStage = new Stage($("#m-stage"));
+const mStage = player($("#m-stage"));
 async function showMethod(mid, animate) {
   selected = mid;
   $("#m-families").querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.method === mid));
@@ -138,11 +130,7 @@ async function showMethod(mid, animate) {
     <div class="role">${fam.role}</div>`;
   $("#m-foot").innerHTML = `<span class="chip">${m.problem.value}</span><span>${m.problem.text}</span>
     <details><summary>덧붙인 프롬프트 보기</summary>${m.prompt}</details>`;
-  const id = runM.start();
-  try {
-    if (animate) await mStage.play(S.methods[mid], runM, id);
-    else { mStage.reset(); }
-  } catch (e) { if (!cancelled(e)) throw e; }
+  mStage.show(stageOf(`m-${mid}`), animate ? stageOpts() : { end: true });
 }
 async function playMethods() {
   const id = runM.start();
@@ -242,7 +230,7 @@ $("#v-why").textContent = W.why;
   $("#v-nums").innerHTML = `Mercury 3 instant + 미리 짐작: <b>${pct(a.accuracy)}</b>, 첫 소리 변화 ${sgn(a.first_delta)}. Mercury 3 + 미리 짐작: <b>${pct(b.accuracy)}</b>, 첫 소리 변화 ${sgn(b.first_delta)}. 목표인 Gemini 3.8 Flash 는 ${pct(t.accuracy)}, 첫 소리 ${fmtMs(t.first_p50)} 입니다. (첫 소리 변화는 같은 시각에 잰 기준 설정 대비)`;
   $("#v-caveats").innerHTML = [...W.caveats, `${W.runner_up.text} (instant: ${pct(r.accuracy)}, 1,000턴당 ${won(r.cost_1k)})`].map((c) => `<li>${c}</li>`).join("");
 }
-const vStage = new Stage($("#v-stage"));
+const vStage = player($("#v-stage"));
 async function playWinner() {
   const id = runV.start();
   const main = C.chapters.find((c) => c.id === "main");
@@ -262,16 +250,12 @@ async function playWinner() {
     }, undefined, runV, id);
     for (const p of winPlane.points) if (W.points.includes(p.id)) { p.ciAlpha = 1; p.showCi = true; }
     winPlane.draw();
-    for (const ex of S.winner) {
-      $("#v-cap").textContent = `미리 짐작 없이 · ${ex.label}`;
-      $("#v-src").textContent = "";
-      await vStage.play(ex.before, runV, id);
-      await sleep(dur(1200), runV, id);
-      $("#v-cap").textContent = `미리 짐작해 두고 · ${ex.label}`;
-      await vStage.play(ex.after, runV, id);
-      $("#v-src").textContent = "비서의 말은 실제 응답, 짐작 카드는 실제로 미리 만든 추정";
-      await sleep(dur(1800), runV, id);
-    }
+    // 예시를 하나씩 이어 튼다 (침실 SAR-02 → 거실 POL-02)
+    const ws = STAGES.filter((s) => s.id.startsWith("w-"));
+    let k = 0;
+    const next = () => { if (k < ws.length && runV.alive(id)) vStage.show(ws[k++], stageOpts()); };
+    vStage.onEnded(() => { if (!isReduced()) next(); });
+    next();
   } catch (e) { if (!cancelled(e)) throw e; }
 }
 
@@ -284,6 +268,9 @@ $("#n-list").innerHTML = D.next.map((n) => `<li>${n}</li>`).join("");
 
 // ---------- 재생 연결 ----------
 const PLAY = { problem: playProblem, goal: playGoal, when: playWhen, methods: playMethods, results: playResults, problems: playProblems, winner: playWinner };
+// 발표·공유용: ?scene=<장면 id> 면 그 장면만 보여 준다
+const only = new URLSearchParams(location.search).get("scene");
+if (only && document.getElementById(only)) document.querySelectorAll(".scene").forEach((s) => { if (s.id !== only) s.remove(); });
 const played = new Set();
 const scenes = [...document.querySelectorAll(".scene")];
 $("#nav").innerHTML = scenes.map((s) => `<a href="#${s.id}" data-id="${s.id}">${s.dataset.title}</a>`).join("");
@@ -303,7 +290,7 @@ document.querySelectorAll("[data-replay]").forEach((b) => b.addEventListener("cl
 // 속도
 const speedBtns = document.querySelectorAll(".speed button");
 const markSpeed = () => speedBtns.forEach((b) => b.classList.toggle("on", +b.dataset.speed === getSpeed()));
-speedBtns.forEach((b) => b.addEventListener("click", () => { setSpeed(+b.dataset.speed); markSpeed(); }));
+speedBtns.forEach((b) => b.addEventListener("click", () => { setSpeed(+b.dataset.speed); markSpeed(); players.forEach((p) => p.setRate(getSpeed())); }));
 markSpeed();
 
 // 발표용: PageDown/PageUp 으로 장면 단위 이동

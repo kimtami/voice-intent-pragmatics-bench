@@ -1,0 +1,9 @@
+Use your built-in image generation tool to create exactly one image. Do not run shell commands or write files yourself.
+The attached image is a style reference only: match its flat editorial illustration style, palette (deep night blue-charcoal, cool highlights, subtle paper grain, no outlines) and lighting mood exactly, but draw a new picture.
+
+Use case: illustration-story
+Scene: a living room at night (about 10 PM). The same woman as in the reference (same face, hair and clothing) sits on a sofa in the left third of the frame with an open laptop on her knees, turned toward a small cylindrical fabric smart speaker that stands on a low side table in the right third. On the coffee table: a passport, a folded paper map and a phone. A small suitcase stands near the wall. A floor lamp gives dim warm light; a window shows distant city lights.
+Mood: she is asking the speaker something, one hand lifted mid-gesture, curious neutral expression. The speaker's top light ring is dim, almost off.
+Composition: wide 3:2 landscape (1536x1024). Characters occupy the lower 60 percent; keep the upper middle as calm empty wall so speech bubbles can be added later. Outer edges fade into #16171a.
+Constraints: no text, no letters, no numbers, no logos, no screens with readable content, no speech bubbles, no UI.
+Avoid: glossy 3D render, cute mascot, robot, purple or neon glow, heavy gradients, stock clip-art look.

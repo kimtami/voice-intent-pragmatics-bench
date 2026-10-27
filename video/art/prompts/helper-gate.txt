@@ -1,0 +1,9 @@
+Use your built-in image generation tool to create exactly one image. Do not run shell commands or write files yourself.
+The attached image is a style reference only: match its flat editorial illustration style, palette (deep night blue-charcoal, cool highlights, subtle paper grain, no outlines) and lighting mood exactly, but draw a new picture.
+
+Use case: illustration-story
+Asset type: small circular inset illustration (it will be masked to a circle)
+Subject: A gatekeeper standing at a narrow doorway, sorting a stream of paper index cards: some cards are passed through the doorway, others are dropped into a wicker basket at his feet. Busy, selective.
+Composition: square 1:1 (1024x1024), subject centered and fully inside a centered circle of about 85 percent of the width; the area outside the circle is plain #16171a.
+Constraints: no text, no letters, no numbers, no logos, no robot, no computer screens.
+Avoid: glossy 3D render, cute mascot, purple or neon glow, heavy gradients.

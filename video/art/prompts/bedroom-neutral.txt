@@ -1,0 +1,6 @@
+Use your built-in image generation tool to edit the attached image and output exactly one image. Do not run shell commands or write files yourself.
+
+Use case: identity-preserve
+Keep identical: the whole composition and framing (1536x1024), the room, window, moon, bed, pillows, blanket, bedside table, speaker and its orange light ring, clock, plant, lamp, colors, lighting, paper grain, and the woman's face, hair, clothing and position in bed.
+Change only: the woman's arms, hands and facial expression. New pose: she sits calmly with both hands resting on the blanket, looking toward the speaker with a neutral, slightly sleepy expression.
+Constraints: same flat editorial illustration style; no text, no letters, no speech bubbles.

@@ -8,3 +8,6 @@ __pycache__/
 results/raw/*.tmp
 TASKS.md
 .omc/
+node_modules/
+video/out/
+video/.remotion/

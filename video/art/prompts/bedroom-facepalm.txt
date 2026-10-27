@@ -1,0 +1,11 @@
+Use your built-in image generation tool to create exactly one image. Do not run shell commands or write files yourself.
+
+Use case: illustration-story
+Asset type: hero illustration for a dark-themed explainer web page about a voice assistant
+Scene: a bedroom at 1 AM. A person sits up in bed against a pillow in the left third of the frame, body turned toward the right, looking at a small cylindrical fabric smart speaker that stands on a bedside table in the right third. A small digital alarm clock sits next to the speaker; its display is a dim blank glow with no readable digits. Behind the bed, a window with a crescent moon and a few stars.
+Subject mood: the person looks tired and exasperated, one hand pressed to the forehead. The speaker's top light ring glows warm orange as if loud music is playing.
+Style/medium: flat editorial illustration, bold geometric shapes, minimal detail, simple face with minimal features, subtle paper grain, no outlines.
+Color palette: deep night blue-charcoal (from #16171a to #2a3140), cool moonlight highlights, one warm orange accent (#d95926) used only on the speaker light.
+Composition: wide 3:2 landscape (1536x1024). Characters occupy the lower 60 percent; keep the upper middle as calm empty dark wall so speech bubbles can be added later. The outer edges fade into #16171a.
+Constraints: no text, no letters, no numbers, no logos, no speech bubbles, no UI.
+Avoid: glossy 3D render, cute mascot, robot, purple or neon glow, heavy gradients, stock vector clip-art look.

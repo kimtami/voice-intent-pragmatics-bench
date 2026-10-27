@@ -649,6 +649,7 @@ results/*.md, *.csv    집계 표 (summary, paired, models_vs_base, gap, hypothe
 results/*.png          차트 (상위 모델까지의 격차, 개요, 방법별 위치, 화용 현상별)
 docs/                  화용론 개요, 필요성, 실험 설계, 모델 설정
 site/                  결과 페이지 (GitHub Pages). 수치는 python -m vib.site_data 로 결과 파일에서 생성, 구성은 site/STORYBOARD.md
+video/                 결과 페이지의 대화 무대 (Remotion). 그림은 Codex 이미지 생성, 페이지용 플레이어는 site/js/stage-player.js 로 묶음 (video/README.md)
 ```
 
 ## 한계

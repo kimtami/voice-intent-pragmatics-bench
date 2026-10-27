@@ -110,9 +110,9 @@ canvas.turn { width: 100%; height: 300px; display: block; }
 .legend i { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
 
 /* 4. 방법 */
-.methods-layout { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 16px; margin-top: 20px; align-items: start; }
-.families { columns: 1; }
-.family { background: var(--surface-2); border-radius: var(--radius); padding: 8px 10px; break-inside: avoid; margin-bottom: 8px; }
+.methods-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; margin-top: 20px; align-items: start; }
+.families { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.family { background: var(--surface-2); border-radius: var(--radius); padding: 8px 10px; }
 .family h3 { margin: 2px 0 2px 8px; font-size: 14px; color: var(--text-muted); font-weight: 600; }
 .family p { display: none; }
 .family button {
@@ -123,7 +123,7 @@ canvas.turn { width: 100%; height: 300px; display: block; }
 .family button:hover { background: var(--surface-3); }
 .family button.on { background: var(--surface-3); border-color: var(--text-muted); color: var(--text-primary); }
 .family button i { width: 4px; align-self: stretch; border-radius: 2px; flex: none; }
-.detail { background: var(--surface-2); border-radius: var(--radius); padding: 20px 22px; min-height: 230px; position: sticky; top: 70px; }
+.detail { background: var(--surface-2); border-radius: var(--radius); padding: 20px 22px; min-height: 230px; }
 .detail .row { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; margin: 12px 0; }
 .detail .row > span { color: var(--text-muted); font-size: 14px; padding-top: 2px; }
 .detail .row > div { font-size: 16px; }
@@ -184,7 +184,7 @@ footer a { color: var(--text-secondary); }
 @media (max-width: 900px) {
   .two-col, .methods-layout { grid-template-columns: minmax(0, 1fr); gap: 28px; }
   .problems { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-  .detail { position: static; }
+  .families { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 600px) {
   body { font-size: 16px; }
@@ -192,7 +192,7 @@ footer a { color: var(--text-secondary); }
   .topbar { padding: 8px 16px; gap: 10px; }
   .topbar .brand, .speed > span { display: none; }
   .speed button { padding: 4px 6px; font-size: 12px; }
-  .families { columns: 1; }
+  .families { grid-template-columns: minmax(0, 1fr); }
   .problems, .example .pair { grid-template-columns: minmax(0, 1fr); }
   .detail .row { grid-template-columns: minmax(0, 1fr); gap: 2px; }
   .bubble { font-size: 19px; }
@@ -201,11 +201,9 @@ footer a { color: var(--text-secondary); }
 }
 
 /* 대화 무대 */
-canvas.stage { width: 100%; height: 400px; display: block; }
-.stage-cap { min-height: 30px; }
-.stage-cap span { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; color: var(--text-primary); background: var(--surface-3); border-radius: var(--radius); padding: 4px 10px; }
-.stage-cap span:empty { display: none; }
-.stage-src { font-size: 13px; color: var(--text-muted); min-height: 20px; margin-top: 4px; }
+/* 대화 무대: Remotion Player (video/src/web.tsx 를 묶은 js/stage-player.js) */
+.stage-player { width: 100%; aspect-ratio: 3 / 2; background: #16171a; border-radius: var(--radius); overflow: hidden; }
+.detail .stage-player { margin: 12px 0; }
 .detail { padding: 16px 18px; }
 .detail-head h3 { margin: 0 0 4px; font-size: 19px; }
 .detail-head .role { color: var(--text-secondary); font-size: 15px; margin-top: 2px; }
@@ -214,7 +212,6 @@ canvas.stage { width: 100%; height: 400px; display: block; }
 .detail-foot details { width: 100%; color: var(--text-muted); }
 .detail-foot summary { cursor: pointer; }
 .winner-stage { margin-top: 28px; background: var(--surface-2); border-radius: var(--radius); padding: 16px 18px; }
-@media (max-width: 600px) { canvas.stage { height: 460px; } }
 
 .stacked > div:first-child { max-width: 760px; }
 .stacked .visual { margin-top: 20px; }

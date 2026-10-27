@@ -1,0 +1,6 @@
+Use your built-in image generation tool to edit the attached image and output exactly one image. Do not run shell commands or write files yourself.
+
+Use case: identity-preserve
+Keep identical: the whole composition and framing (1536x1024), the room, window, city lights, sofa, cushions, blanket, coffee table and everything on it, suitcase, side cabinet, speaker, lamp, plants, picture frame, colors, lighting, paper grain, and the woman's face, hair, clothing, laptop and position on the sofa.
+Change only: the woman's arms, hands and facial expression. New pose: both hands rest on the laptop keyboard, shoulders relaxed, a small relieved smile, looking toward the speaker.
+Constraints: same flat editorial illustration style; no text, no letters, no speech bubbles.
