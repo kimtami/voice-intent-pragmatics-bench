@@ -902,16 +902,31 @@ SELF_ARMS = {
 }
 
 
+# 같은 응답 모델 안에서 비교할 기준 조건 (쌍체 비교)
+SELF_PAIRS = {"luna.A2": "luna.A1", "luna.A2+CH": "luna.A2+CA", "luna.A2+CS": "luna.A2+CA",
+              "mercury.A1+CH": "mercury.A1+CA", "mercury.A1+CS": "mercury.A1+CA"}
+
+
 def selfhyp() -> None:
-    """5차: Luna none·low 지연 비교와 같은 모델 추정(CS). 10문항 × 1회, 같은 실행에서 잰다."""
+    """5차: Luna none·low 지연 비교와 같은 모델 추정(CS). 10문항 × 반복, 같은 실행에서 잰다."""
     sdir = RES / "selfhyp"
     if not (sdir / "judged").exists():
         return
+
+    def per_item(arm: str) -> dict[str, float]:
+        d = defaultdict(list)
+        for j in _jsonl(sdir / "judged" / f"{arm}.jsonl"):
+            if not j.get("judge_error"):
+                d[j["item_id"]].append(j["score"] / 2)
+        return {k: statistics.mean(v) for k, v in d.items()}
+
+    reps = max(r["rep"] for r in _jsonl(sdir / "raw" / "luna.A1.jsonl"))
     lines = [
-        f"{len(SELF_ITEMS)}문항 × 1회 ({', '.join(SELF_ITEMS)}), 모든 조건을 같은 실행에서 잼. 한 문항 차이가 정확도 10%p 입니다.",
+        f"{len(SELF_ITEMS)}문항 × {reps}회 ({', '.join(SELF_ITEMS)}), 모든 조건을 같은 실행에서 잼. "
+        f"비교는 같은 응답 모델 안에서 문항끼리 짝지은 차이(문항 단위 부트스트랩)입니다.",
         "",
-        "| 응답 조건 | 정확도 | 2점 문항 | 잘못된 행동 | 되묻기 | 첫 발화 p50 / p90 / 최대 | 응답 1,000턴당 |",
-        "|---|---|---|---|---|---|---|",
+        "| 응답 조건 | 정확도 | 비교 기준 대비 (95% CI) | 2점 응답 | 잘못된 행동 | 되묻기 | 첫 발화 p50 / p90 / 최대 | 응답 1,000턴당 |",
+        "|---|---|---|---|---|---|---|---|",
     ]
     for arm, name in SELF_ARMS.items():
         raw = [r for r in _jsonl(sdir / "raw" / f"{arm}.jsonl") if not r.get("error")]
@@ -921,20 +936,31 @@ def selfhyp() -> None:
         ask = sum(1 for j in jd if j.get("asked_clarification"))
         t = [r["e2e_first_ms"] for r in raw]
         cost = statistics.mean(_call_cost(r["model"], r["usage"]) for r in raw) * 1000
-        lines.append(f"| {name} | {statistics.mean(sc) / 2 * 100:.0f}% | {sc.count(2)}/{len(sc)} | {bad} | {ask} | "
+        cmp = "–"
+        if arm in SELF_PAIRS:
+            a, b = per_item(arm), per_item(SELF_PAIRS[arm])
+            m, lo, hi, _ = _boot_diff({k: a[k] - b[k] for k in SELF_ITEMS})
+            cmp = f"{SELF_ARMS[SELF_PAIRS[arm]]} 대비 {m * 100:+.1f}%p ({lo * 100:.1f}–{hi * 100:.1f})"
+        lines.append(f"| {name} | {statistics.mean(sc) / 2 * 100:.1f}% | {cmp} | {sc.count(2)}/{len(sc)} | {bad} | {ask} | "
                      f"{_pct(t, 0.5):,.0f} / {_pct(t, 0.9):,.0f} / {max(t):,.0f}ms | ${cost:.2f} |")
-    lines += ["", "| 추정 생성기 | 생성 시간 p50 (최소~최대) | 재시도 | 재시도 포함 최대 대기 | 추정 적중 (0~2, 평균) | 추정 1,000턴당 |",
-              "|---|---|---|---|---|---|"]
+    lines += ["", "| 추정 생성기 | 생성 시간 p50 (최소~최대) | 실패 / 호출 | 재시도 포함 최대 대기 | 추정 적중 (0~2, 평균) | 적중 채점 일치 | 추정 1,000턴당 |",
+              "|---|---|---|---|---|---|---|"]
     for fam, arm, name, model in (("mercury", "mercury.A1+CS", "Mercury 3 기본 (자기 추정)", "mercury-3"),
                                   ("luna", "luna.A2+CS", "GPT-6 Luna low (자기 추정)", "gpt-6-luna")):
-        calls = json.loads((ROOT / "data" / "hypotheses_self" / f"{fam}.json").read_text(encoding="utf-8"))["calls"]
-        ms = [calls[i]["total_ms"] for i in SELF_ITEMS]
-        waits = [calls[i]["total_ms"] + sum(f["total_ms"] for f in calls[i]["failures"]) for i in SELF_ITEMS]
-        retries = sum(len(calls[i]["failures"]) for i in SELF_ITEMS)
-        hit = [j["score"] for j in _jsonl(sdir / "judged" / f"{arm}.analysis.jsonl") if not j.get("judge_error")]
-        cost = statistics.mean(_call_cost(model, calls[i]["usage"]) for i in SELF_ITEMS) * 1000
-        lines.append(f"| {name} | {_pct(ms, 0.5) / 1000:.1f}s ({min(ms) / 1000:.1f}~{max(ms) / 1000:.1f}s) | {retries}/{len(SELF_ITEMS)} | "
-                     f"{max(waits) / 1000:.1f}s | {statistics.mean(hit):.1f} | ${cost:.2f} |")
+        # 1회째: 응답에 쓴 추정의 생성 기록. 2회째부터: 같은 조건으로 생성 시간·실패만 다시 잰 기록
+        samples = [json.loads((ROOT / "data" / "hypotheses_self" / f"{fam}.json").read_text(encoding="utf-8"))["calls"]]
+        samples += [json.loads(p.read_text(encoding="utf-8"))["calls"] for p in sorted(sdir.glob(f"hyp_timing_rep*_{fam}.json"))]
+        ms = [c[i]["total_ms"] for c in samples for i in SELF_ITEMS]
+        waits = [c[i]["total_ms"] + sum(f["total_ms"] for f in c[i]["failures"]) for c in samples for i in SELF_ITEMS]
+        fails = sum(len(c[i]["failures"]) for c in samples for i in SELF_ITEMS)
+        cost = statistics.mean(_call_cost(model, c[i]["usage"]) for c in samples for i in SELF_ITEMS) * 1000
+        hits = defaultdict(list)
+        for j in _jsonl(sdir / "judged" / f"{arm}.analysis.jsonl"):
+            if not j.get("judge_error"):
+                hits[j["item_id"]].append(j["score"])
+        same = sum(1 for v in hits.values() if len(set(v)) == 1)
+        lines.append(f"| {name} | {_pct(ms, 0.5) / 1000:.1f}s ({min(ms) / 1000:.1f}~{max(ms) / 1000:.1f}s) | {fails} / {len(ms) + fails} | "
+                     f"{max(waits) / 1000:.1f}s | {statistics.mean(x for v in hits.values() for x in v):.2f} | {same}/{len(hits)} 문항 | ${cost:.2f} |")
     # 3차 Gemini 추정: 생성 시간은 다시 잰 값, 적중은 3차 때 따로 채점한 값
     gt = json.loads((RES / "latency_control" / "hypothesis_timing.json").read_text(encoding="utf-8"))["total_ms"]
     ms = [gt[i] for i in SELF_ITEMS]
@@ -943,7 +969,7 @@ def selfhyp() -> None:
     usage = dict(zip(ids, json.loads((ROOT / "data" / "hypotheses.json").read_text(encoding="utf-8"))["usage"]))
     cost = statistics.mean(_call_cost("gemini-3.8-flash", usage[i]) for i in SELF_ITEMS) * 1000
     lines.append(f"| Gemini 3.8 Flash (3차 추정, 참고) | {_pct(ms, 0.5) / 1000:.1f}s ({min(ms) / 1000:.1f}~{max(ms) / 1000:.1f}s) | 기록 없음 | – | "
-                 f"{statistics.mean(hit[i] for i in SELF_ITEMS):.1f} (3차 때 별도 채점) | ${cost:.2f} |")
+                 f"{statistics.mean(hit[i] for i in SELF_ITEMS):.2f} (3차 때 1회 채점) | – | ${cost:.2f} |")
     ref = ["luna.A1", "luna.A2", "mercury.A1", "mercury.A1+CA", "mercury.A1+CH", "luna.A1+CA", "luna.A1+CH"]
     vals = []
     for arm in ref:

@@ -1,0 +1,457 @@
+{
+  "meta": {
+    "generator": {
+      "provider": "openai",
+      "model": "gpt-6-luna",
+      "params": {
+        "effort": "low",
+        "max_output_tokens": 4096
+      }
+    },
+    "created_at": "2026-10-27T01:28:12.441160+00:00",
+    "sees": "profile, device state, unselected log, prior dialogue (no utterance, no gold)",
+    "note": "생성 시간·실패만 다시 잰 값. 응답에 쓰는 추정 내용은 data/hypotheses_self/ 그대로"
+  },
+  "hypotheses": {
+    "QFR-01": [
+      {
+        "text": "차량 주행 중이고 음악이 꺼져 있어, 평소 듣는 ‘Drive’ 플레이리스트를 재생하려 할 수 있습니다.",
+        "confidence": 0.78
+      },
+      {
+        "text": "휴대폰 배터리가 20%라 충전이나 배터리 절약을 신경 쓸 수 있습니다.",
+        "confidence": 0.55
+      },
+      {
+        "text": "김 대리가 회의록을 올렸고 팀 채널에 주간 보고 양식이 공유되어, 업무 자료를 확인하거나 관련해 물을 수 있습니다.",
+        "confidence": 0.35
+      }
+    ],
+    "IMP-01": [
+      {
+        "text": "오늘 저녁 7시 민수와 파스타부오노 예약 여부에 답하거나 예약 진행을 요청할 가능성이 높다.",
+        "confidence": 0.94
+      },
+      {
+        "text": "‘거기’나 ‘그 식당’이라고 하면 이탈리안 레스토랑 파스타부오노를 가리킬 가능성이 높다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "민수와의 저녁 약속을 염두에 두고 있어 예약 시간이나 인원 확인을 원할 수 있다.",
+        "confidence": 0.65
+      }
+    ],
+    "ELL-01": [
+      {
+        "text": "직전 대화에서 어제 간 국밥집이 ‘할매순대국 성수점’이라는 답을 들었으므로, 다음 발화에서 그 식당을 ‘거기’라고 부를 수 있습니다.",
+        "confidence": 0.94
+      },
+      {
+        "text": "현재 성수동에서 차량이 정차해 있고 오후 1시이므로, 그 식당까지의 길이나 영업 여부를 확인하려 할 수 있습니다.",
+        "confidence": 0.72
+      },
+      {
+        "text": "어제 그 식당에서 결제한 기록이 있어, 오늘 점심에도 같은 곳에 갈지 고민 중일 수 있습니다.",
+        "confidence": 0.55
+      }
+    ],
+    "REP-02": [
+      {
+        "text": "차량 주행 중이고 10분 뒤 박 과장이 주관하는 회의가 예정되어 있어, 회의 장소까지의 이동이나 도착 시간을 신경 쓸 수 있다.",
+        "confidence": 0.91
+      },
+      {
+        "text": "다음 발화에서 ‘회의’나 ‘박 과장’을 가리키며 회의 준비 또는 일정 확인을 요청할 수 있다.",
+        "confidence": 0.79
+      },
+      {
+        "text": "회의가 임박했으므로 운전 중에는 화면 조작이나 긴 응답보다 간단한 음성 안내를 선호할 수 있다.",
+        "confidence": 0.87
+      }
+    ],
+    "AMB-01": [
+      {
+        "text": "방금 편의점에서 카드로 결제한 건과 관련해 영수증을 문자로 보내 달라고 하거나, 보내지 말라고 답할 가능성이 높습니다.",
+        "confidence": 0.92
+      }
+    ],
+    "SAR-01": [
+      {
+        "text": "차량 길안내 중이며 방금 안내된 골목이 공사로 막혀 있어, 우회 경로를 찾거나 안내를 다시 받길 원할 가능성이 높다.",
+        "confidence": 0.96
+      },
+      {
+        "text": "최근 공사 구간 안내를 여러 차례 받아 공사로 인한 경로 변경이나 지연을 신경 쓰고 있을 수 있다.",
+        "confidence": 0.82
+      },
+      {
+        "text": "현재 목적지는 로그만으로 알 수 없으므로, 다음 발화에서 목적지나 우회 경로를 가리킬 수 있다.",
+        "confidence": 0.73
+      }
+    ],
+    "POL-01": [
+      {
+        "text": "오후 5시 을지로에 있어 퇴근 후 성수동 집으로 이동하는 방법이나 지하철 2호선 관련 정보를 물을 수 있다.",
+        "confidence": 0.76
+      },
+      {
+        "text": "배터리가 20%라서 충전할 곳이나 배터리 절약 방법을 신경 쓸 수 있다.",
+        "confidence": 0.69
+      },
+      {
+        "text": "퇴근 후 식사 장소를 찾는다면 을지로의 을지면옥이나 한식·매운 음식을 고려할 수 있다.",
+        "confidence": 0.57
+      },
+      {
+        "text": "이번 주 지출 요약이 도착해 가계부 내역이나 지출을 확인하려 할 수 있다.",
+        "confidence": 0.34
+      }
+    ],
+    "HON-01": [
+      {
+        "text": "집에서 저녁 시간을 보내는 중이며, 배터리가 20%라 충전이 필요할 수 있다.",
+        "confidence": 0.76
+      },
+      {
+        "text": "배송 출발 알림을 받은 운동화가 어디쯤 왔는지 확인하고 싶을 수 있다.",
+        "confidence": 0.59
+      },
+      {
+        "text": "공기청정기 필터 교체 권장 알림을 기억해 두거나 교체 시기를 알아보고 싶을 수 있다.",
+        "confidence": 0.45
+      },
+      {
+        "text": "장바구니 상품의 가격 인하 소식에 관심이 있을 수 있다.",
+        "confidence": 0.39
+      },
+      {
+        "text": "김 대리가 회의록을 올렸다는 메시지를 확인하거나 관련 업무를 이어가려 할 수 있다.",
+        "confidence": 0.27
+      }
+    ],
+    "MUL-01": [
+      {
+        "text": "내일 오전 10시 성수동 세차 예약이 있지만 비 예보가 있어 예약을 취소하거나 변경할지 고민할 수 있다.",
+        "confidence": 0.86
+      },
+      {
+        "text": "밤 10시라 잠들기 전에 자주 듣는 수면 음악을 틀어 달라고 할 수 있다.",
+        "confidence": 0.69
+      },
+      {
+        "text": "택배 보관함에 도착한 생활용품을 확인하거나 찾는 일을 신경 쓸 수 있다.",
+        "confidence": 0.49
+      },
+      {
+        "text": "대학 동기 단톡방의 메시지와 다음 주 금요일 모임 투표를 확인하거나 답하려 할 수 있다.",
+        "confidence": 0.44
+      }
+    ],
+    "PHA-01": [
+      {
+        "text": "밤 9시에 귀가한 상태라 오늘 남은 일정이나 집에서 할 일을 확인하고 싶을 수 있다.",
+        "confidence": 0.68
+      },
+      {
+        "text": "세탁기 탈수가 끝나 있어 빨래를 널거나 세탁 상태를 확인하려 할 수 있다.",
+        "confidence": 0.63
+      },
+      {
+        "text": "잠들기 전 수면 음악을 틀거나 취침 준비를 할 수 있다.",
+        "confidence": 0.58
+      },
+      {
+        "text": "대학 동기 단톡방의 메시지와 다음 주 금요일 모임 투표에 답하거나 내용을 확인하려 할 수 있다.",
+        "confidence": 0.48
+      },
+      {
+        "text": "이번 주 지출 요약이나 가격 인하 알림을 살펴보고 싶을 수 있다.",
+        "confidence": 0.38
+      }
+    ]
+  },
+  "usage": [
+    {
+      "input_tokens": 521,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "output_tokens": 214,
+      "output_tokens_details": {
+        "reasoning_tokens": 82
+      },
+      "total_tokens": 735
+    },
+    {
+      "input_tokens": 556,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "output_tokens": 199,
+      "output_tokens_details": {
+        "reasoning_tokens": 69
+      },
+      "total_tokens": 755
+    },
+    {
+      "input_tokens": 572,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "output_tokens": 308,
+      "output_tokens_details": {
+        "reasoning_tokens": 156
+      },
+      "total_tokens": 880
+    },
+    {
+      "input_tokens": 530,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "output_tokens": 245,
+      "output_tokens_details": {
+        "reasoning_tokens": 103
+      },
+      "total_tokens": 775
+    },
+    {
+      "input_tokens": 522,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "output_tokens": 192,
+      "output_tokens_details": {
+        "reasoning_tokens": 130
+      },
+      "total_tokens": 714
+    },
+    {
+      "input_tokens": 527,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "output_tokens": 288,
+      "output_tokens_details": {
+        "reasoning_tokens": 147
+      },
+      "total_tokens": 815
+    },
+    {
+      "input_tokens": 516,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "output_tokens": 254,
+      "output_tokens_details": {
+        "reasoning_tokens": 86
+      },
+      "total_tokens": 770
+    },
+    {
+      "input_tokens": 505,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "output_tokens": 341,
+      "output_tokens_details": {
+        "reasoning_tokens": 164
+      },
+      "total_tokens": 846
+    },
+    {
+      "input_tokens": 540,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "output_tokens": 244,
+      "output_tokens_details": {
+        "reasoning_tokens": 85
+      },
+      "total_tokens": 784
+    },
+    {
+      "input_tokens": 519,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "output_tokens": 254,
+      "output_tokens_details": {
+        "reasoning_tokens": 80
+      },
+      "total_tokens": 773
+    }
+  ],
+  "calls": {
+    "QFR-01": {
+      "total_ms": 3933.3,
+      "usage": {
+        "input_tokens": 521,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 214,
+        "output_tokens_details": {
+          "reasoning_tokens": 82
+        },
+        "total_tokens": 735
+      },
+      "failures": []
+    },
+    "IMP-01": {
+      "total_ms": 2761.4,
+      "usage": {
+        "input_tokens": 556,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 199,
+        "output_tokens_details": {
+          "reasoning_tokens": 69
+        },
+        "total_tokens": 755
+      },
+      "failures": []
+    },
+    "ELL-01": {
+      "total_ms": 3816.4,
+      "usage": {
+        "input_tokens": 572,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 308,
+        "output_tokens_details": {
+          "reasoning_tokens": 156
+        },
+        "total_tokens": 880
+      },
+      "failures": []
+    },
+    "REP-02": {
+      "total_ms": 3226.0,
+      "usage": {
+        "input_tokens": 530,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 245,
+        "output_tokens_details": {
+          "reasoning_tokens": 103
+        },
+        "total_tokens": 775
+      },
+      "failures": []
+    },
+    "AMB-01": {
+      "total_ms": 2961.9,
+      "usage": {
+        "input_tokens": 522,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 192,
+        "output_tokens_details": {
+          "reasoning_tokens": 130
+        },
+        "total_tokens": 714
+      },
+      "failures": []
+    },
+    "SAR-01": {
+      "total_ms": 3431.6,
+      "usage": {
+        "input_tokens": 527,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 288,
+        "output_tokens_details": {
+          "reasoning_tokens": 147
+        },
+        "total_tokens": 815
+      },
+      "failures": []
+    },
+    "POL-01": {
+      "total_ms": 3642.1,
+      "usage": {
+        "input_tokens": 516,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 254,
+        "output_tokens_details": {
+          "reasoning_tokens": 86
+        },
+        "total_tokens": 770
+      },
+      "failures": []
+    },
+    "HON-01": {
+      "total_ms": 4015.5,
+      "usage": {
+        "input_tokens": 505,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 341,
+        "output_tokens_details": {
+          "reasoning_tokens": 164
+        },
+        "total_tokens": 846
+      },
+      "failures": []
+    },
+    "MUL-01": {
+      "total_ms": 2972.9,
+      "usage": {
+        "input_tokens": 540,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 244,
+        "output_tokens_details": {
+          "reasoning_tokens": 85
+        },
+        "total_tokens": 784
+      },
+      "failures": []
+    },
+    "PHA-01": {
+      "total_ms": 2912.1,
+      "usage": {
+        "input_tokens": 519,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 254,
+        "output_tokens_details": {
+          "reasoning_tokens": 80
+        },
+        "total_tokens": 773
+      },
+      "failures": []
+    }
+  }
+}

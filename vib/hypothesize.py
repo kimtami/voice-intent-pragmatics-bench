@@ -30,9 +30,12 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--generator", default="gemini38", choices=sorted(GENERATORS))
     ap.add_argument("--items", default=None, help="문항 id 목록 (쉼표 구분)")
+    ap.add_argument("--timing-out", default=None, help="생성 시간·실패만 다시 재서 이 경로에 쓴다 (추정 내용 파일은 그대로)")
     args = ap.parse_args()
     gen = GENERATORS[args.generator]
     out_path = ROOT / "data" / ("hypotheses.json" if args.generator == "gemini38" else f"hypotheses_self/{args.generator}.json")
+    if args.timing_out:
+        out_path = Path(args.timing_out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
     load_dotenv(ROOT / ".env", override=True)
@@ -60,6 +63,8 @@ def main() -> None:
         print(it["id"], len(out[it["id"]]), f"{res.total_ms:.0f}ms", flush=True)
     meta = {"generator": gen, "created_at": datetime.now(timezone.utc).isoformat(),
             "sees": "profile, device state, unselected log, prior dialogue (no utterance, no gold)"}
+    if args.timing_out:
+        meta["note"] = "생성 시간·실패만 다시 잰 값. 응답에 쓰는 추정 내용은 data/hypotheses_self/ 그대로"
     out_path.write_text(json.dumps({"meta": meta, "hypotheses": out, "usage": usage, "calls": calls},
                                    ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print("ok", len(out))
