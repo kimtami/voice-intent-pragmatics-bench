@@ -1098,11 +1098,11 @@ def selfhyp_persona() -> None:
     def hits(paths: list[Path]) -> float:
         return statistics.mean(j["score"] for p in paths for j in _jsonl(p) if not j.get("judge_error"))
 
-    def gen_row(label: str, hyps: dict, calls: list[dict], hit: float) -> str:
+    def gen_row(label: str, hyps: dict, calls: list[dict], hit: float, per_call: int = 1) -> str:
         ms = [c["total_ms"] for c in calls]
         cost = statistics.mean(_call_cost("mercury-3", c["usage"]) for c in calls) * 1000
         return (f"| {label} | {sum(map(len, hyps.values()))} ({sum(map(len, hyps.values())) / len(hyps):.1f}) | {hit:.2f} | "
-                f"{_pct(ms, 0.5) / 1000:.1f}s ({max(ms) / 1000:.1f}s) | {sum(len(c['failures']) for c in calls)} / {len(calls)} | ${cost:.2f} |")
+                f"{_pct(ms, 0.5) / 1000:.1f}s ({max(ms) / 1000:.1f}s) | {sum(len(c['failures']) for c in calls)} / {len(calls) * per_call} | ${cost:.2f} |")
 
     dj = RES / "selfhyp" / "diag" / "judged"
     views = {"task": "관점: 일을 처리하는 비서", "person": "관점: 오래 알아 온 가까운 사람"}
@@ -1118,7 +1118,15 @@ def selfhyp_persona() -> None:
         lines.append(gen_row(label, cp["by_view"][v], [c["views"][v] for c in cp["calls"].values()],
                              hits([pdir / "diag" / "judged" / f"persona_{v}.analysis.jsonl"])))
     lines.append(gen_row("두 관점 합침 (응답에 넣은 것, 시간은 늦은 쪽)", cp["hypotheses"], list(cp["calls"].values()),
-                         hits([pdir / "diag" / "judged" / "persona_merged.analysis.jsonl"])))
+                         hits([pdir / "diag" / "judged" / "persona_merged.analysis.jsonl"]), per_call=len(views)))
+    # v2 는 본 10문항(SELF_ITEMS)을 보고 고쳤으므로, 적중을 본 10문항 / 못 본 14문항으로 나눠 함께 싣는다
+    split_hit = []
+    for label, files in (("v2", [dj / f"instant_v2_{s}.analysis.jsonl" for s in ("insample", "heldout")]),
+                         ("두 관점 합침", [pdir / "diag" / "judged" / "persona_merged.analysis.jsonl"])):
+        js = [j for f in files for j in _jsonl(f) if not j.get("judge_error")]
+        split_hit.append(f"{label} " + " / ".join(f"{statistics.mean(j['score'] for j in js if (j['item_id'] in SELF_ITEMS) == ins):.2f}"
+                                                  for ins in (True, False)))
+    lines += ["", "추정 적중을 v2 를 고칠 때 본 10문항 / 못 본 14문항으로 나누면: " + ", ".join(split_hit) + "."]
     gen_cost = {"CIv2": statistics.mean(_call_cost("mercury-3", c["usage"]) for f in v2s for c in f["calls"].values()),
                 "CP": statistics.mean(_call_cost("mercury-3", c["usage"]) for c in cp["calls"].values())}
     for sub, base, name in (("instant", "mercury.A0", "Mercury 3 instant"), ("luna_none", "luna.A1", "GPT-6 Luna none")):
@@ -1152,6 +1160,11 @@ def selfhyp_persona() -> None:
         m, lo, hi, _ = _boot_diff({k: per[arms[2][0]][k] - per[arms[1][0]][k] for k in keep})
         lines += ["", f"논란 문항({'·'.join(sorted(CONTESTED))})을 뺀 {len(keep)}문항만: 관점 2개 추정 대 v2 추정 "
                       f"{m * 100:+.1f}%p ({lo * 100:.1f}–{hi * 100:.1f})."]
+        parts = []  # v2 를 고칠 때 본 10문항 / 못 본 14문항으로 나눈 관점 2개 대 v2
+        for lab, ks in (("본 10문항", [k for k in ids if k in SELF_ITEMS]), ("못 본 14문항", [k for k in ids if k not in SELF_ITEMS])):
+            d, dl, dh, _ = _boot_diff({k: per[arms[2][0]][k] - per[arms[1][0]][k] for k in ks})
+            parts.append(f"{lab} {d * 100:+.1f}%p ({dl * 100:.1f}–{dh * 100:.1f})")
+        lines[-1] += " v2 를 고칠 때 본 문항으로 나누면 " + ", ".join(parts) + "."
         ctl = pdir / "latency_control"
         if ctl.exists():  # 위 표의 첫 발화는 다른 시각 값이라, 같은 시각에 세 조건을 1회씩 돌린 대조(채점 안 함)를 따로 싣는다
             cells = []
