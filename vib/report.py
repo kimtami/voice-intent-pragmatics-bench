@@ -1219,6 +1219,21 @@ def travel_summary() -> None:
         vs_v2 = diff(arm, "mercury.A0+TV", paired) if cond in ("TP", "TG") else "–"
         lines.append(f"| {info} | {acc(sorted(items))} | {acc(paired)} | {acc(control)} | {diff(arm, 'mercury.A0+TM', paired)} | {vs_v2} | "
                      f"{sc.count(2)}/{len(sc)} | {bad} | {ask} | {_pct(t, 0.5):,.0f} / {_pct(t, 0.9):,.0f}ms | ${cost:.2f} |")
+    hits = []  # 응답 전에 만든 추정이 정답 의도를 담았는지 (분석 채점기, 0~2)
+    for name, label in (("v2", "v2 추정"), ("planner", "여행 플래너 관점 추정")):
+        hp = tdir / "diag" / "judged" / f"{name}.analysis.jsonl"
+        if hp.exists():
+            hs = {j["item_id"]: j["score"] for j in _jsonl(hp) if not j.get("judge_error")}
+            hits.append(f"{label} 전체 {statistics.mean(hs.values()):.2f}, 짝 {statistics.mean(hs[k] for k in paired):.2f}")
+    if hits:
+        lines += ["", "추정 적중(0~2): " + "; ".join(hits) + "."]
+    ctl = tdir / "latency_control"
+    if ctl.exists():  # 게이트 조건의 첫 발화는 다른 시각에 돌았으므로, 같은 시각에 1회씩 다시 돌린 값으로 게이트 비용을 본다
+        t = {c: {r["item_id"]: r["e2e_first_ms"] for r in _jsonl(ctl / f"mercury.A0+{c}.jsonl") if not r.get("error")} for c in ("TM", "TJ4", "TJ5")}
+        cells = [f"{TRAVEL_CONDS[c].split(' (')[0]} {_pct(list(t[c].values()), 0.5):,.0f} / {_pct(list(t[c].values()), 0.9):,.0f}ms" for c in t]
+        d = [f"{c} {statistics.median(t[c][k] - t['TM'][k] for k in t['TM']):+,.0f}ms" for c in ("TJ4", "TJ5")]
+        lines += ["", "같은 시각 지연 대조(20문항 × 1회, 채점 안 함), 첫 발화 p50 / p90: " + ", ".join(cells)
+                  + ". 기억 전체 대비 문항별 중앙값: " + ", ".join(d) + "."]
     types = sorted({items[k]["pair_type"] for k in paired})
     lines += ["", "**짝 문항 유형별 정확도**", "", "| 조건 | " + " | ".join(f"{t} ({sum(items[k]['pair_type'] == t for k in paired)})" for t in types) + " |",
               "|---|" + "---|" * len(types)]
