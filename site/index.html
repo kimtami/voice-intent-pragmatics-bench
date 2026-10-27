@@ -22,27 +22,17 @@
 
   <main>
     <section class="scene" id="problem" data-title="문제">
-      <div class="scene-inner two-col">
+      <div class="scene-inner stacked">
         <div>
           <p class="kicker">문제</p>
           <h1>빠른 음성 비서는 말을 글자 그대로 받아들입니다</h1>
-          <p class="lead">사람은 "잠 참 잘 오겠다"가 칭찬이 아니라 불평이라는 걸 압니다. 상황을 같이 보기 때문입니다. 말의 글자 뜻과 하려는 뜻을 가르는 이 능력을 언어학에서는 화용론이라고 부릅니다.</p>
-          <p class="note">이 페이지는 실제 측정 결과(한국어 음성 발화 30문항 + 여행 20문항, 응답 수천 건)를 보여 줍니다.</p>
+          <p class="lead">헤비메탈을 틀어 놓고 "잠 참 잘 오겠다"면 불평입니다. 이렇게 상황으로 말뜻을 읽는 것을 화용론이라고 합니다.</p>
+          <p class="note">비서의 말풍선은 모두 실제 측정에서 나온 응답입니다.</p>
         </div>
         <div class="visual">
-          <div class="situation" id="p-situation"></div>
-          <canvas class="wave" id="p-wave" aria-hidden="true"></canvas>
-          <div class="bubble" id="p-utter" aria-live="polite"></div>
-          <div class="answers">
-            <div class="answer bad" id="p-bad">
-              <span class="tag"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="#d03b3b" stroke-width="2" fill="none" stroke-linecap="round"/></svg>글자 그대로 받아들인 답</span>
-              <p></p><div class="src"></div>
-            </div>
-            <div class="answer good" id="p-good">
-              <span class="tag"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5" stroke="#0ca30c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>하려는 뜻을 알아들은 답</span>
-              <p></p><div class="src"></div>
-            </div>
-          </div>
+          <div class="stage-cap"><span id="p-cap"></span></div>
+          <canvas class="stage" id="p-stage" role="img" aria-label="사용자와 비서의 대화"></canvas>
+          <div class="stage-src" id="p-src"></div>
         </div>
       </div>
       <button class="replay" data-replay="problem">다시 보기</button>
@@ -53,8 +43,8 @@
         <div>
           <p class="kicker">목표</p>
           <h2>정확한 모델은 느립니다</h2>
-          <p class="lead">가장 정확한 Gemini 3.8 Flash 는 첫 소리까지 2초가 걸립니다. 음성 대화에서 2초는 깁니다. 빠른 모델을 그대로 쓰면서, 말뜻을 맞히는 정도만 상위 모델 가까이 올리는 것이 목표입니다.</p>
-          <p class="note">점 하나가 모델 하나의 기본 설정입니다. 30문항 × 3회, 마우스를 올리면 수치가 보입니다.</p>
+          <p class="lead">가장 정확한 모델은 첫 소리까지 2초. 빠른 모델로 그 정확도에 다가가는 것이 목표입니다.</p>
+          <p class="note">점 하나 = 모델 하나 (30문항 × 3회). 점에 마우스를 올리면 수치.</p>
         </div>
         <div class="chart-wrap">
           <canvas class="plane" id="g-plane" role="img" aria-label="모델별 첫 소리까지 시간과 정확도"></canvas>
@@ -68,7 +58,8 @@
       <div class="scene-inner">
         <p class="kicker">핵심 구분</p>
         <h2>같은 아이디어도 언제 계산하느냐에 따라 속도가 갈립니다</h2>
-        <p class="lead">말이 끝난 뒤 답하기 전에 무언가를 더 하면, 그만큼 사용자가 기다립니다. 사용자가 말하기 전에 미리 해 두면 기다림은 그대로입니다. 아래는 Mercury 3 의 첫 소리 시간입니다(미리 짐작은 다른 시각에 돌아, 같은 시각에 잰 기준 대비 변화 +13ms 를 기준에 더한 값).</p>
+        <p class="lead">말이 끝난 뒤에 더 생각하면 사용자가 기다립니다. 말하기 전에 미리 해 두면 기다림은 그대로입니다.</p>
+        <p class="note">Mercury 3 의 첫 소리 시간. 미리 짐작은 다른 시각에 돌아, 같은 시각에 잰 변화(+13ms)를 기준에 더함.</p>
         <canvas class="turn" id="w-turn" role="img" aria-label="방법별 첫 소리까지 시간"></canvas>
         <div class="legend" id="w-legend"></div>
       </div>
@@ -79,10 +70,14 @@
       <div class="scene-inner">
         <p class="kicker">시도한 방법</p>
         <h2>6가지 방향, 18가지 방법을 시험했습니다</h2>
-        <p class="lead">방법을 누르면 무엇을 덧붙였는지(프롬프트)와 실제로 나온 결과를 볼 수 있습니다. 예시는 가능한 한 같은 상황, "하 이거 들으면 잠 참 잘 오겠다"에 대한 실제 응답입니다.</p>
+        <p class="lead">방법을 누르면 그 방법이 비서의 머릿속에서 무엇을 하는지 대화로 보여 줍니다.</p>
         <div class="methods-layout">
           <div class="families" id="m-families"></div>
-          <div class="detail" id="m-detail" aria-live="polite"></div>
+          <div class="detail" id="m-detail">
+            <div class="detail-head" id="m-head" aria-live="polite"></div>
+            <canvas class="stage" id="m-stage" role="img" aria-label="방법이 하는 일을 보여 주는 대화"></canvas>
+            <div class="detail-foot" id="m-foot"></div>
+          </div>
         </div>
       </div>
       <button class="replay" data-replay="methods">다시 보기</button>
@@ -92,7 +87,7 @@
       <div class="scene-inner">
         <p class="kicker">결과</p>
         <h2>방법마다 점이 어디로 움직였나</h2>
-        <p class="lead">점은 기준 설정에서 출발해 방법을 더한 결과로 이동합니다. 위로 갈수록 말뜻을 잘 맞혔고, 오른쪽으로 갈수록 첫 소리가 늦습니다. 세로 막대는 95% 신뢰구간입니다.</p>
+        <p class="lead">위로 갈수록 말뜻을 잘 맞힘, 오른쪽으로 갈수록 느림. 점은 기준에서 방법을 더한 결과로 이동합니다.</p>
         <div class="tabs" id="r-tabs" role="tablist"></div>
         <div class="chapter-title" id="r-title"></div>
         <div class="chart-wrap">
@@ -111,7 +106,7 @@
       <div class="scene-inner">
         <p class="kicker">문제점</p>
         <h2>좋아 보였던 방법도 대가가 있었습니다</h2>
-        <p class="lead">카드마다 그 방법의 가장 큰 문제를 숫자 하나로 적었습니다.</p>
+
         <div class="problems" id="x-problems"></div>
       </div>
       <button class="replay" data-replay="problems">다시 보기</button>
@@ -126,14 +121,18 @@
             <h2 id="v-head"></h2>
             <p class="lead" id="v-why"></p>
             <p class="lead" id="v-nums"></p>
-            <ul class="caveats" id="v-caveats"></ul>
+            <details class="caveat-box"><summary>주의할 점</summary><ul class="caveats" id="v-caveats"></ul></details>
           </div>
           <div class="chart-wrap">
             <canvas class="plane" id="v-plane" role="img" aria-label="가장 나은 방법의 위치"></canvas>
             <div class="tooltip" id="v-tip" hidden></div>
           </div>
         </div>
-        <div class="examples" id="v-examples"></div>
+        <div class="winner-stage">
+          <div class="stage-cap"><span id="v-cap"></span></div>
+          <canvas class="stage" id="v-stage" role="img" aria-label="미리 짐작 전후의 대화"></canvas>
+          <div class="stage-src" id="v-src"></div>
+        </div>
       </div>
       <button class="replay" data-replay="winner">다시 보기</button>
     </section>

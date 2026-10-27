@@ -1,7 +1,7 @@
-import { T, Run, dur, hide, readMs, reveal, setSpeed, getSpeed, sleep, tween, typeText, isReduced } from "./motion.js";
+import { T, Run, dur, hide, reveal, setSpeed, getSpeed, sleep, tween, isReduced } from "./motion.js";
 import { Plane } from "./plane.js";
 import { Turn } from "./turn.js";
-import { Wave } from "./wave.js";
+import { Stage } from "./stage.js";
 
 const $ = (s) => document.querySelector(s);
 const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -9,7 +9,7 @@ const fmtMs = (ms) => (ms >= 1000 ? `${(ms / 1000).toFixed(1)}초` : `${ms}ms`);
 const won = (v) => `$${v < 0.1 ? v.toFixed(3) : v.toFixed(2)}`;
 const pct = (v) => `${v.toFixed(1)}%`;
 
-const [M, D, C] = await Promise.all(["data/metrics.json", "data/methods.json", "data/chapters.json"].map((u) => fetch(u).then((r) => r.json())));
+const [M, D, C, S] = await Promise.all(["data/metrics.json", "data/methods.json", "data/chapters.json", "data/stages.json"].map((u) => fetch(u).then((r) => r.json())));
 const metric = (k) => M.metrics[k];
 const method = (id) => D.methods.find((m) => m.id === id);
 const timingColor = (t) => css(`--series-${D.timings[t].slot}`);
@@ -45,28 +45,20 @@ function legendHtml(timings, withBase = true, withRef = true) {
 const cancelled = (e) => e && e.message === "cancel";
 
 // ---------- 1. 문제 ----------
-const wave = new Wave($("#p-wave"));
+const pStage = new Stage($("#p-stage"));
 const runP = new Run();
 async function playProblem() {
   const id = runP.start();
-  const ex = D.example;
-  const sit = $("#p-situation"), utt = $("#p-utter"), bad = $("#p-bad"), good = $("#p-good");
-  sit.textContent = ex.situation;
-  utt.textContent = "";
-  for (const el of [bad, good]) { el.querySelector("p").textContent = ""; el.querySelector(".src").textContent = ""; hide(el); }
-  hide(sit);
   try {
-    reveal(sit);
-    await sleep(dur(T.enter), runP, id);
-    await Promise.all([wave.speak(dur(1800)), typeText(utt, `"${ex.utterance}"`, runP, id)]);
-    await sleep(dur(600), runP, id);
-    reveal(bad);
-    await typeText(bad.querySelector("p"), ex.literal.text, runP, id);
-    bad.querySelector(".src").textContent = ex.literal.source;
-    await sleep(readMs(ex.literal.text), runP, id);
-    reveal(good);
-    await typeText(good.querySelector("p"), ex.intended.text, runP, id);
-    good.querySelector(".src").textContent = ex.intended.source;
+    $("#p-cap").textContent = "빠른 비서: 글자 그대로 받아들임";
+    $("#p-src").textContent = "";
+    await pStage.play(S.problem.literal, runP, id);
+    $("#p-src").textContent = D.example.literal.source;
+    await sleep(dur(1600), runP, id);
+    $("#p-cap").textContent = "말뜻을 알아들으면";
+    $("#p-src").textContent = "";
+    await pStage.play(S.problem.pragmatic, runP, id);
+    $("#p-src").textContent = `${D.example.intended.source} · 생각 말풍선은 설명용`;
   } catch (e) { if (!cancelled(e)) throw e; }
 }
 
@@ -130,26 +122,26 @@ function renderFamilies() {
       ${D.methods.filter((m) => m.family === f.id).map((m) => `
         <button data-method="${m.id}" class="${m.id === selected ? "on" : ""}"><i style="background:${timingColor(m.timing)}"></i>${m.name}</button>`).join("")}
     </div>`).join("");
-  $("#m-families").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => showMethod(b.dataset.method, true)));
+  $("#m-families").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => {
+    // 좁은 화면에서는 목록이 무대 위에 있으므로, 누르면 무대로 내려간다
+    if (matchMedia("(max-width: 900px)").matches) $("#m-detail").scrollIntoView({ behavior: isReduced() ? "auto" : "smooth", block: "start" });
+    showMethod(b.dataset.method, true);
+  }));
 }
-async function showMethod(mid, typed) {
+const mStage = new Stage($("#m-stage"));
+async function showMethod(mid, animate) {
   selected = mid;
   $("#m-families").querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.method === mid));
   const m = method(mid), fam = D.families.find((f) => f.id === m.family);
-  const det = $("#m-detail");
-  det.innerHTML = `
-    <h3>${m.name}</h3>
+  $("#m-head").innerHTML = `<h3>${m.name}</h3>
     <div class="timing-chip"><i style="background:${timingColor(m.timing)}"></i>${D.timings[m.timing].label}: ${D.timings[m.timing].detail}</div>
-    <div class="row"><span>하는 일</span><div>${fam.role}</div></div>
-    <div class="row"><span>덧붙인 것</span><div class="prompt"></div></div>
-    <div class="row"><span>나온 결과</span><div class="out"></div></div>
-    <div class="row"><span>문제점</span><div class="prob"></div></div>`;
-  det.querySelector(".prompt").textContent = m.prompt;
-  det.querySelector(".prob").textContent = `${m.problem.value}. ${m.problem.text}`;
+    <div class="role">${fam.role}</div>`;
+  $("#m-foot").innerHTML = `<span class="chip">${m.problem.value}</span><span>${m.problem.text}</span>
+    <details><summary>덧붙인 프롬프트 보기</summary>${m.prompt}</details>`;
   const id = runM.start();
   try {
-    if (typed) await typeText(det.querySelector(".out"), m.output, runM, id);
-    else det.querySelector(".out").textContent = m.output;
+    if (animate) await mStage.play(S.methods[mid], runM, id);
+    else { mStage.reset(); }
   } catch (e) { if (!cancelled(e)) throw e; }
 }
 async function playMethods() {
@@ -250,16 +242,7 @@ $("#v-why").textContent = W.why;
   $("#v-nums").innerHTML = `Mercury 3 instant + 미리 짐작: <b>${pct(a.accuracy)}</b>, 첫 소리 변화 ${sgn(a.first_delta)}. Mercury 3 + 미리 짐작: <b>${pct(b.accuracy)}</b>, 첫 소리 변화 ${sgn(b.first_delta)}. 목표인 Gemini 3.8 Flash 는 ${pct(t.accuracy)}, 첫 소리 ${fmtMs(t.first_p50)} 입니다. (첫 소리 변화는 같은 시각에 잰 기준 설정 대비)`;
   $("#v-caveats").innerHTML = [...W.caveats, `${W.runner_up.text} (instant: ${pct(r.accuracy)}, 1,000턴당 ${won(r.cost_1k)})`].map((c) => `<li>${c}</li>`).join("");
 }
-$("#v-examples").innerHTML = W.examples.map((e) => `
-  <div class="example">
-    <div class="ctx">${e.situation}</div>
-    <div class="utt">"${e.utterance}"</div>
-    <div class="pair">
-      <div class="bad"><div class="lab"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="#d03b3b" stroke-width="2" fill="none" stroke-linecap="round"/></svg>미리 짐작 없이</div><p data-text="${e.before}"></p></div>
-      <div class="good"><div class="lab"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5" stroke="#0ca30c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>미리 짐작해 두고</div><p data-text="${e.after}"></p></div>
-    </div>
-    <div class="src">${e.source}</div>
-  </div>`).join("");
+const vStage = new Stage($("#v-stage"));
 async function playWinner() {
   const id = runV.start();
   const main = C.chapters.find((c) => c.id === "main");
@@ -270,8 +253,6 @@ async function playWinner() {
   winPlane.points.forEach((p) => { p.prog = 1; p.alpha = 1; p.ciAlpha = 0; p.dim = false; });
   winPlane.targetAlpha = 1;
   winPlane.zoneAlpha = 1;
-  const exs = [...$("#v-examples").children];
-  exs.forEach((e) => { hide(e); e.querySelectorAll("p").forEach((p) => { p.textContent = ""; }); });
   winPlane.draw();
   try {
     await sleep(dur(600), runV, id);
@@ -281,13 +262,15 @@ async function playWinner() {
     }, undefined, runV, id);
     for (const p of winPlane.points) if (W.points.includes(p.id)) { p.ciAlpha = 1; p.showCi = true; }
     winPlane.draw();
-    for (const ex of exs) {
-      reveal(ex);
-      const [b, g] = ex.querySelectorAll("p");
-      await typeText(b, b.dataset.text, runV, id);
-      await sleep(dur(500), runV, id);
-      await typeText(g, g.dataset.text, runV, id);
-      await sleep(readMs(g.dataset.text) / 2, runV, id);
+    for (const ex of S.winner) {
+      $("#v-cap").textContent = `미리 짐작 없이 · ${ex.label}`;
+      $("#v-src").textContent = "";
+      await vStage.play(ex.before, runV, id);
+      await sleep(dur(1200), runV, id);
+      $("#v-cap").textContent = `미리 짐작해 두고 · ${ex.label}`;
+      await vStage.play(ex.after, runV, id);
+      $("#v-src").textContent = "비서의 말은 실제 응답, 짐작 카드는 실제로 미리 만든 추정";
+      await sleep(dur(1800), runV, id);
     }
   } catch (e) { if (!cancelled(e)) throw e; }
 }
@@ -295,7 +278,6 @@ async function playWinner() {
 // 재생 전에도 비어 보이지 않게, 목록과 예시 글은 처음부터 채워 둔다 (재생하면 지우고 다시 쓴다)
 renderFamilies();
 showMethod(selected, false);
-document.querySelectorAll("#v-examples p[data-text]").forEach((p) => { p.textContent = p.dataset.text; });
 
 // ---------- 8. 다음 ----------
 $("#n-list").innerHTML = D.next.map((n) => `<li>${n}</li>`).join("");

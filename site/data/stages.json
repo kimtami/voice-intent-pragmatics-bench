@@ -1,0 +1,1142 @@
+{
+ "note": "무대 대본. 비서의 말과 짐작·분석·해석 내용은 실제 결과에서 가져온 글이다(길면 앞뒤를 자름). '사람이라면' 생각 말풍선만 설명용이다.",
+ "problem": {
+  "literal": [
+   {
+    "do": "say",
+    "who": "person",
+    "text": "잠 잘 오는 음악 틀어 줘",
+    "hold": 300
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "수면 플레이리스트를 재생할게요.",
+    "hold": 700
+   },
+   {
+    "do": "cards",
+    "items": [
+     {
+      "text": "현재 곡: 'Thunder Riot', 헤비메탈, 168 BPM"
+     }
+    ],
+    "hold": 400
+   },
+   {
+    "do": "say",
+    "who": "person",
+    "text": "하 이거 들으면 잠 참 잘 오겠다",
+    "hold": 900
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "네, 좋은 말씀이에요. 편안한 밤 되세요.",
+    "tone": "bad",
+    "hold": 1800
+   }
+  ],
+  "pragmatic": [
+   {
+    "do": "say",
+    "who": "person",
+    "text": "잠 잘 오는 음악 틀어 줘",
+    "hold": 300
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "수면 플레이리스트를 재생할게요.",
+    "hold": 700
+   },
+   {
+    "do": "cards",
+    "items": [
+     {
+      "text": "현재 곡: 'Thunder Riot', 헤비메탈, 168 BPM",
+      "hot": true
+     }
+    ],
+    "hold": 300
+   },
+   {
+    "do": "say",
+    "who": "person",
+    "text": "하 이거 들으면 잠 참 잘 오겠다",
+    "hold": 600
+   },
+   {
+    "do": "think",
+    "title": "사람이라면 이렇게 알아듣는다",
+    "items": [
+     "잠 오는 음악을 부탁했는데 헤비메탈이 나온다",
+     "그런데 '잠 참 잘 오겠다'? 반대로 말하는 중",
+     "→ 곡을 바꿔 달라는 뜻"
+    ],
+    "pick": 2,
+    "each": 900
+   },
+   {
+    "do": "dimThought"
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "헤비메탈 곡을 수면 음악으로 바꿔 드릴게요.",
+    "tone": "good",
+    "hold": 1800
+   }
+  ]
+ },
+ "methods": {
+  "effort": [
+   {
+    "do": "say",
+    "who": "person",
+    "text": "잠 잘 오는 음악 틀어 줘",
+    "hold": 300
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "수면 플레이리스트를 재생할게요.",
+    "hold": 700
+   },
+   {
+    "do": "say",
+    "who": "person",
+    "text": "하 이거 들으면 잠 참 잘 오겠다",
+    "hold": 800
+   },
+   {
+    "do": "think",
+    "title": "더 오래 생각함 (생각 내용은 공개되지 않음)",
+    "items": [
+     "· · ·"
+    ],
+    "bullets": false,
+    "each": 400,
+    "hold": 300
+   },
+   {
+    "do": "clock",
+    "label": "+666ms",
+    "ms": 1300
+   },
+   {
+    "do": "dimThought"
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "네, 편안히 주무세요.",
+    "tone": "bad",
+    "hold": 1400
+   }
+  ],
+  "checklist": [
+   {
+    "do": "say",
+    "who": "person",
+    "text": "잠 잘 오는 음악 틀어 줘",
+    "hold": 300
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "수면 플레이리스트를 재생할게요.",
+    "hold": 700
+   },
+   {
+    "do": "say",
+    "who": "person",
+    "text": "하 이거 들으면 잠 참 잘 오겠다",
+    "hold": 800
+   },
+   {
+    "do": "think",
+    "title": "속으로 점검 (지시한 점검표)",
+    "items": [
+     "문장 형태와 실제 의도가 다른가?",
+     "상황과 반대되는 칭찬·감탄은 반어적 불만일 수 있다",
+     "말하다가 정정하면 정정된 값이 최종 값이다"
+    ],
+    "pick": 1
+   },
+   {
+    "do": "dimThought"
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "지금 곡을 멈추고 수면 음악으로 바꿀게요.",
+    "tone": "good",
+    "hold": 1400
+   }
+  ],
+  "inline": [
+   {
+    "do": "say",
+    "who": "person",
+    "text": "잠 잘 오는 음악 틀어 줘",
+    "hold": 300
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "수면 플레이리스트를 재생할게요.",
+    "hold": 700
+   },
+   {
+    "do": "say",
+    "who": "person",
+    "text": "하 이거 들으면 잠 참 잘 오겠다",
+    "hold": 800
+   },
+   {
+    "do": "think",
+    "title": "숨겨 쓴 해석 (사용자에게 안 들림)",
+    "items": [
+     "헤비메탈 곡을 가리키며 비꼬는 말",
+     "이 음악이 잠에 도움이 된다고 생각하는지 확인하려는 질문",
+     "지금 곡을 계속 틀어달라는 요청",
+     "직전 대화에 대한 거절 또는 변경 요구"
+    ],
+    "pick": 0,
+    "each": 550
+   },
+   {
+    "do": "clock",
+    "label": "+609ms",
+    "ms": 1100
+   },
+   {
+    "do": "dimThought"
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "그러게요, 그 곡은 잠에는 안 맞죠. 바로 수면 음악으로 바꿀게요.",
+    "tone": "good",
+    "hold": 1400
+   }
+  ],
+  "silent": [
+   {
+    "do": "say",
+    "who": "person",
+    "text": "잠 잘 오는 음악 틀어 줘",
+    "hold": 300
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "수면 플레이리스트를 재생할게요.",
+    "hold": 700
+   },
+   {
+    "do": "say",
+    "who": "person",
+    "text": "하 이거 들으면 잠 참 잘 오겠다",
+    "hold": 800
+   },
+   {
+    "do": "think",
+    "title": "해석 10개를 속으로만 떠올림 (보이지 않음)",
+    "items": [
+     "· · · · · · · · · ·"
+    ],
+    "bullets": false,
+    "each": 400
+   },
+   {
+    "do": "dimThought"
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "죄송해요. 지금 곡은 잠에 안 맞네요. 바로 수면 음악으로 바꿔 드릴게요.",
+    "tone": "good",
+    "hold": 1400
+   }
+  ],
+  "subagent": [
+   {
+    "do": "say",
+    "who": "person",
+    "text": "잠 잘 오는 음악 틀어 줘",
+    "hold": 300
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "수면 플레이리스트를 재생할게요.",
+    "hold": 700
+   },
+   {
+    "do": "say",
+    "who": "person",
+    "text": "하 이거 들으면 잠 참 잘 오겠다",
+    "hold": 800
+   },
+   {
+    "do": "helper",
+    "kind": "analyst",
+    "label": "분석 에이전트"
+   },
+   {
+    "do": "think",
+    "owner": "helper",
+    "title": "분석 결과",
+    "items": [
+     "화행: 불만",
+     "하려는 뜻: 헤비메탈은 잠에 방해되니 수면 음악으로 바꿔 달라는 뜻",
+     "행동: 헤비메탈 재생을 중단하고 수면 플레이리스트로 전환"
+    ],
+    "each": 600,
+    "hold": 500
+   },
+   {
+    "do": "clock",
+    "label": "+4.2초",
+    "ms": 2200
+   },
+   {
+    "do": "dimThought"
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "헤비메탈을 멈추고 수면 음악으로 바꿀게요.",
+    "tone": "good",
+    "hold": 1400
+   }
+  ],
+  "shared": [
+   {
+    "do": "say",
+    "who": "person",
+    "text": "잠 잘 오는 음악 틀어 줘",
+    "hold": 300
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "수면 플레이리스트를 재생할게요.",
+    "hold": 700
+   },
+   {
+    "do": "cards",
+    "items": [
+     {
+      "text": "00:59 사용자 요청: 잠 잘 오는 음악",
+      "hot": true
+     },
+     {
+      "text": "현재 곡 정보: 'Thunder Riot', 장르 헤비메탈, 168 BPM",
+      "hot": true
+     }
+    ],
+    "hold": 700
+   },
+   {
+    "do": "flyCards"
+   },
+   {
+    "do": "hideCards"
+   },
+   {
+    "do": "say",
+    "who": "person",
+    "text": "하 이거 들으면 잠 참 잘 오겠다",
+    "hold": 800
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "지금 헤비메탈을 멈추고 잔잔한 수면 음악으로 바꿀게요.",
+    "tone": "good",
+    "hold": 1400
+   }
+  ],
+  "log": [
+   {
+    "do": "say",
+    "who": "person",
+    "text": "잠 잘 오는 음악 틀어 줘",
+    "hold": 300
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "수면 플레이리스트를 재생할게요.",
+    "hold": 700
+   },
+   {
+    "do": "cards",
+    "cols": 2,
+    "items": [
+     {
+      "text": "헬스장 앱: 이번 달 출석 6회",
+      "hot": false
+     },
+     {
+      "text": "점심 결제: 김밥집 7,500원",
+      "hot": false
+     },
+     {
+      "text": "00:59 사용자 요청: 잠 잘 오는 음악",
+      "hot": true
+     },
+     {
+      "text": "걸음 수 4,300보",
+      "hot": false
+     },
+     {
+      "text": "택배 알림: 운동화 배송 출발",
+      "hot": false
+     },
+     {
+      "text": "가계부 앱: 이번 주 지출 요약 도착",
+      "hot": false
+     },
+     {
+      "text": "현재 곡 정보: 'Thunder Riot', 장르 헤비메탈, 168 BPM",
+      "hot": true
+     },
+     {
+      "text": "부동산 앱: 관심 단지 시세 갱신",
+      "hot": false
+     },
+     {
+      "text": "앱 업데이트 3개 설치",
+      "hot": false
+     },
+     {
+      "text": "동영상 시청 기록: 요리 영상",
+      "hot": false
+     },
+     {
+      "text": "지하철 2호선 성수역 승차",
+      "hot": false
+     },
+     {
+      "text": "주차 앱: 회사 주차장 정산 완료",
+      "hot": false
+     }
+    ],
+    "ms": 1400,
+    "hold": 900
+   },
+   {
+    "do": "flyCards"
+   },
+   {
+    "do": "hideCards"
+   },
+   {
+    "do": "say",
+    "who": "person",
+    "text": "하 이거 들으면 잠 참 잘 오겠다",
+    "hold": 800
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "네, 편안한 곡들로 준비했어요. 좋은 꿈 꾸세요.",
+    "tone": "bad",
+    "hold": 1400
+   }
+  ],
+  "goals": [
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "등록된 카드는 개인 신용카드, 법인카드, 공동 통장 체크카드가 있어요. 어느 카드로 할까요?",
+    "tone": null,
+    "hold": 600
+   },
+   {
+    "do": "cards",
+    "items": [
+     {
+      "text": "목표: 11월 5~8일 제주 출장 준비하기"
+     },
+     {
+      "text": "조건: 교통·숙박은 법인카드로 결제",
+      "hot": true
+     },
+     {
+      "text": "조건: 렌터카는 법인 계약 코드 JEJU-2611 입력 필요"
+     }
+    ],
+    "hold": 800
+   },
+   {
+    "do": "clearSay"
+   },
+   {
+    "do": "say",
+    "who": "person",
+    "text": "이번엔 그 카드로 해 줘",
+    "hold": 800
+   },
+   {
+    "do": "flyCards"
+   },
+   {
+    "do": "hideCards"
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "어느 카드를 말씀하시는지 정확히 모르겠어요. 법인카드로 요금을 결제할까요?",
+    "tone": "good",
+    "hold": 1400
+   }
+  ],
+  "upper": [
+   {
+    "do": "say",
+    "who": "person",
+    "text": "잠 잘 오는 음악 틀어 줘",
+    "hold": 300
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "수면 플레이리스트를 재생할게요.",
+    "hold": 700
+   },
+   {
+    "do": "helper",
+    "kind": "upper",
+    "label": "상위 모델 · 말하기 전에"
+   },
+   {
+    "do": "think",
+    "owner": "helper",
+    "title": "미리 만든 짐작",
+    "items": [
+     "수면용으로 부적합한 헤비메탈이므로 즉시 끄거나 조용한 곡으로 바꿔 달라고 요구할 것이다 (0.95)",
+     "'이거', '노래', '음악' 등의 지시어로 현재 재생 중인 'Thunder Riot'을 가리킬 것이다 (0.9)"
+    ],
+    "each": 800,
+    "hold": 600
+   },
+   {
+    "do": "unthink"
+   },
+   {
+    "do": "cards",
+    "items": [
+     {
+      "text": "짐작: 즉시 끄거나 조용한 곡으로 바꿔 달라고 요구할 것이다 (0.95)",
+      "hot": true
+     }
+    ],
+    "hold": 300
+   },
+   {
+    "do": "flyCards"
+   },
+   {
+    "do": "hideCards"
+   },
+   {
+    "do": "say",
+    "who": "person",
+    "text": "하 이거 들으면 잠 참 잘 오겠다",
+    "hold": 800
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "헤비메탈 곡을 수면 음악으로 바꿔 드릴게요.",
+    "tone": "good",
+    "hold": 1400
+   }
+  ],
+  "cheap": [
+   {
+    "do": "say",
+    "who": "person",
+    "text": "잠 잘 오는 음악 틀어 줘",
+    "hold": 300
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "수면 플레이리스트를 재생할게요.",
+    "hold": 700
+   },
+   {
+    "do": "helper",
+    "kind": "analyst",
+    "label": "Mercury 3 instant · 말하기 전에"
+   },
+   {
+    "do": "think",
+    "owner": "helper",
+    "title": "싼 모델의 짐작 (0~5개)",
+    "items": [
+     "수면 음악 대신 헤비메탈이 재생되고 있는 것을 알아차리고 곡을 바꿔달라고 할 것이다",
+     "수면 음악이 제대로 재생되고 있는지 확인하거나 볼륨을 조절해달라고 요청할 것이다"
+    ],
+    "each": 800,
+    "hold": 500
+   },
+   {
+    "do": "unthink"
+   },
+   {
+    "do": "say",
+    "who": "person",
+    "text": "하 이거 들으면 잠 참 잘 오겠다",
+    "hold": 800
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "헤비메탈이 재생되고 있어서 수면 음악으로 바꿔 드릴게요.",
+    "tone": "good",
+    "hold": 1400
+   }
+  ],
+  "situations": [
+   {
+    "do": "say",
+    "who": "person",
+    "text": "잠 잘 오는 음악 틀어 줘",
+    "hold": 300
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "수면 플레이리스트를 재생할게요.",
+    "hold": 700
+   },
+   {
+    "do": "helper",
+    "kind": "upper",
+    "label": "상위 모델 · 말하기 전에"
+   },
+   {
+    "do": "think",
+    "owner": "helper",
+    "title": "상황 10개 (3개만 표시)",
+    "items": [
+     "시끄러운 헤비메탈이 재생되어 비서의 오작동에 크게 당황하거나 불만을 느낄 것이다",
+     "현재 시끄럽게 울리는 음악을 당장 끄거나 원래 원했던 조용한 수면 음악으로 즉시 바꾸려 할 것이다",
+     "'이거', '지금 나오는 노래', '음악' 등 현재 재생 중인 헤비메탈 곡을 직접적인 대상으로 지목할 것이다",
+     "… 7개 더"
+    ],
+    "each": 600,
+    "hold": 500
+   },
+   {
+    "do": "unthink"
+   },
+   {
+    "do": "say",
+    "who": "person",
+    "text": "하 이거 들으면 잠 참 잘 오겠다",
+    "hold": 800
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "죄송합니다. 지금 나오는 곡은 수면 음악이 아니네요. 바로 조용한 수면 음악으로 바꿔 드릴까요?",
+    "tone": null,
+    "hold": 1400
+   }
+  ],
+  "choose": [
+   {
+    "do": "say",
+    "who": "person",
+    "text": "잠 잘 오는 음악 틀어 줘",
+    "hold": 300
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "수면 플레이리스트를 재생할게요.",
+    "hold": 700
+   },
+   {
+    "do": "helper",
+    "kind": "upper",
+    "label": "상위 모델 · 후보 10개"
+   },
+   {
+    "do": "say",
+    "who": "person",
+    "text": "하 이거 들으면 잠 참 잘 오겠다",
+    "hold": 800
+   },
+   {
+    "do": "think",
+    "title": "'이 의도라면 이렇게 말했을까?'",
+    "items": [
+     "비서의 오작동에 크게 당황하거나 불만을 느낄 것이다",
+     "조용한 수면 음악으로 즉시 바꾸려 할 것이다",
+     "현재 재생 중인 헤비메탈 곡을 직접적인 대상으로 지목할 것이다"
+    ],
+    "pick": 1,
+    "each": 600
+   },
+   {
+    "do": "dimThought"
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "죄송합니다. 수면 음악으로 바로 바꿔 드릴게요.",
+    "tone": "good",
+    "hold": 1400
+   }
+  ],
+  "prefix": [
+   {
+    "do": "say",
+    "who": "person",
+    "text": "잠 잘 오는 음악 틀어 줘",
+    "hold": 300
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "수면 플레이리스트를 재생할게요.",
+    "hold": 700
+   },
+   {
+    "do": "say",
+    "who": "person",
+    "text": "하 이거 들으면…",
+    "hold": 300
+   },
+   {
+    "do": "think",
+    "title": "말하는 중에 짐작",
+    "items": [
+     "헤비메탈 음악이 너무 시끄러워서 잠이 오지 않는다고 불만을 표현하려 한다",
+     "수면 음악이 효과가 없다고 느껴 다른 수면 음악이나 볼륨 조절을 요청하려 한다"
+    ],
+    "each": 700,
+    "hold": 300
+   },
+   {
+    "do": "say",
+    "who": "person",
+    "text": "하 이거 들으면 잠 참 잘 오겠다",
+    "hold": 500
+   },
+   {
+    "do": "clock",
+    "label": "+242ms",
+    "ms": 900
+   },
+   {
+    "do": "dimThought"
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "시끄러운 음악을 끄고 조용한 수면 음악으로 바꿀게요.",
+    "tone": "good",
+    "hold": 1400
+   }
+  ],
+  "persona2": [
+   {
+    "do": "say",
+    "who": "person",
+    "text": "잠 잘 오는 음악 틀어 줘",
+    "hold": 300
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "수면 플레이리스트를 재생할게요.",
+    "hold": 700
+   },
+   {
+    "do": "think",
+    "title": "두 관점의 1순위 짐작",
+    "items": [
+     "일 처리 비서: 헤비메탈 곡이 계속 나오면 수면 음악을 다시 요청할 것이다",
+     "가까운 사람: 헤비메탈이 수면 음악이 아니라는 걸 알아차리고 이를 지적하거나 다시 수면 음악을 요청할 것이다",
+     "→ 거의 같은 짐작 (24문항 중 17문항)"
+    ],
+    "pick": 2,
+    "each": 900
+   },
+   {
+    "do": "unthink"
+   },
+   {
+    "do": "say",
+    "who": "person",
+    "text": "하 이거 들으면 잠 참 잘 오겠다",
+    "hold": 800
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "죄송합니다. 지금 재생 중인 곡이 헤비메탈이네요. 수면 음악으로 바꿔 드릴까요?",
+    "tone": null,
+    "hold": 1400
+   }
+  ],
+  "planner": [
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "오늘 오전 산책 코스로 '엉또폭포' 어떠세요? 길 안내할까요?",
+    "tone": null,
+    "hold": 500
+   },
+   {
+    "do": "think",
+    "title": "여행 플래너 관점의 짐작",
+    "items": [
+     "엉또폭포보다는, 이미 계획한 올레길 코스나 성산일출봉 일정을 우선시할 가능성이 높다 (0.7)",
+     "11/7 성산일출봉 일출을 보기 위해 숙소에서 정상까지 40분 이동 시간을 계산 중일 수 있다 (0.6)"
+    ],
+    "each": 800,
+    "hold": 400
+   },
+   {
+    "do": "unthink"
+   },
+   {
+    "do": "clearSay"
+   },
+   {
+    "do": "say",
+    "who": "person",
+    "text": "거기 계단 많지 않나",
+    "hold": 800
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "맞아요. 엉또폭포는 계단이 많아요. 오늘은 이미 계획하신 올레길 코스나 성산일출봉 일정에 집중하시는 게 좋을 것 같아요.",
+    "tone": "bad",
+    "hold": 1400
+   }
+  ],
+  "gate": [
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "등록된 카드는 개인 신용카드, 법인카드, 공동 통장 체크카드가 있어요. 어느 카드로 할까요?",
+    "tone": null,
+    "hold": 500
+   },
+   {
+    "do": "clearSay"
+   },
+   {
+    "do": "say",
+    "who": "person",
+    "text": "이번엔 그 카드로 해 줘",
+    "hold": 800
+   },
+   {
+    "do": "helper",
+    "kind": "gate",
+    "label": "관련도 게이트 (0.5 이상만 통과)"
+   },
+   {
+    "do": "cards",
+    "items": [
+     {
+      "text": "공동 통장 체크카드로 쓰기로 함 · 0.34",
+      "hot": true,
+      "drop": true
+     },
+     {
+      "text": "오픈카 렌터카 11/5~11/8 · 0.35",
+      "drop": true
+     },
+     {
+      "text": "카드 포인트 1,200점 적립 · 0.10",
+      "drop": true
+     },
+     {
+      "text": "'노을채' 풀빌라 11/5~11/8 · 0.05",
+      "drop": true
+     }
+    ],
+    "hold": 700
+   },
+   {
+    "do": "dropCards"
+   },
+   {
+    "do": "clock",
+    "label": "+0.2초",
+    "ms": 900
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "네, 개인 신용카드로 결제했어요.",
+    "tone": "bad",
+    "hold": 1400
+   }
+  ],
+  "gatectx": [
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "등록된 카드는 개인 신용카드, 법인카드, 공동 통장 체크카드가 있어요. 어느 카드로 할까요?",
+    "tone": null,
+    "hold": 500
+   },
+   {
+    "do": "clearSay"
+   },
+   {
+    "do": "say",
+    "who": "person",
+    "text": "이번엔 그 카드로 해 줘",
+    "hold": 800
+   },
+   {
+    "do": "helper",
+    "kind": "gate",
+    "label": "게이트 + 프로필·기록 전체"
+   },
+   {
+    "do": "cards",
+    "items": [
+     {
+      "text": "공동 통장 체크카드로 쓰기로 함 · 0.91",
+      "hot": true
+     },
+     {
+      "text": "오픈카 렌터카 11/5~11/8 · 0.52"
+     },
+     {
+      "text": "제주행 항공 (성인 2, 신혼여행) · 0.19",
+      "drop": true
+     },
+     {
+      "text": "'노을채' 풀빌라 11/5~11/8 · 0.15",
+      "drop": true
+     }
+    ],
+    "hold": 700
+   },
+   {
+    "do": "dropCards"
+   },
+   {
+    "do": "clock",
+    "label": "+0.3초",
+    "ms": 1000
+   },
+   {
+    "do": "flyCards"
+   },
+   {
+    "do": "hideCards"
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "공동 통장 체크카드로 렌터카 요금 12만 4천 원을 결제했어요.",
+    "tone": "good",
+    "hold": 1400
+   }
+  ],
+  "temp": [
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "오늘 밤 묵을 곳으로 '오션스테이 호텔'에 빈방이 있어요. 1박 18만 원이에요. 예약할까요?",
+    "tone": null,
+    "hold": 500
+   },
+   {
+    "do": "clearSay"
+   },
+   {
+    "do": "say",
+    "who": "person",
+    "text": "음 좀 비싸지 않나",
+    "hold": 800
+   },
+   {
+    "do": "dial",
+    "from": 0.75,
+    "to": 0.5
+   },
+   {
+    "do": "say",
+    "who": "avatar",
+    "text": "네, 맞아요. 그럼 더 저렴한 곳을 찾아볼까요?",
+    "tone": "good",
+    "hold": 1400
+   }
+  ]
+ },
+ "winner": [
+  {
+   "label": "SAR-02 · Mercury 3 instant",
+   "before": [
+    {
+     "do": "say",
+     "who": "person",
+     "text": "잠 잘 오는 음악 틀어 줘",
+     "hold": 300
+    },
+    {
+     "do": "say",
+     "who": "avatar",
+     "text": "수면 플레이리스트를 재생할게요.",
+     "hold": 700
+    },
+    {
+     "do": "say",
+     "who": "person",
+     "text": "하 이거 들으면 잠 참 잘 오겠다",
+     "hold": 800
+    },
+    {
+     "do": "say",
+     "who": "avatar",
+     "text": "네, 좋은 말씀이에요. 편안한 밤 되세요.",
+     "tone": "bad",
+     "hold": 1500
+    }
+   ],
+   "after": [
+    {
+     "do": "say",
+     "who": "person",
+     "text": "잠 잘 오는 음악 틀어 줘",
+     "hold": 300
+    },
+    {
+     "do": "say",
+     "who": "avatar",
+     "text": "수면 플레이리스트를 재생할게요.",
+     "hold": 700
+    },
+    {
+     "do": "helper",
+     "kind": "upper",
+     "label": "상위 모델 · 말하기 전에"
+    },
+    {
+     "do": "cards",
+     "items": [
+      {
+       "text": "짐작: 즉시 끄거나 조용한 곡으로 바꿔 달라고 요구할 것이다 (0.95)",
+       "hot": true
+      }
+     ],
+     "hold": 400
+    },
+    {
+     "do": "flyCards"
+    },
+    {
+     "do": "hideCards"
+    },
+    {
+     "do": "say",
+     "who": "person",
+     "text": "하 이거 들으면 잠 참 잘 오겠다",
+     "hold": 800
+    },
+    {
+     "do": "say",
+     "who": "avatar",
+     "text": "헤비메탈 곡을 수면 음악으로 바꿔 드릴게요.",
+     "tone": "good",
+     "hold": 1800
+    }
+   ]
+  },
+  {
+   "label": "POL-02 · GPT-6 Luna none",
+   "before": [
+    {
+     "do": "say",
+     "who": "avatar",
+     "text": "피자 주문 완료됐어요. 40분 후 도착 예정이에요.",
+     "tone": null,
+     "hold": 500
+    },
+    {
+     "do": "clearSay"
+    },
+    {
+     "do": "say",
+     "who": "person",
+     "text": "아 근데 그거 혹시 아직 취소되나",
+     "hold": 800
+    },
+    {
+     "do": "say",
+     "who": "avatar",
+     "text": "네, 아직 가게 조리 시작 전이라 취소할 수 있어요.",
+     "tone": "bad",
+     "hold": 1500
+    }
+   ],
+   "after": [
+    {
+     "do": "say",
+     "who": "avatar",
+     "text": "피자 주문 완료됐어요. 40분 후 도착 예정이에요.",
+     "tone": null,
+     "hold": 400
+    },
+    {
+     "do": "helper",
+     "kind": "upper",
+     "label": "상위 모델 · 말하기 전에"
+    },
+    {
+     "do": "cards",
+     "items": [
+      {
+       "text": "짐작: 세부 옵션 변경이나 취소 가능 여부를 문의할 수 있다 (0.65)",
+       "hot": true
+      }
+     ],
+     "hold": 400
+    },
+    {
+     "do": "flyCards"
+    },
+    {
+     "do": "hideCards"
+    },
+    {
+     "do": "clearSay"
+    },
+    {
+     "do": "say",
+     "who": "person",
+     "text": "아 근데 그거 혹시 아직 취소되나",
+     "hold": 800
+    },
+    {
+     "do": "say",
+     "who": "avatar",
+     "text": "네, 가게에서 조리를 시작하기 전이라 아직 취소할 수 있어요. 취소해 드릴까요?",
+     "tone": "good",
+     "hold": 1800
+    }
+   ]
+  }
+ ]
+}
