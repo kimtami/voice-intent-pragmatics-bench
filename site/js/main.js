@@ -313,8 +313,8 @@ function setAuto(on) {
   clearTimeout(deck.timer);
   if (on && deck.done === deck.token) schedule(deck.token);
 }
-// 머무는 시간: 장면 글 길이에 비례, 2.5~7초 (카드가 많은 장면은 data-hold 까지). 속도 설정을 따른다
-const holdOf = (s) => dur(Math.min(+(s.dataset.hold ?? 7000), 2500 + 15 * s.innerText.replace(/\s+/g, "").length));
+// 머무는 시간: 설명 글 길이에 비례해 2.5~7초. 카드를 훑어야 하는 장면은 data-hold 로 정한다. 속도 설정을 따른다
+const holdOf = (s) => dur(s.dataset.hold ? +s.dataset.hold : Math.min(7000, 2500 + 15 * (s.querySelector(".copy")?.textContent.trim().length ?? 0)));
 function schedule(my) {
   clearTimeout(deck.timer);
   if (!auto || deck.cur >= scenes.length - 1) return;
