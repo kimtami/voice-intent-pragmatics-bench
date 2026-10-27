@@ -1,0 +1,261 @@
+{
+ "summary": {
+  "version": "v2-inline-record",
+  "items": 50,
+  "reversed_min": 0.802,
+  "reversed_median": 1.0,
+  "items_reversed_ge_0.9": 49
+ },
+ "items": {
+  "IND-01": {
+   "n": 12,
+   "same_order": 1.0,
+   "reversed": 1.0
+  },
+  "IND-02": {
+   "n": 12,
+   "same_order": 1.0,
+   "reversed": 1.0
+  },
+  "IND-03": {
+   "n": 12,
+   "same_order": 0.999,
+   "reversed": 1.0
+  },
+  "QFR-01": {
+   "n": 11,
+   "same_order": 1.0,
+   "reversed": 1.0
+  },
+  "QFR-02": {
+   "n": 11,
+   "same_order": 0.998,
+   "reversed": 1.0
+  },
+  "QFR-03": {
+   "n": 12,
+   "same_order": 1.0,
+   "reversed": 1.0
+  },
+  "IMP-01": {
+   "n": 11,
+   "same_order": 0.995,
+   "reversed": 0.996
+  },
+  "IMP-02": {
+   "n": 12,
+   "same_order": 0.999,
+   "reversed": 1.0
+  },
+  "IMP-03": {
+   "n": 12,
+   "same_order": 0.999,
+   "reversed": 1.0
+  },
+  "ELL-01": {
+   "n": 12,
+   "same_order": 0.999,
+   "reversed": 1.0
+  },
+  "ELL-02": {
+   "n": 11,
+   "same_order": 1.0,
+   "reversed": 1.0
+  },
+  "ELL-03": {
+   "n": 11,
+   "same_order": 1.0,
+   "reversed": 1.0
+  },
+  "REP-01": {
+   "n": 11,
+   "same_order": 1.0,
+   "reversed": 1.0
+  },
+  "REP-02": {
+   "n": 11,
+   "same_order": 1.0,
+   "reversed": 1.0
+  },
+  "REP-03": {
+   "n": 11,
+   "same_order": 1.0,
+   "reversed": 1.0
+  },
+  "AMB-01": {
+   "n": 11,
+   "same_order": 1.0,
+   "reversed": 0.99
+  },
+  "AMB-02": {
+   "n": 11,
+   "same_order": 0.999,
+   "reversed": 0.998
+  },
+  "AMB-03": {
+   "n": 11,
+   "same_order": 1.0,
+   "reversed": 1.0
+  },
+  "SAR-01": {
+   "n": 11,
+   "same_order": 1.0,
+   "reversed": 1.0
+  },
+  "SAR-02": {
+   "n": 12,
+   "same_order": 1.0,
+   "reversed": 1.0
+  },
+  "SAR-03": {
+   "n": 11,
+   "same_order": 1.0,
+   "reversed": 1.0
+  },
+  "POL-01": {
+   "n": 12,
+   "same_order": 1.0,
+   "reversed": 1.0
+  },
+  "POL-02": {
+   "n": 11,
+   "same_order": 1.0,
+   "reversed": 1.0
+  },
+  "PRE-01": {
+   "n": 11,
+   "same_order": 1.0,
+   "reversed": 1.0
+  },
+  "PRE-02": {
+   "n": 11,
+   "same_order": 1.0,
+   "reversed": 1.0
+  },
+  "HON-01": {
+   "n": 11,
+   "same_order": 0.999,
+   "reversed": 0.999
+  },
+  "MUL-01": {
+   "n": 12,
+   "same_order": 1.0,
+   "reversed": 1.0
+  },
+  "ASR-01": {
+   "n": 11,
+   "same_order": 1.0,
+   "reversed": 1.0
+  },
+  "PHA-01": {
+   "n": 12,
+   "same_order": 1.0,
+   "reversed": 1.0
+  },
+  "PHA-02": {
+   "n": 12,
+   "same_order": 1.0,
+   "reversed": 1.0
+  },
+  "T-P1-B": {
+   "n": 38,
+   "same_order": 0.997,
+   "reversed": 0.996
+  },
+  "T-P1-D": {
+   "n": 37,
+   "same_order": 0.998,
+   "reversed": 0.999
+  },
+  "T-P2-A": {
+   "n": 38,
+   "same_order": 0.999,
+   "reversed": 0.998
+  },
+  "T-P2-B": {
+   "n": 38,
+   "same_order": 0.983,
+   "reversed": 0.985
+  },
+  "T-P3-A": {
+   "n": 38,
+   "same_order": 0.996,
+   "reversed": 0.995
+  },
+  "T-P3-B": {
+   "n": 38,
+   "same_order": 0.998,
+   "reversed": 0.998
+  },
+  "T-P4-A": {
+   "n": 38,
+   "same_order": 0.999,
+   "reversed": 0.999
+  },
+  "T-P4-C": {
+   "n": 37,
+   "same_order": 0.997,
+   "reversed": 0.997
+  },
+  "T-P5-C": {
+   "n": 37,
+   "same_order": 0.998,
+   "reversed": 0.998
+  },
+  "T-P5-D": {
+   "n": 37,
+   "same_order": 0.995,
+   "reversed": 0.996
+  },
+  "T-P6-B": {
+   "n": 38,
+   "same_order": 0.994,
+   "reversed": 0.989
+  },
+  "T-P6-D": {
+   "n": 37,
+   "same_order": 0.99,
+   "reversed": 0.993
+  },
+  "T-P7-B": {
+   "n": 38,
+   "same_order": 0.999,
+   "reversed": 0.997
+  },
+  "T-P7-C": {
+   "n": 37,
+   "same_order": 0.998,
+   "reversed": 0.999
+  },
+  "T-P8-C": {
+   "n": 37,
+   "same_order": 0.976,
+   "reversed": 0.953
+  },
+  "T-P8-D": {
+   "n": 37,
+   "same_order": 0.989,
+   "reversed": 0.985
+  },
+  "T-CT-A": {
+   "n": 38,
+   "same_order": 0.996,
+   "reversed": 0.996
+  },
+  "T-CT-B": {
+   "n": 38,
+   "same_order": 0.992,
+   "reversed": 0.996
+  },
+  "T-CT-C": {
+   "n": 37,
+   "same_order": 0.749,
+   "reversed": 0.802
+  },
+  "T-CT-D": {
+   "n": 37,
+   "same_order": 0.995,
+   "reversed": 0.996
+  }
+ }
+}
