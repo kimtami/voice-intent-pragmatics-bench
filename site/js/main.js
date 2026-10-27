@@ -289,8 +289,6 @@ async function playWinner() {
 renderFamilies();
 showMethod(selected, false);
 
-// ---------- 8. 다음 ----------
-$("#n-list").innerHTML = D.next.map((n) => `<li>${n}</li>`).join("");
 
 // ---------- 재생 연결 ----------
 const PLAY = { problem: playProblem, goal: playGoal, when: playWhen, methods: playMethods, results: playResults, problems: playProblems, winner: playWinner };

@@ -168,11 +168,6 @@ table.data td.num { font-variant-numeric: tabular-nums; }
 .example .pair p { margin: 2px 0 0; font-size: 16px; }
 .example .src { font-size: 13px; color: var(--text-muted); margin-top: 8px; }
 
-/* 8. 다음 */
-.next-list { font-size: 18px; color: var(--text-secondary); padding-left: 20px; }
-.next-list li { margin: 6px 0; }
-.howto { background: var(--surface-2); border-radius: var(--radius); padding: 18px 20px; margin-top: 24px; color: var(--text-secondary); font-size: 15px; }
-.howto code { font-family: inherit; color: var(--text-primary); background: var(--surface-3); padding: 1px 6px; border-radius: 4px; }
 
 @media (max-width: 900px) {
   .two-col, .split { grid-template-columns: minmax(0, 1fr); gap: 28px; }
@@ -207,7 +202,6 @@ table.data td.num { font-variant-numeric: tabular-nums; }
 .fit .chart-wrap + .table-panel { margin-top: 8px; }
 .swap + .swap { margin-top: 20px; }
 .families { margin: 12px 0; }
-.next-list + .howto { margin-top: 16px; }
 .deckbar, .m-select { display: none; }
 
 /* ---------- 한 화면 발표 (기본) ----------
@@ -274,9 +268,6 @@ body.deck .winner-badge { margin-bottom: 6px; }
 body.deck .caveat-box { font-size: clamp(12px, 1.6vh, 15px); }
 body.deck .caveat-box[open] ul { max-height: 26vh; overflow: auto; }
 
-/* 다음 */
-body.deck .next-list { font-size: clamp(14px, 2vh, 18px); }
-body.deck .howto { font-size: clamp(12px, 1.6vh, 15px); padding: 14px 16px; }
 
 /* 아래 발표 막대 */
 body.deck .deckbar { flex: none; display: flex; align-items: center; gap: 10px; height: 52px; padding: 0 clamp(12px, 2vw, 24px); border-top: 1px solid var(--grid); background: rgba(22, 23, 26, 0.96); }
@@ -318,3 +309,5 @@ body.deck .deckbar { flex: none; display: flex; align-items: center; gap: 10px; 
   body.deck .tabs button { padding: 3px 8px; }
   body.deck .legend { font-size: 11px; gap: 4px 10px; }
 }
+body.deck .source-note { margin-top: 8px; }
+@media (max-width: 600px) { body.deck #winner .copy .source-note { display: block; font-size: 11px; } }

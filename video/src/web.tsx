@@ -48,7 +48,8 @@ export function mountStage(el: HTMLElement, assetBase: string, rate = 1, fit = f
     if (!cur || w <= 0) return "wide";
     if (!fit) return w < TALL_BELOW ? "tall" : "wide";
     const a = cur.size("wide"), b = cur.size("tall");
-    return Math.min(w / b.w, h / b.h) > Math.min(w / a.w, h / a.h) * 1.05 ? "tall" : "wide";
+    // 세로 배치는 글자를 약 1.15배 크게 잡아 두었으므로, 배율이 비슷하면 세로가 실제 글자가 더 크다
+    return Math.min(w / b.w, h / b.h) * 1.15 > Math.min(w / a.w, h / a.h) ? "tall" : "wide";
   };
   let layout = layoutNow();
   const hooked = new WeakSet<PlayerRef>();
