@@ -194,6 +194,12 @@ def selfhyp_arms() -> dict[str, Arm]:
         arms[f"mercury.A0+CI{v}"] = Arm(f"mercury.A0+CI{v}", "mercury", f"CI{v}", m["provider"], m["model"], m["A0"], [m["key"]],
                                         extra={"mode": "auto_selfhyp", "judge_hyps": False, "base_arm": "mercury.A0",
                                                "hyp_source": [f"results/selfhyp/diag/instant_{v}_{s}.json" for s in ("insample", "heldout")]})
+    # 다른 약한 응답 모델: GPT-6 Luna none 에 같은 v2 추정(Mercury instant 가 만든 것)을 넣는다
+    lu = MODELS["luna"]
+    arms["luna.A1+CA"] = base["luna.A1+CA"]
+    arms["luna.A1+CIv2"] = Arm("luna.A1+CIv2", "luna", "CIv2", lu["provider"], lu["model"], lu["A1"], [lu["key"]],
+                               extra={"mode": "auto_selfhyp", "judge_hyps": False, "base_arm": "luna.A1",
+                                      "hyp_source": [f"results/selfhyp/diag/instant_v2_{s}.json" for s in ("insample", "heldout")]})
     return arms
 
 

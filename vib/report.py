@@ -564,6 +564,7 @@ def main() -> None:
     selfhyp_diag()
     selfhyp_heldout()
     selfhyp_instant()
+    selfhyp_luna()
     gap = gap_closure(table, per_item_by_arm)
     write_gap(gap, table)
     for fname, methods, colors, note in GAP_CHARTS:
@@ -1049,6 +1050,8 @@ HELDOUT_ARMS = [("mercury.A1+CA", "로그만", []), ("mercury.A1+CIv1", "로그 
 INSTANT_ARMS = [("mercury.A0+CA", "로그만", []),
                 ("mercury.A0+CIv1", "로그 + instant 추정 (v1 프롬프트)", ["instant_v1_insample", "instant_v1_heldout"]),
                 ("mercury.A0+CIv2", "로그 + instant 추정 (v2 프롬프트)", ["instant_v2_insample", "instant_v2_heldout"])]
+LUNA_ARMS = [("luna.A1+CA", "로그만", []),
+             ("luna.A1+CIv2", "로그 + instant 추정 (v2 프롬프트)", ["instant_v2_insample", "instant_v2_heldout"])]
 
 
 def selfhyp_heldout() -> None:
@@ -1066,18 +1069,33 @@ def selfhyp_instant() -> None:
     lines = _hyp_response("instant", INSTANT_ARMS,
                           "Mercury 3 instant 응답, {n}문항 × {reps}회 (v2 프롬프트를 고칠 때 본 10문항 + 못 본 14문항), 세 조건을 같은 실행에서 잼. "
                           "못 본 14문항 열은 v2 를 고칠 때 보지 않은 문항만의 정확도입니다.", refs, vs_last=True)
-    if not lines:
-        return
-    lines += ["", "| 넣은 정보 | 추정 생성 시간 p50 (최대) | 생성 실패 / 요청 | 1,000턴당 비용: 추정 생성 + 응답 |", "|---|---|---|---|"]
-    resp = {arm: [r for r in _jsonl(RES / "selfhyp" / "instant" / "raw" / f"{arm}.jsonl") if not r.get("error")] for arm, _, _ in INSTANT_ARMS}
-    for arm, info, hyp in INSTANT_ARMS:
+    if lines:
+        (RES / "selfhyp" / "instant" / "summary.md").write_text("\n".join(lines + _hyp_cost("instant", INSTANT_ARMS)) + "\n", encoding="utf-8")
+
+
+def selfhyp_luna() -> None:
+    """다른 약한 응답 모델: Mercury instant 가 만든 v2 추정을 GPT-6 Luna none 응답에 넣는다 (24문항)."""
+    refs = [("luna.A1+CA", "GPT-6 Luna none 로그만"), ("luna.A1+CH", "GPT-6 Luna none 로그 + 상위 모델(Gemini 3.8 Flash) 추정"),
+            ("gemini38.A1", "Gemini 3.8 Flash 기본")]
+    lines = _hyp_response("luna_none", LUNA_ARMS,
+                          "GPT-6 Luna none 응답, {n}문항 × {reps}회 (v2 프롬프트를 고칠 때 본 10문항 + 못 본 14문항), 두 조건을 같은 실행에서 잼. "
+                          "추정과 추정 적중은 Mercury 3 instant 실험과 같은 입력입니다.", refs, vs_last=True)
+    if lines:
+        (RES / "selfhyp" / "luna_none" / "summary.md").write_text("\n".join(lines + _hyp_cost("luna_none", LUNA_ARMS)) + "\n", encoding="utf-8")
+
+
+def _hyp_cost(sub: str, arms: list) -> list[str]:
+    """추정 생성(Mercury 3 instant) 시간·실패와 1,000턴당 비용. 응답 비용은 응답 모델 단가로 잰다."""
+    lines = ["", "| 넣은 정보 | 추정 생성 시간 p50 (최대) | 생성 실패 / 요청 | 1,000턴당 비용: 추정 생성 + 응답 |", "|---|---|---|---|"]
+    for arm, info, hyp in arms:
+        resp = [r for r in _jsonl(RES / "selfhyp" / sub / "raw" / f"{arm}.jsonl") if not r.get("error")]
         calls = [c for h in hyp for c in json.loads((RES / "selfhyp" / "diag" / f"{h}.json").read_text(encoding="utf-8"))["calls"].values()]
         gen = statistics.mean(_call_cost("mercury-3", c["usage"]) for c in calls) * 1000 if calls else 0.0
-        out = statistics.mean(_call_cost("mercury-3", r["usage"]) for r in resp[arm]) * 1000
+        out = statistics.mean(_call_cost(r["model"], r["usage"]) for r in resp) * 1000
         ms = [c["total_ms"] for c in calls]
         lines.append(f"| {info} | " + (f"{_pct(ms, 0.5) / 1000:.1f}s ({max(ms) / 1000:.1f}s) | {sum(len(c['failures']) for c in calls)} / {len(calls)} | "
                                        if calls else "– | – | ") + f"${gen:.2f} + ${out:.2f} = ${gen + out:.2f} |")
-    (RES / "selfhyp" / "instant" / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return lines
 
 
 def _hyp_response(sub: str, arms: list, head: str, refs: list[tuple[str, str]], vs_last: bool = False) -> list[str] | None:
@@ -1124,8 +1142,11 @@ def _hyp_response(sub: str, arms: list, head: str, refs: list[tuple[str, str]], 
         col = f" {statistics.mean(a[k] for k in unseen) * 100:.1f}% |" if split else ""
         lines.append(f"| {info} | {statistics.mean(a[k] for k in ids) * 100:.1f}% | {statistics.mean(a[k] for k in keep) * 100:.1f}% |{col} "
                      f"{cmp} | {sc.count(2)}/{len(sc)} | {bad} | {_pct(t, 0.5):,.0f} / {_pct(t, 0.9):,.0f}ms | {hit} |")
-    a1, a2 = per_item(arms[1][0]), per_item(arms[2][0])
-    m, lo, hi, _ = _boot_diff({k: a2[k] - a1[k] for k in ids})
+    v1v2 = ""
+    if len(arms) > 2:  # v1·v2 두 추정 조건이 모두 있을 때만
+        a1, a2 = per_item(arms[1][0]), per_item(arms[2][0])
+        m, lo, hi, _ = _boot_diff({k: a2[k] - a1[k] for k in ids})
+        v1v2 = f"v2 추정 대 v1 추정: {m * 100:+.1f}%p ({lo * 100:.1f}–{hi * 100:.1f})."
     notes = []
     last = per_item(arms[-1][0])
     for arm, label in refs:  # 같은 문항의 기존 3회 반복 결과 (다른 시각에 잰 값이라 지연은 비교하지 않는다)
@@ -1140,7 +1161,7 @@ def _hyp_response(sub: str, arms: list, head: str, refs: list[tuple[str, str]], 
             notes.append(f"| {label} | {acc:.1f}% ({acc_keep:.1f}%) | {dm * 100:+.1f}%p ({dlo * 100:.1f}–{dhi * 100:.1f}) |")
         else:
             notes.append(f"{label} 정확도 {acc:.1f}% (논란 문항 제외 {acc_keep:.1f}%)")
-    lines += ["", f"v2 추정 대 v1 추정: {m * 100:+.1f}%p ({lo * 100:.1f}–{hi * 100:.1f})."]
+    lines += ["", v1v2]
     if split:  # v2 를 고칠 때 보지 않은 문항만의 로그만 대비 차이 (프롬프트 수정의 공정한 시험)
         u_keep = [k for k in unseen if k not in CONTESTED]
         parts = []
@@ -1151,6 +1172,7 @@ def _hyp_response(sub: str, arms: list, head: str, refs: list[tuple[str, str]], 
                 f"{lab} {d * 100:+.1f}%p ({dl * 100:.1f}–{dh * 100:.1f})"
                 for lab, (d, dl, dh) in zip((f"못 본 {len(unseen)}문항", f"그중 논란 없는 {len(u_keep)}문항"), ds)))
         lines[-1] += " 로그만 대비, v2 를 고칠 때 보지 않은 문항만: " + "; ".join(parts) + "."
+    lines[-1] = lines[-1].strip()
     if vs_last:
         lines += ["", f"**같은 {len(ids)}문항의 기존 3회 반복 결과와 비교 (다른 시각 실행, 문항끼리 짝지음)**", "",
                   "| 기존 조건 | 정확도 (논란 문항 제외) | v2 추정 조건과의 차이 (95% CI) |", "|---|---|---|", *notes]
