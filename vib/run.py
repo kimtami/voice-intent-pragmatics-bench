@@ -120,10 +120,14 @@ def run_one(arm: Arm, item: dict, rep: int) -> dict:
             hyps = json.loads(HYPS.read_text(encoding="utf-8"))["hypotheses"][item["id"]]
             extra += "\n\n" + prompts.hypotheses_block(hyps)
         elif mode == "auto_selfhyp":
-            source = arm.extra.get("hyp_source", arm.family)  # 기본은 응답 모델 자신, CI 는 mercury_instant
-            hyps = json.loads((SELF_HYPS / f"{source}.json").read_text(encoding="utf-8"))["hypotheses"][item["id"]]
+            source = arm.extra.get("hyp_source", arm.family)  # 기본은 응답 모델 자신, CI 는 mercury_instant, 경로도 받는다
+            path = ROOT / source if "/" in source else SELF_HYPS / f"{source}.json"
+            hyps = json.loads(path.read_text(encoding="utf-8"))["hypotheses"][item["id"]]
             extra += "\n\n" + prompts.hypotheses_block(hyps)
-            row["analysis"] = hyps  # 채점기가 추정 목록도 정답 의도와 대조하도록 analysis 로 남긴다
+            if arm.extra.get("judge_hyps", True):
+                row["analysis"] = hyps  # 채점기가 추정 목록도 정답 의도와 대조하도록 analysis 로 남긴다
+            else:
+                row["hypotheses"] = hyps
     elif mode in ("m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m5b", "m5c"):
         profile = json.loads(PROFILE.read_text(encoding="utf-8"))
         log = json.loads(AUTO.read_text(encoding="utf-8"))["logs"][item["id"]]

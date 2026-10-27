@@ -562,6 +562,7 @@ def main() -> None:
     chart_screen()
     selfhyp()
     selfhyp_diag()
+    selfhyp_heldout()
     gap = gap_closure(table, per_item_by_arm)
     write_gap(gap, table)
     for fname, methods, colors, note in GAP_CHARTS:
@@ -1040,6 +1041,59 @@ def selfhyp_diag() -> None:
             lines.append(f"| {prompt} | {label} | {s['n']} ({s['n'] / s['items']:.1f}) | {s['noise'] / s['n']:.0%} | "
                          f"{s['covered']}/{s['items']} | {statistics.mean(hits):.2f} |")
     (ddir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+HELDOUT_ARMS = [("mercury.A1+CA", "로그만", None), ("mercury.A1+CIv1", "로그 + instant 추정 (v1 프롬프트)", "instant_v1_heldout"),
+                ("mercury.A1+CIv2", "로그 + instant 추정 (v2 프롬프트)", "instant_v2_heldout")]
+
+
+def selfhyp_heldout() -> None:
+    """원인 분석 후속: 못 본 14문항에서 v1·v2 추정을 Mercury 3 medium 응답에 넣어 로그만과 같은 실행에서 비교한다."""
+    hdir = RES / "selfhyp" / "heldout"
+    if not (hdir / "judged").exists():
+        return
+
+    def per_item(arm: str) -> dict[str, float]:
+        d = defaultdict(list)
+        for j in _jsonl(hdir / "judged" / f"{arm}.jsonl"):
+            if not j.get("judge_error"):
+                d[j["item_id"]].append(j["score"] / 2)
+        return {k: statistics.mean(v) for k, v in d.items()}
+
+    ids = sorted(per_item("mercury.A1+CA"))
+    keep = [k for k in ids if k not in CONTESTED]
+    reps = max(r["rep"] for r in _jsonl(hdir / "raw" / "mercury.A1+CA.jsonl"))
+    base = per_item("mercury.A1+CA")
+    lines = [f"Mercury 3 medium 응답, 못 본 {len(ids)}문항 × {reps}회 ({', '.join(ids)}), 세 조건을 같은 실행에서 잼. "
+             f"추정은 Mercury 3 instant 가 만들었고 응답할 때 로그 아래에 덧붙임. 정답 기준에 논란이 있는 "
+             f"{'·'.join(k for k in ids if k in CONTESTED)} 를 뺀 {len(keep)}문항 정확도를 함께 싣습니다.", "",
+             "| 넣은 정보 | 응답 정확도 | 논란 문항 제외 | 로그만 대비 (95% CI) | 2점 응답 | 잘못된 행동 | 첫 발화 p50 / p90 | 추정 적중 (0~2) |",
+             "|---|---|---|---|---|---|---|---|"]
+    for arm, info, hyp in HELDOUT_ARMS:
+        raw = [r for r in _jsonl(hdir / "raw" / f"{arm}.jsonl") if not r.get("error")]
+        jd = [j for j in _jsonl(hdir / "judged" / f"{arm}.jsonl") if not j.get("judge_error")]
+        a = per_item(arm)
+        sc = [j["score"] for j in jd]
+        bad = sum(1 for j in jd if j.get("over_action") or j.get("wrong_target_or_value"))
+        t = [r["e2e_first_ms"] for r in raw]
+        cmp = "–"
+        if arm != "mercury.A1+CA":
+            m, lo, hi, _ = _boot_diff({k: a[k] - base[k] for k in ids})
+            cmp = f"{m * 100:+.1f}%p ({lo * 100:.1f}–{hi * 100:.1f})"
+        hit = "–"
+        if hyp:
+            hs = [j["score"] for j in _jsonl(RES / "selfhyp" / "diag" / "judged" / f"{hyp}.analysis.jsonl") if not j.get("judge_error")]
+            hit = f"{statistics.mean(hs):.2f}"
+        lines.append(f"| {info} | {statistics.mean(a[k] for k in ids) * 100:.1f}% | {statistics.mean(a[k] for k in keep) * 100:.1f}% | "
+                     f"{cmp} | {sc.count(2)}/{len(sc)} | {bad} | {_pct(t, 0.5):,.0f} / {_pct(t, 0.9):,.0f}ms | {hit} |")
+    a1, a2 = per_item("mercury.A1+CIv1"), per_item("mercury.A1+CIv2")
+    m, lo, hi, _ = _boot_diff({k: a2[k] - a1[k] for k in ids})
+    ref = [j for j in _jsonl(RES / "judged" / "mercury.A1+CA.jsonl") if not j.get("judge_error") and j["item_id"] in ids]
+    ref_all = statistics.mean(j["score"] for j in ref) / 2 * 100
+    ref_keep = statistics.mean(j["score"] for j in ref if j["item_id"] in keep) / 2 * 100
+    lines += ["", f"v2 추정 대 v1 추정: {m * 100:+.1f}%p ({lo * 100:.1f}–{hi * 100:.1f}). "
+                  f"참고: 같은 {len(ids)}문항의 기존 3회 반복 로그만 정확도 {ref_all:.1f}% (논란 문항 제외 {ref_keep:.1f}%)."]
+    (hdir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 BASE_ARM = "mercury.A1"  # 모델 간 비교의 기준: Inception 공식 음성 가이드 설정

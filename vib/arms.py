@@ -182,6 +182,12 @@ def selfhyp_arms() -> dict[str, Arm]:
     m = MODELS["mercury"]
     arms["mercury.A1+CI"] = Arm("mercury.A1+CI", "mercury", "CI", m["provider"], m["model"], m["A1"], [m["key"]],
                                 extra={"mode": "auto_selfhyp", "hyp_source": "mercury_instant", "base_arm": "mercury.A1"})
+    # 원인 분석 후속: 못 본 14문항에서 Mercury instant 추정을 원래 프롬프트(v1)와 고친 프롬프트(v2)로 만들어 비교한다.
+    # 추정 적중은 원인 분석에서 이미 채점했으므로 응답 행에서는 다시 채점하지 않는다(judge_hyps=False).
+    for v in ("v1", "v2"):
+        arms[f"mercury.A1+CI{v}"] = Arm(f"mercury.A1+CI{v}", "mercury", f"CI{v}", m["provider"], m["model"], m["A1"], [m["key"]],
+                                        extra={"mode": "auto_selfhyp", "hyp_source": f"results/selfhyp/diag/instant_{v}_heldout.json",
+                                               "judge_hyps": False, "base_arm": "mercury.A1"})
     return arms
 
 
