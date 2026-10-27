@@ -163,8 +163,9 @@ def run_one(arm: Arm, item: dict, rep: int) -> dict:
         cond, mem = arm.condition, t["memories"]
         if cond == "TN":
             mem = []
-        elif cond.startswith("TJ"):  # 게이트: 미리 잰 Jev 점수로 거르고, 같은 문항의 게이트 시간 측정값을 반복 차수별로 더한다
-            g = json.loads((TRAVEL_RES / "gate.json").read_text(encoding="utf-8"))["items"][item["id"]]
+        elif cond[:2] in ("TJ", "TK"):  # 게이트: 미리 잰 Jev 점수로 거르고, 같은 문항의 게이트 시간 측정값을 반복 차수별로 더한다
+            gfile = "gate.json" if cond.startswith("TJ") else "gate_ctx.json"  # TK 는 프로필·기억 전체를 보고 매긴 점수
+            g = json.loads((TRAVEL_RES / gfile).read_text(encoding="utf-8"))["items"][item["id"]]
             assert g["memories"] == mem
             mem = [m for m, p in zip(mem, g["probs"]) if p >= int(cond[2:]) / 10]
             analysis_ms = g["timing_ms"][(rep - 1) % len(g["timing_ms"])]

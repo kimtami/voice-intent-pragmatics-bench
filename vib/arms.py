@@ -248,6 +248,9 @@ TRAVEL_CONDS = {
     "TG": "기억 전체 + 목표·조건 목록",
     "TJ4": "게이트 0.4 (Jev 관련도 0.4 이상 기억만)",
     "TJ5": "게이트 0.5 (Jev 관련도 0.5 이상 기억만)",
+    # 맥락 게이트: Jev 공통 상태에 프로필과 기억 전체를 더해 매긴 점수로 거른다 (질문은 그대로 기억 1개씩)
+    "TK4": "맥락 게이트 0.4 (프로필·기억 전체를 보고 매긴 관련도 0.4 이상만)",
+    "TK5": "맥락 게이트 0.5 (프로필·기억 전체를 보고 매긴 관련도 0.5 이상만)",
 }
 
 
@@ -255,7 +258,7 @@ def travel_arms() -> dict[str, Arm]:
     m = MODELS["mercury"]
     arms = {}
     for cond in TRAVEL_CONDS:
-        keys = [m["key"]] + (["TYPESAFE_API_KEY"] if cond.startswith("TJ") else [])
+        keys = [m["key"]] + (["TYPESAFE_API_KEY"] if cond[:2] in ("TJ", "TK") else [])
         arms[f"mercury.A0+{cond}"] = Arm(f"mercury.A0+{cond}", "mercury", cond, m["provider"], m["model"], m["A0"], keys,
                                          extra={"mode": "travel", "base_arm": "mercury.A0"})
     return arms

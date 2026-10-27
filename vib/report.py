@@ -1191,8 +1191,10 @@ def travel_summary() -> None:
     prep = tdir / "prep"
     gen = {c: statistics.mean(_call_cost("mercury-3", v["usage"]) for v in json.loads((prep / f).read_text(encoding="utf-8"))["calls"].values())
            for c, f in (("TV", "v2.json"), ("TP", "planner.json")) if (prep / f).exists()}
-    gate = json.loads((tdir / "gate.json").read_text(encoding="utf-8")) if (tdir / "gate.json").exists() else None
-    gate_cost = gate["summary"]["cost_per_1k_turns_usd"] / 1000 if gate else 0.0
+    gate_cost = {}  # 턴당 게이트 비용: TJ 는 기억 1개만 보는 게이트, TK 는 프로필·기억 전체를 함께 보는 맥락 게이트
+    for pre, f in (("TJ", "gate.json"), ("TK", "gate_ctx.json")):
+        if (tdir / f).exists():
+            gate_cost[pre] = json.loads((tdir / f).read_text(encoding="utf-8"))["summary"]["cost_per_1k_turns_usd"] / 1000
 
     def diff(a: str, b: str, ks: list[str]) -> str:
         if a == b or a not in per or b not in per:
@@ -1214,7 +1216,7 @@ def travel_summary() -> None:
         ask = sum(1 for j in jd if j.get("asked_clarification"))
         t = [r["e2e_first_ms"] for r in raw]
         cond = arm.split("+")[1]
-        cost = (gen.get(cond, 0.0) + (gate_cost if cond.startswith("TJ") else 0.0) + statistics.mean(_call_cost(r["model"], r["usage"]) for r in raw)) * 1000
+        cost = (gen.get(cond, 0.0) + gate_cost.get(cond[:2], 0.0) + statistics.mean(_call_cost(r["model"], r["usage"]) for r in raw)) * 1000
         acc = lambda ks: f"{statistics.mean(per[arm][k] for k in ks) * 100:.1f}%"
         vs_v2 = diff(arm, "mercury.A0+TV", paired) if cond in ("TP", "TG") else "–"
         lines.append(f"| {info} | {acc(sorted(items))} | {acc(paired)} | {acc(control)} | {diff(arm, 'mercury.A0+TM', paired)} | {vs_v2} | "
@@ -1227,12 +1229,13 @@ def travel_summary() -> None:
             hits.append(f"{label} 전체 {statistics.mean(hs.values()):.2f}, 짝 {statistics.mean(hs[k] for k in paired):.2f}")
     if hits:
         lines += ["", "추정 적중(0~2): " + "; ".join(hits) + "."]
-    ctl = tdir / "latency_control"
-    if ctl.exists():  # 게이트 조건의 첫 발화는 다른 시각에 돌았으므로, 같은 시각에 1회씩 다시 돌린 값으로 게이트 비용을 본다
-        t = {c: {r["item_id"]: r["e2e_first_ms"] for r in _jsonl(ctl / f"mercury.A0+{c}.jsonl") if not r.get("error")} for c in ("TM", "TJ4", "TJ5")}
+    for ctl, gates in ((tdir / "latency_control", ("TJ4", "TJ5")), (tdir / "latency_control_ctx", ("TK4", "TK5"))):
+        if not ctl.exists():  # 게이트 조건의 첫 발화는 다른 시각에 돌았으므로, 같은 시각에 1회씩 다시 돌린 값으로 게이트 비용을 본다
+            continue
+        t = {c: {r["item_id"]: r["e2e_first_ms"] for r in _jsonl(ctl / f"mercury.A0+{c}.jsonl") if not r.get("error")} for c in ("TM",) + gates}
         cells = [f"{TRAVEL_CONDS[c].split(' (')[0]} {_pct(list(t[c].values()), 0.5):,.0f} / {_pct(list(t[c].values()), 0.9):,.0f}ms" for c in t]
-        d = [f"{c} {statistics.median(t[c][k] - t['TM'][k] for k in t['TM']):+,.0f}ms" for c in ("TJ4", "TJ5")]
-        lines += ["", "같은 시각 지연 대조(20문항 × 1회, 채점 안 함), 첫 발화 p50 / p90: " + ", ".join(cells)
+        d = [f"{c} {statistics.median(t[c][k] - t['TM'][k] for k in t['TM']):+,.0f}ms" for c in gates]
+        lines += ["", f"같은 시각 지연 대조(`{ctl.name}`, 20문항 × 1회, 채점 안 함), 첫 발화 p50 / p90: " + ", ".join(cells)
                   + ". 기억 전체 대비 문항별 중앙값: " + ", ".join(d) + "."]
     types = sorted({items[k]["pair_type"] for k in paired})
     lines += ["", "**짝 문항 유형별 정확도**", "", "| 조건 | " + " | ".join(f"{t} ({sum(items[k]['pair_type'] == t for k in paired)})" for t in types) + " |",
@@ -1242,7 +1245,8 @@ def travel_summary() -> None:
                                                    for t in types) + " |")
     grows = []
     for path, label in ((RES / "gate" / "existing.json", "기존 30문항 로그 (관련 기록 = 2차에서 사람이 고른 events, 나머지 = 잡음 10개)"),
-                        (tdir / "gate.json", "여행 20문항 기억 (관련 기록 = 문항마다 표시한 결정적 기억)")):
+                        (tdir / "gate.json", "여행 20문항 기억 (관련 기록 = 문항마다 표시한 결정적 기억)"),
+                        (tdir / "gate_ctx.json", "여행 20문항, 맥락 게이트 (프로필·기억 전체를 함께 봄)")):
         if not path.exists():
             continue
         g = json.loads(path.read_text(encoding="utf-8"))["summary"]

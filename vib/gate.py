@@ -10,6 +10,8 @@ v1 은 상태에 기억 목록을 두고 `memories[i]` 번호로 가리켰는데
   python -m vib.gate existing   # 기존 30문항 로그: 관련 기록(events) 재현율, 잡음 통과율, 지연 → results/gate/existing.json
   python -m vib.gate travel     # 여행 20문항 기억 → results/travel/gate.json (응답 실행이 이 점수를 쓴다)
   python -m vib.gate order      # 합격 검사: 같은 순서 재호출 대 순서를 뒤집은 호출에서 같은 글자의 점수 상관 → results/gate/order_check.json
+  python -m vib.gate travel-ctx # 맥락 버전: 공통 상태에 프로필과 기억 전체를 더함 → results/travel/gate_ctx.json
+  python -m vib.gate order-ctx  # 맥락 버전 합격 검사 (여행 20문항, 상태 속 기억 목록과 질문 순서를 함께 뒤집음) → results/gate/order_check_ctx.json
 """
 
 import argparse
@@ -43,19 +45,29 @@ QUESTION = ("Is this record relevant to the user's current utterance `utterance`
             "assistant understand what the user means or decide the right response, given `device_state` and `prior_dialogue`?")
 
 
-def _question(record: str) -> Noul:
-    return Noul(instructions={"question": QUESTION, "record": record}, criteria=CRITERIA)
+# 맥락 버전: 같은 질문에 프로필과 다른 기억을 함께 보라는 말만 더한다 (점수를 보기 전에 고정)
+QUESTION_CTX = QUESTION.replace("given `device_state` and `prior_dialogue`?",
+                                "given `device_state`, `prior_dialogue`, the user's profile `user_profile`, and the user's other records `memories`?")
+assert QUESTION_CTX != QUESTION
 
 
-def score(utterance: str, state: str, context: list[dict], memories: list[str]) -> dict:
-    """기억마다 관련 확률. 한 요청의 걸린 시간(ms)과 입력 토큰을 함께 낸다."""
+def _question(record: str, question: str = QUESTION) -> Noul:
+    return Noul(instructions={"question": question, "record": record}, criteria=CRITERIA)
+
+
+def score(utterance: str, state: str, context: list[dict], memories: list[str], profile: dict | None = None) -> dict:
+    """기억마다 관련 확률. 한 요청의 걸린 시간(ms)과 입력 토큰을 함께 낸다.
+    profile 을 주면 맥락 버전: 공통 상태에 프로필과 기억 전체를 넣고, 질문은 그대로 기억 1개씩 묻는다."""
     global _client
     if _client is None:
         _client = TypeSafeClient(model=MODEL)
     st = {"utterance": utterance, "device_state": state,
           "prior_dialogue": [f"{'사용자' if t['role'] == 'user' else '비서'}: {t['content']}" for t in context] or ["(없음)"]}
+    if profile is not None:
+        st |= {"user_profile": profile, "memories": memories}
+    q = QUESTION_CTX if profile is not None else QUESTION
     t0 = time.perf_counter()
-    resp = _client.system_one(state=st, questions={f"m{i}": _question(m) for i, m in enumerate(memories)})
+    resp = _client.system_one(state=st, questions={f"m{i}": _question(m, q) for i, m in enumerate(memories)})
     ms = (time.perf_counter() - t0) * 1000
     return {"probs": [round(resp.nouls[f"m{i}"].noul, 4) for i in range(len(memories))], "ms": round(ms, 1),
             "model": resp.model, "input_tokens": resp.usage.input_tokens}
@@ -65,12 +77,13 @@ def keep(memories: list[str], probs: list[float], threshold: float) -> list[str]
     return [m for m, p in zip(memories, probs) if p >= threshold]
 
 
-def _run(items: list[dict], memories_of, relevant_of, out: Path) -> None:
+def _run(items: list[dict], memories_of, relevant_of, out: Path, profile_of=None) -> None:
     rows = {}
     for it in items:
         mem = memories_of(it)
-        first = score(it["utterance"], it["state"], it["context"], mem)
-        times = [first["ms"]] + [score(it["utterance"], it["state"], it["context"], mem)["ms"] for _ in range(TIMING_CALLS - 1)]
+        prof = profile_of(it) if profile_of else None
+        first = score(it["utterance"], it["state"], it["context"], mem, prof)
+        times = [first["ms"]] + [score(it["utterance"], it["state"], it["context"], mem, prof)["ms"] for _ in range(TIMING_CALLS - 1)]
         rel = relevant_of(it)
         rows[it["id"]] = {"memories": mem, "probs": first["probs"], "relevant": [mem.index(r) for r in rel],
                           "timing_ms": times, "input_tokens": first["input_tokens"], "model": first["model"]}
@@ -91,7 +104,8 @@ def _run(items: list[dict], memories_of, relevant_of, out: Path) -> None:
     summary["latency_ms"] = {"p50": statistics.median(ms), "p90": statistics.quantiles(ms, n=10)[-1], "max": max(ms), "n": len(ms)}
     summary["cost_per_1k_turns_usd"] = statistics.mean(toks) * PRICE_IN / 1e6 * 1000 if toks else None
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps({"meta": {"model": MODEL, "version": VERSION, "timing_calls": TIMING_CALLS, "thresholds": THRESHOLDS},
+    out.write_text(json.dumps({"meta": {"model": MODEL, "version": VERSION + ("+context" if profile_of else ""),
+                                        "timing_calls": TIMING_CALLS, "thresholds": THRESHOLDS},
                                "summary": summary, "items": rows}, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     print(json.dumps(summary, ensure_ascii=False, indent=1))
 
@@ -102,19 +116,21 @@ def _corr(a: list[float], b: list[float]) -> float:
     return sum((x - ma) * (y - mb) for x, y in zip(a, b)) / den if den else float("nan")
 
 
-def order_check(cases: list[tuple[str, dict, list[str]]]) -> None:
-    """정답을 쓰지 않는 합격 검사: 점수가 기억의 글자를 따라가면 순서를 뒤집어도 같은 글자의 점수가 같아야 한다."""
+def order_check(cases: list[tuple], out_name: str = "order_check.json") -> None:
+    """정답을 쓰지 않는 합격 검사: 점수가 기억의 글자를 따라가면 순서를 뒤집어도 같은 글자의 점수가 같아야 한다.
+    case 에 프로필이 있으면 맥락 버전이고, 상태 속 기억 목록도 함께 뒤집힌다."""
     rows = {}
-    for iid, it, mem in cases:
-        a = score(it["utterance"], it["state"], it["context"], mem)["probs"]
-        b = score(it["utterance"], it["state"], it["context"], mem)["probs"]
-        rev = dict(zip(mem[::-1], score(it["utterance"], it["state"], it["context"], mem[::-1])["probs"]))
+    for iid, it, mem, *rest in cases:
+        prof = rest[0] if rest else None
+        a = score(it["utterance"], it["state"], it["context"], mem, prof)["probs"]
+        b = score(it["utterance"], it["state"], it["context"], mem, prof)["probs"]
+        rev = dict(zip(mem[::-1], score(it["utterance"], it["state"], it["context"], mem[::-1], prof)["probs"]))
         rows[iid] = {"n": len(mem), "same_order": round(_corr(a, b), 3), "reversed": round(_corr(a, [rev[m] for m in mem]), 3)}
         print(iid, rows[iid], flush=True)
     rs = [r["reversed"] for r in rows.values()]
-    summary = {"version": VERSION, "items": len(rs), "reversed_min": min(rs), "reversed_median": statistics.median(rs),
-               "items_reversed_ge_0.9": sum(r >= 0.9 for r in rs)}
-    out = ROOT / "results" / "gate" / "order_check.json"
+    summary = {"version": VERSION + ("+context" if cases and len(cases[0]) > 3 else ""), "items": len(rs), "reversed_min": min(rs),
+               "reversed_median": statistics.median(rs), "items_reversed_ge_0.9": sum(r >= 0.9 for r in rs)}
+    out = ROOT / "results" / "gate" / out_name
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({"summary": summary, "items": rows}, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     print(json.dumps(summary, ensure_ascii=False))
@@ -122,9 +138,18 @@ def order_check(cases: list[tuple[str, dict, list[str]]]) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("which", choices=["existing", "travel", "order"])
+    ap.add_argument("which", choices=["existing", "travel", "order", "travel-ctx", "order-ctx"])
     args = ap.parse_args()
     load_dotenv(ROOT / ".env", override=True)
+    if args.which in ("travel-ctx", "order-ctx"):
+        t = json.loads((ROOT / "data" / "travel" / "items.json").read_text(encoding="utf-8"))
+        trav = json.loads((ROOT / "data" / "travel" / "travelers.json").read_text(encoding="utf-8"))["travelers"]
+        if args.which == "order-ctx":
+            order_check([(it["id"], it, trav[it["traveler"]]["memories"], trav[it["traveler"]]["profile"]) for it in t], "order_check_ctx.json")
+        else:
+            _run(t, lambda it: trav[it["traveler"]]["memories"], lambda it: it["relevant"], ROOT / "results" / "travel" / "gate_ctx.json",
+                 profile_of=lambda it: trav[it["traveler"]]["profile"])
+        return
     if args.which == "order":
         q = json.loads((ROOT / "data" / "queries.json").read_text(encoding="utf-8"))
         logs = json.loads((ROOT / "data" / "auto_context.json").read_text(encoding="utf-8"))["logs"]
