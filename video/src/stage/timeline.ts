@@ -4,7 +4,9 @@
 
 export type Tone = "good" | "bad" | null | undefined;
 export type Step = { do: string; [k: string]: unknown };
-export type Act = { caption: string; steps: Step[]; src?: string };
+// 무대 아래 정보 띠: 응답·도우미 모델, 방법이 하는 일, 계산 시점, 이 조건의 정확도와 첫 소리 (site/data 에서 채움)
+export type ActInfo = { timing?: "ahead" | "during" | "before"; timingLabel?: string; reply: string; helper?: string; how?: string; acc?: number; accBase?: number; first?: number; firstBase?: number; sample?: string };
+export type Act = { caption: string; steps: Step[]; src?: string; info?: ActInfo };
 export type Pose = "neutral" | "say" | "wait" | "relief";
 
 export const TYPE_MS = 38; // 한 글자 타이핑 (site/js/motion.js 의 T.type)
@@ -23,7 +25,7 @@ export type Dial = { from: number; to: number; t0: number; tEnd: number };
 export type Span = { t0: number; t1: number };
 
 export type Timeline = {
-  acts: { caption: string; src?: string; t0: number; t1: number }[];
+  acts: { caption: string; src?: string; info?: ActInfo; t0: number; t1: number }[];
   says: Say[];
   thoughts: Thought[];
   cards: Cards[];
@@ -50,7 +52,7 @@ export function buildTimeline(acts: Act[]): Timeline {
   };
   acts.forEach((act, ai) => {
     if (ai > 0) { closeAll(t); tl.acts[ai - 1].t1 = t; }
-    tl.acts.push({ caption: act.caption, src: act.src, t0: t, t1: INF });
+    tl.acts.push({ caption: act.caption, src: act.src, info: act.info, t0: t, t1: INF });
     tl.poses.push({ t, pose: "neutral" });
     t += ai === 0 ? ACT_IN_MS : ACT_SWITCH_MS;
     let pSay: Say | null = null, aSay: Say | null = null, thought: Thought | null = null, cards: Cards | null = null;
@@ -109,6 +111,9 @@ export function buildTimeline(acts: Act[]): Timeline {
         case "helper": tl.helpers.push({ kind: String(st.kind), label: String(st.label ?? ""), t0: t, tEnd: INF }); t += 500; break;
         case "clock": {
           const ms = Number(st.ms ?? 1200);
+          // 기다리는 동안 비서 자리에는 깜빡이는 점만 남긴다
+          if (aSay) aSay.tEnd = t;
+          aSay = null;
           tl.clocks.push({ label: String(st.label ?? ""), t0: t, t1: t + ms, tEnd: INF });
           tl.think.push({ t0: t, t1: t + ms });
           tl.poses.push({ t, pose: "wait" });

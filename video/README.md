@@ -7,7 +7,8 @@
 ## 구조
 
 - `src/stage/timeline.ts`: 대본 단계(say, think, cards, helper, clock, dial …)를 시간표로 바꾸는 순수 함수
-- `src/stage/Stage.tsx`: 시간표를 그리는 컴포지션
+- `src/stage/Stage.tsx`: 시간표를 그리는 컴포지션 (기다림은 깜빡이는 점 3개, 아래 정보 띠에 응답·도우미 모델과 수치)
+- `src/stage/layout.ts`: 배치 두 가지. wide(넓은 화면, 영상) 와 tall(휴대폰: 그림 아래에 생각·말풍선·정보 띠를 쌓음). 페이지는 자리 폭 640px 미만이면 tall
 - `src/stage/scenes.ts`: 그림마다 잰 위치 (스피커 빛 고리, 시계 화면, 말풍선 자리)
 - `src/stage/scripts.ts`: 대본에 장면(침실·거실)과 막(캡션·출처)을 붙여 무대 목록을 만든다
 - `src/turn/Turn.tsx`: 언제 일하나 장면의 대화 턴 시간축 (줄 정의와 첫 소리 값)
@@ -39,3 +40,4 @@ npm run thumbs                                      # 문제점 카드 썸네일
 ## 라이선스
 
 Remotion 은 개인, 직원 3명 이하 영리 조직, 비영리 조직은 무료이고, 그 밖의 회사는 회사 라이선스가 필요하다 (`node_modules/remotion/LICENSE.md`).
+이 저장소는 개인 연구 프로젝트(MIT)라 무료 라이선스 대상이고, 그래서 페이지 플레이어에 `acknowledgeRemotionLicense` 를 넣었다.

@@ -13,7 +13,7 @@ const metric = (k) => M.metrics[k];
 const method = (id) => D.methods.find((m) => m.id === id);
 const timingColor = (t) => css(`--series-${D.timings[t].slot}`);
 // 대화 무대: Codex 로 그린 방 위에 대본을 재생하는 Remotion Player. 움직임 줄이기면 끝 화면만 보여 준다
-const STAGES = stageList(S, D);
+const STAGES = stageList(S, D, M);
 const stageOf = (id) => STAGES.find((s) => s.id === id);
 const stageOpts = () => (isReduced() ? { end: true } : { play: true });
 const players = [];
@@ -104,10 +104,9 @@ const mStage = player($("#m-stage"));
 async function showMethod(mid, animate) {
   selected = mid;
   $("#m-families").querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.method === mid));
-  const m = method(mid), fam = D.families.find((f) => f.id === m.family);
-  $("#m-head").innerHTML = `<h3>${m.name}</h3>
-    <div class="timing-chip"><i style="background:${timingColor(m.timing)}"></i>${D.timings[m.timing].label}: ${D.timings[m.timing].detail}</div>
-    <div class="role">${fam.role}</div>`;
+  const m = method(mid);
+  // 계산 시점, 응답·도우미 모델, 방법, 수치는 무대 아래 정보 띠에 있다
+  $("#m-head").innerHTML = `<h3>${m.name}</h3>`;
   $("#m-foot").innerHTML = `<span class="chip">${m.problem.value}</span><span>${m.problem.text}</span>
     <details><summary>덧붙인 프롬프트 보기</summary>${m.prompt}</details>`;
   mStage.show(stageOf(`m-${mid}`), animate ? stageOpts() : { end: true });

@@ -6,14 +6,18 @@ import { easeOut, prog } from "../stage/timeline";
 import { FONT } from "../stage/Stage";
 
 export type TurnRow = { label: string; timing: "during" | "before" | "ahead"; ms: number; chip?: "upper" | "checklist" | "effort" | "subagent" };
-export type TurnProps = { rows: TurnRow[]; timingLabels: Record<TurnRow["timing"], string>; assetBase?: string };
+export type TurnProps = { rows: TurnRow[]; timingLabels: Record<TurnRow["timing"], string>; assetBase?: string; layout?: "wide" | "tall" };
 
 export const TW = 1536, TH = 940;
 const COLOR = { during: "#3987e5", before: "#d95926", ahead: "#199e70" };
 const INK = "#f0efec", MUTED = "rgba(240,239,236,0.62)", LINE = "rgba(255,255,255,0.14)";
-const X = { track: 380, speak: 540, wait: 790, end: 1340 };
 const MAX_MS = 5000;
-const ROW0 = 130, ROW_H = 158;
+// wide: 왼쪽에 방법 이름, 오른쪽에 시간축. tall(휴대폰): 방법 이름을 시간축 위에 둔다
+const GEO = {
+  wide: { W: TW, H: TH, X: { track: 380, speak: 540, wait: 790, end: 1340 }, row0: 130, rowH: 158, midOff: 70, labelLeft: true, label: 32 },
+  tall: { W: 1080, H: 1720, X: { track: 40, speak: 180, wait: 420, end: 900 }, row0: 120, rowH: 316, midOff: 190, labelLeft: false, label: 36 },
+};
+export const turnSize = (layout: "wide" | "tall") => ({ w: GEO[layout].W, h: GEO[layout].H });
 
 // 줄마다 등장, 칩, 막대가 자라는 시각 (예전 캔버스 장면과 같은 순서와 길이)
 export function turnTimes(rows: TurnRow[]) {
@@ -33,25 +37,27 @@ export const turnDuration = (rows: TurnRow[], fps: number) => Math.ceil((turnTim
 
 const fmt = (ms: number) => (ms >= 1000 ? `${(ms / 1000).toFixed(1)}초` : `${Math.round(ms)}ms`);
 
-export const Turn: React.FC<TurnProps> = ({ rows, timingLabels, assetBase }) => {
+export const Turn: React.FC<TurnProps> = ({ rows, timingLabels, assetBase, layout = "wide" }) => {
+  const G = GEO[layout], X = G.X;
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const ms = (frame / fps) * 1000;
   const src = (n: string) => (assetBase != null ? `${assetBase}${n}` : staticFile(n));
   const T = turnTimes(rows);
   const scale = (X.end - X.wait) / MAX_MS;
+  const TWl = G.W, THl = G.H;
   return (
     <AbsoluteFill style={{ backgroundColor: "#16171a", fontFamily: FONT, color: INK, wordBreak: "keep-all" }}>
       {/* 칸 이름과 경계 */}
       {[["말하기 전", X.track], ["사용자가 말함", X.speak], ["첫 소리까지 기다림 →", X.wait]].map(([t, x]) => (
         <div key={String(t)} style={{ position: "absolute", left: Number(x) + 14, top: 48, fontSize: 26, color: MUTED }}>{t}</div>
       ))}
-      <svg width={TW} height={TH} style={{ position: "absolute", inset: 0 }}>
-        {[X.track, X.speak, X.wait].map((x) => <line key={x} x1={x} x2={x} y1={40} y2={TH - 30} stroke={LINE} strokeWidth={2} strokeDasharray="6 8" />)}
+      <svg width={TWl} height={THl} style={{ position: "absolute", inset: 0 }}>
+        {[X.track, X.speak, X.wait].map((x) => <line key={x} x1={x} x2={x} y1={40} y2={THl - 30} stroke={LINE} strokeWidth={2} strokeDasharray="6 8" />)}
       </svg>
       {rows.map((r, i) => {
         const tt = T.rows[i];
-        const y = ROW0 + i * ROW_H, mid = y + 70;
+        const y = G.row0 + i * G.rowH, mid = y + G.midOff;
         const a = easeOut(prog(ms, tt.t0, 400));
         const chip = easeOut(prog(ms, tt.chipT, 500));
         const g = easeOut(prog(ms, tt.growT, tt.growMs));
@@ -63,14 +69,14 @@ export const Turn: React.FC<TurnProps> = ({ rows, timingLabels, assetBase }) => 
         return (
           <div key={i} style={{ position: "absolute", inset: 0, opacity: a }}>
             {/* 왼쪽: 방법 이름과 계산 시점 */}
-            <div style={{ position: "absolute", left: 48, top: mid - 40, width: X.track - 70 }}>
-              <div style={{ fontSize: 32, fontWeight: 700 }}>{r.label}</div>
+            <div style={{ position: "absolute", left: G.labelLeft ? 48 : X.track, top: G.labelLeft ? mid - 40 : y + 20, width: G.labelLeft ? X.track - 70 : TWl - 80, display: G.labelLeft ? "block" : "flex", alignItems: "baseline", gap: 20 }}>
+              <div style={{ fontSize: G.label, fontWeight: 700 }}>{r.label}</div>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 6, fontSize: 24, color: MUTED }}>
                 <span style={{ width: 14, height: 14, borderRadius: 7, background: col, display: "inline-block" }} />{timingLabels[r.timing]}
               </div>
             </div>
-            <svg width={TW} height={TH} style={{ position: "absolute", inset: 0 }}>
-              <line x1={X.track} x2={X.end + 140} y1={mid} y2={mid} stroke={LINE} strokeWidth={2} />
+            <svg width={TWl} height={THl} style={{ position: "absolute", inset: 0 }}>
+              <line x1={X.track} x2={Math.min(X.end + 140, TWl - 20)} y1={mid} y2={mid} stroke={LINE} strokeWidth={2} />
               {/* 사용자의 말: 파형 */}
               {Array.from({ length: 9 }).map((_, k) => {
                 const h = speaking ? 10 + 26 * Math.abs(Math.sin(s * 9 + k * 0.9)) : 8 + 10 * Math.abs(Math.sin(k * 1.7));
@@ -82,6 +88,16 @@ export const Turn: React.FC<TurnProps> = ({ rows, timingLabels, assetBase }) => 
             <Face src={src("stage/icon-person.webp")} x={X.speak + 62} y={mid} r={46} />
             {/* 기다림 시간 */}
             <div style={{ position: "absolute", left: barEnd - 4, top: mid - 62, transform: "translateX(-100%)", fontSize: 30, fontWeight: 700, fontVariantNumeric: "tabular-nums", opacity: g > 0 ? 1 : 0, whiteSpace: "nowrap" }}>{fmt(r.ms * g)}</div>
+            {/* 기다리는 동안: 막대 끝에서 점 3개가 차례로 깜빡인다 */}
+            {g > 0 && done <= 0 ? (
+              <div style={{ position: "absolute", left: barEnd + 22, top: mid - 9, display: "flex", gap: 9 }}>
+                {[0, 1, 2].map((k) => {
+                  const ph = (s * 2.2 - k * 0.22) % 1;
+                  const lit = Math.max(0, Math.sin(Math.PI * Math.max(0, Math.min(1, ph * 1.6))));
+                  return <div key={k} style={{ width: 18, height: 18, borderRadius: 9, background: INK, opacity: 0.25 + 0.75 * lit, transform: `translateY(${-lit * 5}px)` }} />;
+                })}
+              </div>
+            ) : null}
             {/* 첫 소리: 막대 끝의 스피커 */}
             <div style={{ position: "absolute", left: barEnd + 18, top: mid - 46, opacity: done, display: "flex", alignItems: "center", gap: 10 }}>
               <Face src={src("stage/icon-speaker.webp")} x={46} y={46} r={46} glow={done} inline />

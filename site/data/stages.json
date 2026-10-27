@@ -283,7 +283,7 @@
    {
     "do": "helper",
     "kind": "analyst",
-    "label": "분석 에이전트"
+    "label": "Mercury 3 high · 분석 에이전트"
    },
    {
     "do": "think",
@@ -512,7 +512,7 @@
    {
     "do": "helper",
     "kind": "upper",
-    "label": "상위 모델 · 말하기 전에"
+    "label": "Gemini 3.8 Flash · 말하기 전에"
    },
    {
     "do": "think",
@@ -620,7 +620,7 @@
    {
     "do": "helper",
     "kind": "upper",
-    "label": "상위 모델 · 말하기 전에"
+    "label": "Gemini 3.8 Flash · 말하기 전에"
    },
    {
     "do": "think",
@@ -668,7 +668,7 @@
    {
     "do": "helper",
     "kind": "upper",
-    "label": "상위 모델 · 후보 10개"
+    "label": "Gemini 3.8 Flash · 후보 10개"
    },
    {
     "do": "say",
@@ -848,7 +848,7 @@
    {
     "do": "helper",
     "kind": "gate",
-    "label": "관련도 게이트 (0.5 이상만 통과)"
+    "label": "Jev 관련도 게이트 · 0.5 이상만"
    },
    {
     "do": "cards",
@@ -909,7 +909,7 @@
    {
     "do": "helper",
     "kind": "gate",
-    "label": "게이트 + 프로필·기록 전체"
+    "label": "Jev 맥락 게이트 · 0.5 이상만"
    },
    {
     "do": "cards",
@@ -1031,7 +1031,7 @@
     {
      "do": "helper",
      "kind": "upper",
-     "label": "상위 모델 · 말하기 전에"
+     "label": "Gemini 3.8 Flash · 말하기 전에"
     },
     {
      "do": "cards",
@@ -1062,7 +1062,24 @@
      "tone": "good",
      "hold": 1800
     }
-   ]
+   ],
+   "info": {
+    "before": {
+     "metric": "main.mercury.A0+CA",
+     "models": {
+      "reply": "Mercury 3 instant"
+     }
+    },
+    "after": {
+     "metric": "main.mercury.A0+CH",
+     "base": "main.mercury.A0+CA",
+     "timing": "ahead",
+     "models": {
+      "reply": "Mercury 3 instant",
+      "helper": "Gemini 3.8 Flash 가 말하기 전에 추정 최대 5개"
+     }
+    }
+   }
   },
   {
    "label": "POL-02 · GPT-6 Luna none",
@@ -1102,7 +1119,7 @@
     {
      "do": "helper",
      "kind": "upper",
-     "label": "상위 모델 · 말하기 전에"
+     "label": "Gemini 3.8 Flash · 말하기 전에"
     },
     {
      "do": "cards",
@@ -1136,7 +1153,24 @@
      "tone": "good",
      "hold": 1800
     }
-   ]
+   ],
+   "info": {
+    "before": {
+     "metric": "main.luna.A1+CA",
+     "models": {
+      "reply": "GPT-6 Luna · effort none"
+     }
+    },
+    "after": {
+     "metric": "main.luna.A1+CH",
+     "base": "main.luna.A1+CA",
+     "timing": "ahead",
+     "models": {
+      "reply": "GPT-6 Luna · effort none",
+      "helper": "Gemini 3.8 Flash 가 말하기 전에 추정 최대 5개"
+     }
+    }
+   }
   }
  ]
 }

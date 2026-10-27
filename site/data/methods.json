@@ -6,11 +6,22 @@
   "utterance": "하 이거 들으면 잠 참 잘 오겠다",
   "literal": {
    "text": "네, 좋은 말씀이에요. 편안한 밤 되세요.",
-   "source": "Mercury 3 instant, 로그만 (3차, 2회째)"
+   "source": "Mercury 3 instant, 로그만 (3차, 2회째)",
+   "metric": "main.mercury.A0+CA",
+   "models": {
+    "reply": "Mercury 3 instant"
+   }
   },
   "intended": {
    "text": "헤비메탈 곡을 수면 음악으로 바꿔 드릴게요.",
-   "source": "Mercury 3 instant + 미리 만든 추정 (3차, 2회째)"
+   "source": "Mercury 3 instant + 미리 만든 추정 (3차, 2회째)",
+   "metric": "main.mercury.A0+CH",
+   "base": "main.mercury.A0+CA",
+   "models": {
+    "reply": "Mercury 3 instant",
+    "helper": "Gemini 3.8 Flash 가 말하기 전에 추정 최대 5개"
+   },
+   "timing": "ahead"
   }
  },
  "timings": {
@@ -76,6 +87,9 @@
    "problem": {
     "value": "+666ms",
     "text": "생각하는 만큼 첫 소리가 늦어졌지만(모델별 중앙값) 정확도는 거의 그대로 (4개 모델 합산 +1.1%p)"
+   },
+   "models": {
+    "reply": "Mercury 3 · reasoning_effort high"
    }
   },
   {
@@ -91,6 +105,9 @@
    "problem": {
     "value": "모델마다 다름",
     "text": "Mercury·Luna +3.9%p, Claude Haiku −3.3%p. 모델이 이미 하는 추론을 지시해서는 효과가 작다"
+   },
+   "models": {
+    "reply": "Mercury 3 · medium + 화용 점검표"
    }
   },
   {
@@ -106,6 +123,9 @@
    "problem": {
     "value": "+609ms",
     "text": "해석을 쓰는 동안 첫 소리가 늦어진다. 10개로 늘리면 +1,066ms 인데 정확도는 그대로"
+   },
+   "models": {
+    "reply": "Mercury 3 · medium"
    }
   },
   {
@@ -121,6 +141,9 @@
    "problem": {
     "value": "가를 수 없음",
     "text": "느려지지 않았지만, 로그만 준 경우와 1~2문항 차이라 지시 덕분인지 알 수 없다"
+   },
+   "models": {
+    "reply": "Mercury 3 · medium"
    }
   },
   {
@@ -136,6 +159,10 @@
    "problem": {
     "value": "+4.2초",
     "text": "분석이 끝나야 답을 시작해서 음성 대화에 쓰기 어렵다"
+   },
+   "models": {
+    "reply": "Mercury 3 · medium",
+    "helper": "Mercury 3 · high 가 먼저 화용 분석"
    }
   },
   {
@@ -151,6 +178,9 @@
    "problem": {
     "value": "사람이 골라야 함",
     "text": "정답을 아는 사람이 관련 기록 1~2줄을 골라 넣은 것이라 실제 서비스에서는 그대로 쓸 수 없다"
+   },
+   "models": {
+    "reply": "Mercury 3 · medium"
    }
   },
   {
@@ -166,6 +196,9 @@
    "problem": {
     "value": "반어 70.4 → 64.8%",
     "text": "관련 사실이 잡음 속에 묻히면 반어를 놓친다"
+   },
+   "models": {
+    "reply": "Mercury 3 · medium"
    }
   },
   {
@@ -181,6 +214,10 @@
    "problem": {
     "value": "한 문항에 기댐",
     "text": "가장 높았지만 v2 추정과는 가를 수 없고, 이득 9점 중 4점이 한 문항에서 나왔다"
+   },
+   "models": {
+    "reply": "Mercury 3 instant",
+    "helper": "Mercury 3 instant 가 목표·조건 목록을 미리 정리"
    }
   },
   {
@@ -197,6 +234,10 @@
    "problem": {
     "value": "비용 12배",
     "text": "1,000턴당 $3.41 로 상위 모델에 바로 답하게 하는 것($0.28)의 약 12배, 생성에 7.6초"
+   },
+   "models": {
+    "reply": "Mercury 3 instant",
+    "helper": "Gemini 3.8 Flash 가 말하기 전에 추정 최대 5개"
    }
   },
   {
@@ -212,6 +253,10 @@
    "problem": {
     "value": "모델에 따라 다름",
     "text": "Mercury 3 instant 에서는 올랐지만 GPT-6 Luna none 에서는 효과가 없었다 (+2.1%p)"
+   },
+   "models": {
+    "reply": "Mercury 3 instant",
+    "helper": "Mercury 3 instant 가 말하기 전에 추정 (v2 프롬프트)"
    }
   },
   {
@@ -227,6 +272,10 @@
    "problem": {
     "value": "많을수록 빗나감",
     "text": "5개보다 낮았다. 겹치거나 빗나간 추정이 늘어 방해가 된다"
+   },
+   "models": {
+    "reply": "Mercury 3 · medium",
+    "helper": "Gemini 3.8 Flash 가 말하기 전에 상황 10개"
    }
   },
   {
@@ -242,6 +291,10 @@
    "problem": {
     "value": "생성 18초",
     "text": "후보를 상위 모델로 만드는 데 18초, 1,000턴당 $7.65"
+   },
+   "models": {
+    "reply": "Mercury 3 · medium",
+    "helper": "Gemini 3.8 Flash 가 미리 만든 후보 10개"
    }
   },
   {
@@ -257,6 +310,10 @@
    "problem": {
     "value": "+242ms",
     "text": "말이 끝나기 전에 짐작이 다 끝난다는 보장이 없고, 이득도 보이지 않았다"
+   },
+   "models": {
+    "reply": "Mercury 3 · medium",
+    "helper": "Mercury 3 instant 가 말 앞 절반으로 가설 5개"
    }
   },
   {
@@ -272,6 +329,10 @@
    "problem": {
     "value": "17/24 같은 1순위",
     "text": "관점을 나눠도 추정이 거의 같았고 개수와 비용만 늘었다"
+   },
+   "models": {
+    "reply": "Mercury 3 instant",
+    "helper": "Mercury 3 instant 둘이 관점을 나눠 동시에 추정"
    }
   },
   {
@@ -287,6 +348,10 @@
    "problem": {
     "value": "v2 와 같음",
     "text": "관점을 바꿔도 결과는 같았고, 문자 그대로의 질문을 지나치게 해석하는 일이 생겼다"
+   },
+   "models": {
+    "reply": "Mercury 3 instant",
+    "helper": "Mercury 3 instant 가 여행 플래너 관점으로 추정"
    }
   },
   {
@@ -302,6 +367,10 @@
    "problem": {
     "value": "기억의 36% 버림",
     "text": "결정적 기록을 버려 정확도가 떨어지고, 응답 앞에서 0.2초를 쓴다"
+   },
+   "models": {
+    "reply": "Mercury 3 instant",
+    "helper": "Jev (TypeSafe) 가 기억마다 관련도, 0.5 이상만 넘김"
    }
   },
   {
@@ -317,6 +386,10 @@
    "problem": {
     "value": "+0.3초",
     "text": "기록은 95% 남겼지만 모든 기록을 준 것과 정확도를 가를 수 없고 첫 소리만 늦어진다"
+   },
+   "models": {
+    "reply": "Mercury 3 instant",
+    "helper": "Jev 가 프로필·기억 전체를 보고 관련도, 0.5 이상만"
    }
   },
   {
@@ -332,6 +405,9 @@
    "problem": {
     "value": "흔들림 30% 그대로",
     "text": "정확도는 올랐지만 같은 입력에 다르게 답하는 비율은 줄지 않았다. 한 조건에서만 확인"
+   },
+   "models": {
+    "reply": "Mercury 3 instant · temperature 0.5 (기본 0.75)"
    }
   }
  ],
@@ -385,5 +461,6 @@
   "더 많은 문항과 반복: 같은 입력에도 응답의 약 30% 가 반복마다 달라, 10%p 안팎의 차이는 가를 수 없음",
   "조건 목록만 따로 떼어 시험 (목표 목록의 이득이 어디서 왔는지)",
   "되묻기 규칙(예약·결제는 확인, 조회는 바로 실행)을 정답 기준에 반영"
- ]
+ ],
+ "note_models": "models: 무대 정보 띠에 쓰는 응답 모델(reply)과 도우미 모델(helper). 출처는 vib/arms.py, vib/travel_prep.py, README 의 조건 설명"
 }
