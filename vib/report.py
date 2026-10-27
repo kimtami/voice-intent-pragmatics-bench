@@ -563,6 +563,7 @@ def main() -> None:
     selfhyp()
     selfhyp_diag()
     selfhyp_heldout()
+    selfhyp_instant()
     gap = gap_closure(table, per_item_by_arm)
     write_gap(gap, table)
     for fname, methods, colors, note in GAP_CHARTS:
@@ -1043,15 +1044,47 @@ def selfhyp_diag() -> None:
     (ddir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-HELDOUT_ARMS = [("mercury.A1+CA", "로그만", None), ("mercury.A1+CIv1", "로그 + instant 추정 (v1 프롬프트)", "instant_v1_heldout"),
-                ("mercury.A1+CIv2", "로그 + instant 추정 (v2 프롬프트)", "instant_v2_heldout")]
+HELDOUT_ARMS = [("mercury.A1+CA", "로그만", []), ("mercury.A1+CIv1", "로그 + instant 추정 (v1 프롬프트)", ["instant_v1_heldout"]),
+                ("mercury.A1+CIv2", "로그 + instant 추정 (v2 프롬프트)", ["instant_v2_heldout"])]
+INSTANT_ARMS = [("mercury.A0+CA", "로그만", []),
+                ("mercury.A0+CIv1", "로그 + instant 추정 (v1 프롬프트)", ["instant_v1_insample", "instant_v1_heldout"]),
+                ("mercury.A0+CIv2", "로그 + instant 추정 (v2 프롬프트)", ["instant_v2_insample", "instant_v2_heldout"])]
 
 
 def selfhyp_heldout() -> None:
     """원인 분석 후속: 못 본 14문항에서 v1·v2 추정을 Mercury 3 medium 응답에 넣어 로그만과 같은 실행에서 비교한다."""
-    hdir = RES / "selfhyp" / "heldout"
-    if not (hdir / "judged").exists():
+    lines = _hyp_response("heldout", HELDOUT_ARMS, "Mercury 3 medium 응답, 못 본 {n}문항 × {reps}회 ({ids}), 세 조건을 같은 실행에서 잼.",
+                          [("mercury.A1+CA", "로그만")])
+    if lines:
+        (RES / "selfhyp" / "heldout" / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def selfhyp_instant() -> None:
+    """약한 응답 설정: 같은 v1·v2 추정을 Mercury 3 instant 응답에 넣는다 (24문항). 기존 3회 반복 결과와도 문항끼리 짝지어 비교한다."""
+    refs = [("mercury.A0+CA", "Mercury 3 instant 로그만"), ("mercury.A0+CH", "Mercury 3 instant 로그 + 상위 모델(Gemini 3.8 Flash) 추정"),
+            ("mercury.A1+CA", "Mercury 3 medium 로그만"), ("gemini38.A1", "Gemini 3.8 Flash 기본")]
+    lines = _hyp_response("instant", INSTANT_ARMS,
+                          "Mercury 3 instant 응답, {n}문항 × {reps}회 (v2 프롬프트를 고칠 때 본 10문항 + 못 본 14문항), 세 조건을 같은 실행에서 잼. "
+                          "못 본 14문항 열은 v2 를 고칠 때 보지 않은 문항만의 정확도입니다.", refs, vs_last=True)
+    if not lines:
         return
+    lines += ["", "| 넣은 정보 | 추정 생성 시간 p50 (최대) | 생성 실패 / 요청 | 1,000턴당 비용: 추정 생성 + 응답 |", "|---|---|---|---|"]
+    resp = {arm: [r for r in _jsonl(RES / "selfhyp" / "instant" / "raw" / f"{arm}.jsonl") if not r.get("error")] for arm, _, _ in INSTANT_ARMS}
+    for arm, info, hyp in INSTANT_ARMS:
+        calls = [c for h in hyp for c in json.loads((RES / "selfhyp" / "diag" / f"{h}.json").read_text(encoding="utf-8"))["calls"].values()]
+        gen = statistics.mean(_call_cost("mercury-3", c["usage"]) for c in calls) * 1000 if calls else 0.0
+        out = statistics.mean(_call_cost("mercury-3", r["usage"]) for r in resp[arm]) * 1000
+        ms = [c["total_ms"] for c in calls]
+        lines.append(f"| {info} | " + (f"{_pct(ms, 0.5) / 1000:.1f}s ({max(ms) / 1000:.1f}s) | {sum(len(c['failures']) for c in calls)} / {len(calls)} | "
+                                       if calls else "– | – | ") + f"${gen:.2f} + ${out:.2f} = ${gen + out:.2f} |")
+    (RES / "selfhyp" / "instant" / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _hyp_response(sub: str, arms: list, head: str, refs: list[tuple[str, str]], vs_last: bool = False) -> list[str] | None:
+    """추정 조건 응답표. vs_last 면 기존 3회 반복 결과마다 마지막 조건(v2)과의 문항 짝 차이를 붙인다 (다른 시각 실행)."""
+    hdir = RES / "selfhyp" / sub
+    if not (hdir / "judged").exists():
+        return None
 
     def per_item(arm: str) -> dict[str, float]:
         d = defaultdict(list)
@@ -1060,16 +1093,19 @@ def selfhyp_heldout() -> None:
                 d[j["item_id"]].append(j["score"] / 2)
         return {k: statistics.mean(v) for k, v in d.items()}
 
-    ids = sorted(per_item("mercury.A1+CA"))
+    base_arm = arms[0][0]
+    base = per_item(base_arm)
+    ids = sorted(base)
     keep = [k for k in ids if k not in CONTESTED]
-    reps = max(r["rep"] for r in _jsonl(hdir / "raw" / "mercury.A1+CA.jsonl"))
-    base = per_item("mercury.A1+CA")
-    lines = [f"Mercury 3 medium 응답, 못 본 {len(ids)}문항 × {reps}회 ({', '.join(ids)}), 세 조건을 같은 실행에서 잼. "
-             f"추정은 Mercury 3 instant 가 만들었고 응답할 때 로그 아래에 덧붙임. 정답 기준에 논란이 있는 "
-             f"{'·'.join(k for k in ids if k in CONTESTED)} 를 뺀 {len(keep)}문항 정확도를 함께 싣습니다.", "",
-             "| 넣은 정보 | 응답 정확도 | 논란 문항 제외 | 로그만 대비 (95% CI) | 2점 응답 | 잘못된 행동 | 첫 발화 p50 / p90 | 추정 적중 (0~2) |",
-             "|---|---|---|---|---|---|---|---|"]
-    for arm, info, hyp in HELDOUT_ARMS:
+    unseen = [k for k in ids if k not in SELF_ITEMS]  # v2 프롬프트를 고칠 때 보지 않은 문항
+    split = len(unseen) < len(ids)
+    reps = max(r["rep"] for r in _jsonl(hdir / "raw" / f"{base_arm}.jsonl"))
+    lines = [head.format(n=len(ids), reps=reps, ids=", ".join(ids)) + " 추정은 Mercury 3 instant 가 만들었고 응답할 때 로그 아래에 덧붙임. "
+             f"정답 기준에 논란이 있는 {'·'.join(k for k in ids if k in CONTESTED)} 를 뺀 {len(keep)}문항 정확도를 함께 싣습니다.", "",
+             "| 넣은 정보 | 응답 정확도 | 논란 문항 제외 |" + (f" 못 본 {len(unseen)}문항 |" if split else "")
+             + " 로그만 대비 (95% CI) | 2점 응답 | 잘못된 행동 | 첫 발화 p50 / p90 | 추정 적중 (0~2) |",
+             "|---|---|---|" + ("---|" if split else "") + "---|---|---|---|---|"]
+    for arm, info, hyp in arms:
         raw = [r for r in _jsonl(hdir / "raw" / f"{arm}.jsonl") if not r.get("error")]
         jd = [j for j in _jsonl(hdir / "judged" / f"{arm}.jsonl") if not j.get("judge_error")]
         a = per_item(arm)
@@ -1077,23 +1113,50 @@ def selfhyp_heldout() -> None:
         bad = sum(1 for j in jd if j.get("over_action") or j.get("wrong_target_or_value"))
         t = [r["e2e_first_ms"] for r in raw]
         cmp = "–"
-        if arm != "mercury.A1+CA":
+        if arm != base_arm:
             m, lo, hi, _ = _boot_diff({k: a[k] - base[k] for k in ids})
             cmp = f"{m * 100:+.1f}%p ({lo * 100:.1f}–{hi * 100:.1f})"
         hit = "–"
         if hyp:
-            hs = [j["score"] for j in _jsonl(RES / "selfhyp" / "diag" / "judged" / f"{hyp}.analysis.jsonl") if not j.get("judge_error")]
+            hs = [j["score"] for h in hyp for j in _jsonl(RES / "selfhyp" / "diag" / "judged" / f"{h}.analysis.jsonl")
+                  if not j.get("judge_error")]
             hit = f"{statistics.mean(hs):.2f}"
-        lines.append(f"| {info} | {statistics.mean(a[k] for k in ids) * 100:.1f}% | {statistics.mean(a[k] for k in keep) * 100:.1f}% | "
+        col = f" {statistics.mean(a[k] for k in unseen) * 100:.1f}% |" if split else ""
+        lines.append(f"| {info} | {statistics.mean(a[k] for k in ids) * 100:.1f}% | {statistics.mean(a[k] for k in keep) * 100:.1f}% |{col} "
                      f"{cmp} | {sc.count(2)}/{len(sc)} | {bad} | {_pct(t, 0.5):,.0f} / {_pct(t, 0.9):,.0f}ms | {hit} |")
-    a1, a2 = per_item("mercury.A1+CIv1"), per_item("mercury.A1+CIv2")
+    a1, a2 = per_item(arms[1][0]), per_item(arms[2][0])
     m, lo, hi, _ = _boot_diff({k: a2[k] - a1[k] for k in ids})
-    ref = [j for j in _jsonl(RES / "judged" / "mercury.A1+CA.jsonl") if not j.get("judge_error") and j["item_id"] in ids]
-    ref_all = statistics.mean(j["score"] for j in ref) / 2 * 100
-    ref_keep = statistics.mean(j["score"] for j in ref if j["item_id"] in keep) / 2 * 100
-    lines += ["", f"v2 추정 대 v1 추정: {m * 100:+.1f}%p ({lo * 100:.1f}–{hi * 100:.1f}). "
-                  f"참고: 같은 {len(ids)}문항의 기존 3회 반복 로그만 정확도 {ref_all:.1f}% (논란 문항 제외 {ref_keep:.1f}%)."]
-    (hdir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    notes = []
+    last = per_item(arms[-1][0])
+    for arm, label in refs:  # 같은 문항의 기존 3회 반복 결과 (다른 시각에 잰 값이라 지연은 비교하지 않는다)
+        ref = [j for j in _jsonl(RES / "judged" / f"{arm}.jsonl") if not j.get("judge_error") and j["item_id"] in ids]
+        acc = statistics.mean(j["score"] for j in ref) / 2 * 100
+        acc_keep = statistics.mean(j["score"] for j in ref if j["item_id"] in keep) / 2 * 100
+        if vs_last:
+            r = defaultdict(list)
+            for j in ref:
+                r[j["item_id"]].append(j["score"] / 2)
+            dm, dlo, dhi, _ = _boot_diff({k: last[k] - statistics.mean(r[k]) for k in ids})
+            notes.append(f"| {label} | {acc:.1f}% ({acc_keep:.1f}%) | {dm * 100:+.1f}%p ({dlo * 100:.1f}–{dhi * 100:.1f}) |")
+        else:
+            notes.append(f"{label} 정확도 {acc:.1f}% (논란 문항 제외 {acc_keep:.1f}%)")
+    lines += ["", f"v2 추정 대 v1 추정: {m * 100:+.1f}%p ({lo * 100:.1f}–{hi * 100:.1f})."]
+    if split:  # v2 를 고칠 때 보지 않은 문항만의 로그만 대비 차이 (프롬프트 수정의 공정한 시험)
+        u_keep = [k for k in unseen if k not in CONTESTED]
+        parts = []
+        for arm, info, _ in arms[1:]:
+            a = per_item(arm)
+            ds = [_boot_diff({k: a[k] - base[k] for k in ks})[:3] for ks in (unseen, u_keep)]
+            parts.append(f"{info.split('(')[1].split(' ')[0]} " + ", ".join(
+                f"{lab} {d * 100:+.1f}%p ({dl * 100:.1f}–{dh * 100:.1f})"
+                for lab, (d, dl, dh) in zip((f"못 본 {len(unseen)}문항", f"그중 논란 없는 {len(u_keep)}문항"), ds)))
+        lines[-1] += " 로그만 대비, v2 를 고칠 때 보지 않은 문항만: " + "; ".join(parts) + "."
+    if vs_last:
+        lines += ["", f"**같은 {len(ids)}문항의 기존 3회 반복 결과와 비교 (다른 시각 실행, 문항끼리 짝지음)**", "",
+                  "| 기존 조건 | 정확도 (논란 문항 제외) | v2 추정 조건과의 차이 (95% CI) |", "|---|---|---|", *notes]
+    else:
+        lines[-1] += f" 참고: 같은 {len(ids)}문항의 기존 3회 반복 {', '.join(notes)}."
+    return lines
 
 
 BASE_ARM = "mercury.A1"  # 모델 간 비교의 기준: Inception 공식 음성 가이드 설정

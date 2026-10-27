@@ -188,6 +188,12 @@ def selfhyp_arms() -> dict[str, Arm]:
         arms[f"mercury.A1+CI{v}"] = Arm(f"mercury.A1+CI{v}", "mercury", f"CI{v}", m["provider"], m["model"], m["A1"], [m["key"]],
                                         extra={"mode": "auto_selfhyp", "hyp_source": f"results/selfhyp/diag/instant_{v}_heldout.json",
                                                "judge_hyps": False, "base_arm": "mercury.A1"})
+    # 약한 응답 설정: 응답도 Mercury 3 instant. 같은 v1·v2 추정을 본 10문항 + 못 본 14문항(24문항) 모두에 넣는다
+    arms["mercury.A0+CA"] = base["mercury.A0+CA"]
+    for v in ("v1", "v2"):
+        arms[f"mercury.A0+CI{v}"] = Arm(f"mercury.A0+CI{v}", "mercury", f"CI{v}", m["provider"], m["model"], m["A0"], [m["key"]],
+                                        extra={"mode": "auto_selfhyp", "judge_hyps": False, "base_arm": "mercury.A0",
+                                               "hyp_source": [f"results/selfhyp/diag/instant_{v}_{s}.json" for s in ("insample", "heldout")]})
     return arms
 
 
