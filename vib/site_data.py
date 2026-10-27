@@ -4,12 +4,14 @@
   python -m vib.site_data
 
 항목 형식:
-  {"id": 키, "summary": arm}                       30문항 본실험 (results/summary.csv 의 한 줄)
+  {"id": 키, "summary": arm}                       30문항 본실험 (results/summary.csv 의 한 줄). 2·3차 조건은 다른 시각에 돌았으므로
+                                                   첫 발화를 '1차 기준선 p50 + 같은 실행 대조군 대비 변화(results/gap.csv)' 로 쓴다
   {"id": 키, "screen": code}                       4차 선별 (results/screen/summary.csv 의 한 줄, 신뢰구간은 채점 파일에서)
   {"id": 키, "judged": 경로, "raw": 경로, ...}     그 밖의 실험. items="paired" 면 여행 짝 문항만,
                                                    gen=[추정 생성 파일들] 이면 턴당 생성 비용을 더하고,
-                                                   latency={"base": 키, "control": 디렉터리, "arm": 조건} 이면
+                                                   latency={"base": 키, "control": 디렉터리, "ref": 파일, "arm": 파일} 이면
                                                    첫 발화를 '기준 키의 p50 + 같은 시각 대조에서 잰 문항별 증가분 중앙값' 으로 쓴다.
+  4차 선별은 묶음마다 같은 실행의 Mercury 3 기본과 비교한 변화(d_first)를 1묶음 기준선에 더한다.
 """
 
 import csv
@@ -28,8 +30,9 @@ SI = RES / "selfhyp"
 TR = RES / "travel"
 DIAG_V2 = [SI / "diag" / f"instant_v2_{s}.json" for s in ("insample", "heldout")]
 DIAG_V1 = [SI / "diag" / f"instant_v1_{s}.json" for s in ("insample", "heldout")]
-GATE_J = {"base": "travel.TM", "control": TR / "latency_control", "arm": None}
-GATE_K = {"base": "travel.TM", "control": TR / "latency_control_ctx", "arm": None}
+GATE_J = {"base": "travel.TM", "control": TR / "latency_control", "ref": "mercury.A0+TM"}
+GATE_K = {"base": "travel.TM", "control": TR / "latency_control_ctx", "ref": "mercury.A0+TM"}
+PERSONA_CTL = SI / "persona" / "latency_control"
 
 METRICS = (
     # 30문항 × 3회 본실험 (1~3차)
@@ -45,15 +48,17 @@ METRICS = (
        {"id": "cheap.instant.CIv1", "judged": SI / "instant/judged/mercury.A0+CIv1.jsonl", "raw": SI / "instant/raw/mercury.A0+CIv1.jsonl", "gen": DIAG_V1},
        {"id": "cheap.instant.CIv2", "judged": SI / "instant/judged/mercury.A0+CIv2.jsonl", "raw": SI / "instant/raw/mercury.A0+CIv2.jsonl", "gen": DIAG_V2},
        {"id": "cheap.instant.CP", "judged": SI / "persona/judged/mercury.A0+CP.jsonl", "raw": SI / "persona/raw/mercury.A0+CP.jsonl",
-        "gen": [SI / "persona/instant_persona.json"]},
+        "gen": [SI / "persona/instant_persona.json"],
+        "latency": {"base": "cheap.instant.CA", "control": PERSONA_CTL, "ref": "mercury.A0+CA", "arm": "mercury.A0+CP"}},
        {"id": "cheap.luna.CA", "judged": SI / "luna_none/judged/luna.A1+CA.jsonl", "raw": SI / "luna_none/raw/luna.A1+CA.jsonl"},
        {"id": "cheap.luna.CIv2", "judged": SI / "luna_none/judged/luna.A1+CIv2.jsonl", "raw": SI / "luna_none/raw/luna.A1+CIv2.jsonl", "gen": DIAG_V2},
        {"id": "cheap.luna.CP", "judged": SI / "persona/judged/luna.A1+CP.jsonl", "raw": SI / "persona/raw/luna.A1+CP.jsonl",
-        "gen": [SI / "persona/instant_persona.json"]}]
+        "gen": [SI / "persona/instant_persona.json"],
+        "latency": {"base": "cheap.luna.CA", "control": PERSONA_CTL, "ref": "luna.A1+CA", "arm": "luna.A1+CP"}}]
     # 6차 여행 개인화 (짝 16문항 × 2회, Mercury 3 instant 응답)
     + [{"id": f"travel.{c}", "judged": TR / f"judged/mercury.A0+{c}.jsonl", "raw": TR / f"raw/mercury.A0+{c}.jsonl", "items": "paired",
         **({"gen": [TR / f"prep/{ {'TV': 'v2', 'TP': 'planner'}[c]}.json"]} if c in ("TV", "TP") else {}),
-        **({"latency": {**(GATE_J if c.startswith("TJ") else GATE_K), "arm": c}} if c[:2] in ("TJ", "TK") else {})}
+        **({"latency": {**(GATE_J if c.startswith("TJ") else GATE_K), "arm": f"mercury.A0+{c}"}} if c[:2] in ("TJ", "TK") else {})}
        for c in ("TN", "TM", "TV", "TP", "TG", "TJ4", "TJ5", "TK4", "TK5")]
     # 온도 (20문항 × 3회, 같은 실행 안의 비교)
     + [{"id": "temp.r2.t075", "judged": TR / "temp/judged/mercury.A0+TM.jsonl", "raw": TR / "temp/raw/mercury.A0+TM.jsonl"},
@@ -86,19 +91,29 @@ def _from_files(spec: dict, done: dict) -> dict:
            "cost_1k": round((statistics.mean(_call_cost(r["model"], r["usage"]) for r in raw)
                              + (_gen_cost(spec["gen"]) if spec.get("gen") else 0.0)) * 1000, 2)}
     lat = spec.get("latency")
-    if lat:  # 게이트: 같은 시각에 다시 잰 '기억 전체' 대비 문항별 증가분 중앙값을, 본 실행 기억 전체의 p50 에 더한다
-        ctl = {c: {r["item_id"]: r["e2e_first_ms"] for r in _jsonl(lat["control"] / f"mercury.A0+{c}.jsonl") if not r.get("error")}
-               for c in ("TM", lat["arm"])}
-        delta = statistics.median(ctl[lat["arm"]][k] - ctl["TM"][k] for k in ctl["TM"])
+    if lat:  # 다른 시각에 돈 조건: 같은 시각에 다시 잰 기준 대비 문항별 증가분 중앙값을 기준 키의 p50 에 더한다
+        ctl = {c: {r["item_id"]: r["e2e_first_ms"] for r in _jsonl(lat["control"] / f"{c}.jsonl") if not r.get("error")}
+               for c in (lat["ref"], lat["arm"])}
+        delta = statistics.median(ctl[lat["arm"]][k] - ctl[lat["ref"]][k] for k in ctl[lat["ref"]])
         out |= {"first_p50": round(done[lat["base"]]["first_p50"] + delta), "first_delta": round(delta), "first_p90": None,
-                "first_note": "기억 전체 p50 + 같은 시각 대조의 게이트 증가분"}
-        gate = json.loads((TR / ("gate.json" if lat["arm"].startswith("TJ") else "gate_ctx.json")).read_text(encoding="utf-8"))
-        out["cost_1k"] = round(out["cost_1k"] + gate["summary"]["cost_per_1k_turns_usd"], 2)
+                "first_note": "기준 p50 + 같은 시각에 다시 잰 증가분"}
+        if lat["arm"].split("+")[1][:2] in ("TJ", "TK"):
+            gate = json.loads((TR / ("gate.json" if "+TJ" in lat["arm"] else "gate_ctx.json")).read_text(encoding="utf-8"))
+            out["cost_1k"] = round(out["cost_1k"] + gate["summary"]["cost_per_1k_turns_usd"], 2)
     return out
+
+
+def _screen_base_p50() -> int:
+    ctl = [r["e2e_first_ms"] for r in _jsonl(RES / "screen" / "latency_control" / "mercury.A1.jsonl") if not r.get("error")]
+    return round(_pct(ctl, 0.5))
+
+
+SCREEN_BASE_P50 = _screen_base_p50()
 
 
 def main() -> None:
     summ = {r["arm"]: r for r in csv.DictReader(open(RES / "summary.csv", encoding="utf-8"))}
+    gap = {r["arm"]: r for r in csv.DictReader(open(RES / "gap.csv", encoding="utf-8"))}
     screen = {r["code"]: r for r in csv.DictReader(open(RES / "screen" / "summary.csv", encoding="utf-8"))}
     done: dict = {}
     for spec in METRICS:
@@ -107,6 +122,11 @@ def main() -> None:
             done[spec["id"]] = {"accuracy": float(r["accuracy"]), "ci": [float(r["acc_ci_lo"]), float(r["acc_ci_hi"])],
                                 "first_p50": round(float(r["first_p50_ms"])), "first_p90": round(float(r["first_p90_ms"])),
                                 "items": 30, "reps": 3, "cost_1k": float(r["cost_per_1k_turns_usd"])}
+            g = gap.get(spec["summary"])
+            if g and "+" in spec["summary"]:  # 2·3차 조건: 1차 기준선에 같은 실행 대조군 대비 변화를 더한다
+                base = done[f"main.{g['base_arm']}"]["first_p50"]
+                done[spec["id"]] |= {"first_p50": base + int(g["delta_first_p50_ms"]), "first_delta": int(g["delta_first_p50_ms"]),
+                                     "first_p90": None, "first_note": "1차 기준선 p50 + 같은 실행 대조군 대비 변화"}
         elif "screen" in spec:
             r = screen[spec["screen"]]
             per = defaultdict(list)
@@ -115,7 +135,8 @@ def main() -> None:
                     per[j["item_id"]].append(j["score"] / 2)
             lo, hi = _boot_ci(per)
             done[spec["id"]] = {"accuracy": float(r["acc"]), "ci": [round(lo * 100, 1), round(hi * 100, 1)],
-                                "first_p50": round(float(r["first_p50"])), "first_delta": round(float(r["d_first"])),
+                                "first_p50": SCREEN_BASE_P50 + round(float(r["d_first"])), "first_delta": round(float(r["d_first"])),
+                                "first_note": "Mercury 3 기준선 p50 + 같은 실행 대조 대비 변화",
                                 "items": len(per), "reps": 1, "cost_1k": float(r["cost_1k"]),
                                 "gen_p50_ms": round(float(r["gen_p50"])) if r["gen_p50"] else None}
         else:

@@ -246,7 +246,8 @@ $("#v-head").textContent = W.headline;
 $("#v-why").textContent = W.why;
 {
   const a = metric(W.points[0]), b = metric(W.points[1]), t = metric(W.target), r = metric(W.runner_up.metric);
-  $("#v-nums").innerHTML = `Mercury 3 instant + 미리 짐작: <b>${pct(a.accuracy)}, ${fmtMs(a.first_p50)}</b>. Mercury 3 + 미리 짐작: <b>${pct(b.accuracy)}, ${fmtMs(b.first_p50)}</b>. 목표인 Gemini 3.8 Flash 는 ${pct(t.accuracy)}, ${fmtMs(t.first_p50)} 입니다.`;
+  const sgn = (v) => `${v > 0 ? "+" : v < 0 ? "−" : "±"}${Math.abs(v)}ms`;
+  $("#v-nums").innerHTML = `Mercury 3 instant + 미리 짐작: <b>${pct(a.accuracy)}</b>, 첫 소리 변화 ${sgn(a.first_delta)}. Mercury 3 + 미리 짐작: <b>${pct(b.accuracy)}</b>, 첫 소리 변화 ${sgn(b.first_delta)}. 목표인 Gemini 3.8 Flash 는 ${pct(t.accuracy)}, 첫 소리 ${fmtMs(t.first_p50)} 입니다. (첫 소리 변화는 같은 시각에 잰 기준 설정 대비)`;
   $("#v-caveats").innerHTML = [...W.caveats, `${W.runner_up.text} (instant: ${pct(r.accuracy)}, 1,000턴당 ${won(r.cost_1k)})`].map((c) => `<li>${c}</li>`).join("");
 }
 $("#v-examples").innerHTML = W.examples.map((e) => `
@@ -291,6 +292,11 @@ async function playWinner() {
   } catch (e) { if (!cancelled(e)) throw e; }
 }
 
+// 재생 전에도 비어 보이지 않게, 목록과 예시 글은 처음부터 채워 둔다 (재생하면 지우고 다시 쓴다)
+renderFamilies();
+showMethod(selected, false);
+document.querySelectorAll("#v-examples p[data-text]").forEach((p) => { p.textContent = p.dataset.text; });
+
 // ---------- 8. 다음 ----------
 $("#n-list").innerHTML = D.next.map((n) => `<li>${n}</li>`).join("");
 
@@ -299,14 +305,17 @@ const PLAY = { problem: playProblem, goal: playGoal, when: playWhen, methods: pl
 const played = new Set();
 const scenes = [...document.querySelectorAll(".scene")];
 $("#nav").innerHTML = scenes.map((s) => `<a href="#${s.id}" data-id="${s.id}">${s.dataset.title}</a>`).join("");
+// 장면의 윗부분이 화면 위쪽 60% 안에 들어오면 재생한다. 비율 기준이면 화면보다 훨씬 긴 장면(휴대폰)은 끝내 시작되지 않는다
 const io = new IntersectionObserver((entries) => {
   for (const e of entries) {
-    if (!e.isIntersecting) continue;
-    $("#nav").querySelectorAll("a").forEach((a) => a.classList.toggle("on", a.dataset.id === e.target.id));
-    if (!played.has(e.target.id) && PLAY[e.target.id]) { played.add(e.target.id); PLAY[e.target.id](); }
+    if (e.isIntersecting && !played.has(e.target.id) && PLAY[e.target.id]) { played.add(e.target.id); PLAY[e.target.id](); }
   }
-}, { threshold: 0.45 });
-scenes.forEach((s) => io.observe(s));
+}, { rootMargin: "0px 0px -40% 0px", threshold: 0 });
+// 메뉴 표시는 화면 가운데 가는 띠에 걸친 장면 하나만
+const navIo = new IntersectionObserver((entries) => {
+  for (const e of entries) if (e.isIntersecting) $("#nav").querySelectorAll("a").forEach((a) => a.classList.toggle("on", a.dataset.id === e.target.id));
+}, { rootMargin: "-45% 0px -54% 0px", threshold: 0 });
+scenes.forEach((s) => { io.observe(s); navIo.observe(s); });
 document.querySelectorAll("[data-replay]").forEach((b) => b.addEventListener("click", () => PLAY[b.dataset.replay]?.()));
 
 // 속도
