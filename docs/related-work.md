@@ -34,7 +34,7 @@
 
 | 연구 | 방법 | 시사점 |
 |---|---|---|
-| [Sleep-time Compute](https://arxiv.org/abs/2504.13171) (Letta·UC Berkeley) | 질문이 오기 전 맥락을 미리 다시 표현(c → c′)해 두고, 질문 시점 계산을 줄임. **질문이 맥락에서 예측 가능할수록 효과가 큼** | 3차 C-auto+H 와 같은 구조. 우리 시나리오가 예측 가능했던 점이 효과를 키웠을 수 있음 |
+| [Sleep-time Compute](https://arxiv.org/abs/2504.13171) (Letta·UC Berkeley) | 질문이 오기 전 맥락을 미리 다시 표현(c → c′)해 두고, 질문 시점 계산을 줄임. **질문이 맥락에서 예측 가능할수록 효과가 큼** | 계산 시점(질문 전, 질문을 보지 않음)은 3차 C-auto+H 와 같지만 구현은 다름. 논문은 같은 모델이 맥락을 추론이 담긴 새 맥락으로 바꿔 쓰고, C-auto+H 는 더 강한 모델의 추정을 "사실 아님" 표시로 덧붙임. 맥락을 바꿔 쓰는 쪽은 4차 M3 에 가까움. 우리 시나리오가 예측 가능했던 점이 효과를 키웠을 수 있음 |
 | [Anticipate and Learn (ProAct)](https://arxiv.org/abs/2605.25971) ([GitHub](https://github.com/AgentACE-AI/ProAct)) | 대화 이력과 장기 기억으로 다음 요구를 예측하고 쉬는 시간에 근거를 준비. 필요한 턴 14.8%·환각 28.1% 감소(초록) | 오픈소스 구현 참고 가능 |
 | [PROBE](https://arxiv.org/abs/2510.19771), [ProactiveMobile](https://arxiv.org/abs/2602.21858), [ProEvent](https://arxiv.org/abs/2607.17701) | 말하지 않은 요구를 찾아 먼저 처리하는 능력 평가. 최고 모델도 26.7~40% (초록) | 선제 행동은 아직 어려운 과제. 우리는 "응답 정확도 보조"로만 썼음 |
 
