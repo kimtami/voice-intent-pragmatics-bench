@@ -33,7 +33,7 @@ export const Stage: React.FC<StageProps> = ({ scene, acts, assetBase }) => {
   const sc = SCENES[scene];
   const src = (name: string) => (assetBase != null ? `${assetBase}${name}` : staticFile(name));
   return (
-    <AbsoluteFill style={{ backgroundColor: "#16171a", fontFamily: FONT, color: C.ink, overflow: "hidden" }}>
+    <AbsoluteFill style={{ backgroundColor: "#16171a", fontFamily: FONT, color: C.ink, overflow: "hidden", wordBreak: "keep-all", overflowWrap: "anywhere" }}>
       <Poses tl={tl} ms={ms} sc={sc} src={src} />
       <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ position: "absolute", inset: 0, zIndex: 3 }}>
         <defs>
@@ -172,7 +172,8 @@ const Captions: React.FC<{ tl: Timeline; ms: number; sc: Scene }> = ({ tl, ms, s
 const Bubble: React.FC<{ s: Say; ms: number; sc: Scene }> = ({ s, ms, sc }) => {
   const isP = s.who === "person";
   // 비서가 답하면 사람 말은 조금만 물러난다 (밝은 말풍선은 많이 흐리면 회색 덩어리가 된다)
-  const a = life(ms, s.t0, s.tEnd) * (1 - 0.22 * prog(ms, s.dimAt, FADE_MS));
+  // 같은 쪽이 이어 말하면 앞 말풍선은 빨리 빠진다 (같은 자리에서 겹쳐 보이지 않게)
+  const a = Math.min(prog(ms, s.t0, FADE_MS), 1 - prog(ms, s.tEnd, 140)) * (1 - 0.22 * prog(ms, s.dimAt, FADE_MS));
   if (a <= 0) return null;
   const g = isP ? sc.person : sc.avatar;
   const p = prog(ms, s.t0, s.t1 - s.t0);
@@ -264,7 +265,7 @@ const HelperInset: React.FC<{ h: Timeline["helpers"][number]; tl: Timeline; ms: 
       <div data-box="도우미" style={{ width: r * 2, height: r * 2, borderRadius: r, overflow: "hidden", border: `4px solid ${busy ? C.green : "rgba(255,255,255,0.22)"}`, boxShadow: busy ? `0 0 ${24 * pulse}px rgba(43,209,151,${0.6 * pulse})` : "0 10px 30px rgba(0,0,0,0.45)" }}>
         <Img src={src(`stage/helper-${h.kind}.webp`)} style={{ width: "112%", height: "112%", margin: "-6%" }} />
       </div>
-      <div style={{ marginTop: 10, fontSize: 28, fontWeight: 600, color: C.ink, whiteSpace: "nowrap", textShadow: "0 2px 10px rgba(0,0,0,0.8)", marginLeft: -60, marginRight: -60 }}>{h.label}</div>
+      <div style={{ marginTop: 10, fontSize: 26, lineHeight: 1.3, fontWeight: 600, color: C.ink, textShadow: "0 2px 10px rgba(0,0,0,0.8)", marginLeft: -30, marginRight: -30 }}>{h.label}</div>
     </div>
   );
 };

@@ -1,7 +1,8 @@
 import { loadFont } from "@remotion/fonts";
 import { Composition } from "remotion";
 import { Stage, stageDuration } from "./stage/Stage";
-import { STAGES } from "./stage/stages-data";
+import { STAGES, TURN } from "./stage/stages-data";
+import { Turn, TH, turnDuration, TW } from "./turn/Turn";
 import { H, W } from "./stage/scenes";
 
 // 렌더·스튜디오용 글꼴 (페이지에서는 페이지가 이미 Pretendard 를 불러 둔다)
@@ -15,6 +16,7 @@ export const RemotionRoot: React.FC = () => {
       {STAGES.map((s) => (
         <Composition key={s.id} id={s.id} component={Stage} durationInFrames={stageDuration(s.acts, FPS)} fps={FPS} width={W} height={H} defaultProps={{ scene: s.scene, acts: s.acts }} />
       ))}
+      <Composition id="turn" component={Turn} durationInFrames={turnDuration(TURN.rows, FPS)} fps={FPS} width={TW} height={TH} defaultProps={TURN} />
     </>
   );
 };

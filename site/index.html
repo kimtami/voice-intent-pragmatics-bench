@@ -58,8 +58,7 @@
         <h2>같은 아이디어도 언제 계산하느냐에 따라 속도가 갈립니다</h2>
         <p class="lead">말이 끝난 뒤에 더 생각하면 사용자가 기다립니다. 말하기 전에 미리 해 두면 기다림은 그대로입니다.</p>
         <p class="note">Mercury 3 의 첫 소리 시간. 미리 짐작은 다른 시각에 돌아, 같은 시각에 잰 변화(+13ms)를 기준에 더함.</p>
-        <canvas class="turn" id="w-turn" role="img" aria-label="방법별 첫 소리까지 시간"></canvas>
-        <div class="legend" id="w-legend"></div>
+        <div class="stage-player turn-player" id="w-turn" role="img" aria-label="방법별 첫 소리까지 시간"></div>
       </div>
       <button class="replay" data-replay="when">다시 보기</button>
     </section>
@@ -104,6 +103,7 @@
       <div class="scene-inner">
         <p class="kicker">문제점</p>
         <h2>좋아 보였던 방법도 대가가 있었습니다</h2>
+        <p class="lead">카드를 누르면 그 방법이 하는 일을 무대로 다시 보여 줍니다.</p>
 
         <div class="problems" id="x-problems"></div>
       </div>

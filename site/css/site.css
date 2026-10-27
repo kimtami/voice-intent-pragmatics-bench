@@ -98,7 +98,6 @@ h2 { font-size: clamp(26px, 3.2vw, 36px); }
 /* 차트 공통 */
 .chart-wrap { position: relative; width: 100%; }
 canvas.plane { width: 100%; height: min(62vh, 520px); display: block; touch-action: pan-y; }
-canvas.turn { width: 100%; height: 300px; display: block; }
 .tooltip {
   position: absolute; pointer-events: none; z-index: 5;
   background: #0f1012; border: 1px solid var(--grid); border-radius: var(--radius);
@@ -149,9 +148,12 @@ table.data td.num { font-variant-numeric: tabular-nums; }
 
 /* 6. 문제점 */
 .problems { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 24px; }
-.problem { background: var(--surface-2); border-radius: var(--radius); padding: 14px 16px; border-top: 3px solid var(--grid); perspective: 600px; }
+.problem { background: var(--surface-2); border-radius: var(--radius); padding: 0 0 14px; border: 0; border-top: 3px solid var(--grid); overflow: hidden; text-align: left; font: inherit; color: inherit; cursor: pointer; }
+.problem img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; margin-bottom: 10px; transition: filter 0.2s; }
+.problem:hover img, .problem:focus-visible img { filter: brightness(1.12); }
+.problem .name, .problem .value, .problem .text { padding: 0 16px; }
 .problem .name { font-size: 14px; color: var(--text-muted); display: flex; gap: 8px; align-items: center; }
-.problem .name i { width: 8px; height: 8px; border-radius: 50%; }
+.problem .name i { width: 8px; height: 8px; border-radius: 50%; flex: none; }
 .problem .value { font-size: 24px; font-weight: 700; margin: 4px 0; }
 .problem .text { font-size: 14px; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .problem:hover .text { -webkit-line-clamp: unset; }
@@ -197,13 +199,13 @@ footer a { color: var(--text-secondary); }
   .detail .row { grid-template-columns: minmax(0, 1fr); gap: 2px; }
   .bubble { font-size: 19px; }
   .replay { right: 16px; }
-  canvas.turn { height: 260px; }
 }
 
 /* 대화 무대 */
 /* 대화 무대: Remotion Player (video/src/web.tsx 를 묶은 js/stage-player.js) */
 .stage-player { width: 100%; aspect-ratio: 3 / 2; background: #16171a; border-radius: var(--radius); overflow: hidden; }
 .detail .stage-player { margin: 12px 0; }
+.stage-player.turn-player { aspect-ratio: 1536 / 940; margin-top: 18px; }
 .detail { padding: 16px 18px; }
 .detail-head h3 { margin: 0 0 4px; font-size: 19px; }
 .detail-head .role { color: var(--text-secondary); font-size: 15px; margin-top: 2px; }

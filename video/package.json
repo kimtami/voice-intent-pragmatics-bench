@@ -31,7 +31,8 @@
     "upgrade": "remotion upgrade",
     "lint": "eslint src && tsc",
     "build:web": "esbuild src/web.tsx --bundle --format=esm --minify --jsx=automatic --define:process.env.NODE_ENV='\"production\"' --outfile=../site/js/stage-player.js",
-    "still": "remotion still src/index.ts"
+    "still": "remotion still src/index.ts",
+    "thumbs": "zsh scripts/thumbs.sh"
   },
   "allowScripts": {
     "esbuild": false

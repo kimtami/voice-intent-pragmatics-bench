@@ -33,6 +33,10 @@ def main() -> None:
         for pose in ("neutral", "wait", "relief"):
             pic = Image.open(SRC / f"{scene}-{pose}.png").convert("RGB")
             Image.composite(pic, base, mask).save(DST / f"{scene}-{pose}.webp", "WEBP", quality=88, method=6)
+    # 타임라인용 작은 그림: 침실 그림에서 얼굴(말하는 자세·기다리는 자세)과 스피커를 잘라 둥글게 쓴다
+    crops = {"icon-person": ("bedroom-facepalm", (300, 330, 560, 590)), "icon-wait": ("bedroom-wait-c", (290, 330, 550, 590)), "icon-speaker": ("bedroom-facepalm", (1100, 560, 1360, 820))}
+    for out, (name, box) in crops.items():
+        Image.open(SRC / f"{name}.png").convert("RGB").crop(box).resize((192, 192), Image.LANCZOS).save(DST / f"{out}.webp", "WEBP", quality=88, method=6)
     for kind in ("analyst", "upper", "gate"):
         Image.open(SRC / f"helper-{kind}.png").convert("RGB").resize((512, 512), Image.LANCZOS).save(DST / f"helper-{kind}.webp", "WEBP", quality=88, method=6)
 

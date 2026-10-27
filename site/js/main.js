@@ -1,6 +1,5 @@
 import { T, Run, dur, hide, reveal, setSpeed, getSpeed, sleep, tween, isReduced } from "./motion.js";
 import { Plane } from "./plane.js";
-import { Turn } from "./turn.js";
 import { mountStage, stageList } from "./stage-player.js";
 
 const $ = (s) => document.querySelector(s);
@@ -80,29 +79,9 @@ async function playGoal() {
 }
 
 // ---------- 3. 언제 일하나 ----------
-const turn = new Turn($("#w-turn"));
-const runW = new Run();
-const TURN_ROWS = [
-  { key: "main.mercury.A1", label: "기본", timing: "during" },
-  { key: "main.mercury.A1+CH", label: "미리 짐작", timing: "ahead", chip: "upper" },
-  { key: "main.mercury.A4", label: "화용 점검표", timing: "during", chip: "checklist" },
-  { key: "main.mercury.A2", label: "생각 더 하기", timing: "before", chip: "effort" },
-  { key: "main.mercury.A3", label: "분석 서브에이전트", timing: "before", chip: "subagent" },
-];
-$("#w-legend").innerHTML = legendHtml(["ahead", "during", "before"], false, false);
-async function playWhen() {
-  const id = runW.start();
-  turn.setRows(TURN_ROWS.map((r) => ({ ...r, ms: metric(r.key).first_p50, color: timingColor(r.timing),
-    chipText: r.chip ? ({ upper: "미리 짐작", checklist: "점검표", effort: "생각 더", subagent: "분석" })[r.chip] : null })));
-  try {
-    for (const row of turn.rows) {
-      await tween(dur(400), (_, v) => { row.alpha = v; turn.draw(); }, undefined, runW, id);
-      if (row.chipText) await tween(dur(500), (_, v) => { row.chip = v; turn.draw(); }, undefined, runW, id);
-      await tween(dur(Math.min(1600, 500 + row.ms / 4)), (_, v) => { row.grow = v; turn.draw(); }, undefined, runW, id);
-      await sleep(dur(350), runW, id);
-    }
-  } catch (e) { if (!cancelled(e)) throw e; }
-}
+// 줄 정의와 첫 소리 값은 video/src/turn/Turn.tsx (페이지와 스튜디오가 같이 쓴다)
+const wTurn = player($("#w-turn"));
+function playWhen() { wTurn.showTurn(M, D, stageOpts()); }
 
 // ---------- 4. 시도한 방법 ----------
 const runM = new Run();
@@ -201,12 +180,18 @@ async function playResults() {
 
 // ---------- 6. 문제점 ----------
 const runX = new Run();
+// 카드마다 그 방법 무대의 끝 화면 (video/scripts/thumbs.sh). 누르면 시도한 방법 장면에서 그 무대를 재생한다
 $("#x-problems").innerHTML = D.methods.map((m) => `
-  <div class="problem" style="border-top-color:${timingColor(m.timing)}">
+  <button class="problem" data-method="${m.id}" style="border-top-color:${timingColor(m.timing)}">
+    <img src="media/stage/thumbs/m-${m.id}.webp" alt="" loading="lazy" width="480" height="320">
     <div class="name"><i style="background:${timingColor(m.timing)}"></i>${m.name}</div>
     <div class="value">${m.problem.value}</div>
     <div class="text">${m.problem.text}</div>
-  </div>`).join("");
+  </button>`).join("");
+$("#x-problems").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => {
+  $("#m-detail").scrollIntoView({ behavior: isReduced() ? "auto" : "smooth", block: "center" });
+  showMethod(b.dataset.method, true);
+}));
 async function playProblems() {
   const id = runX.start();
   const cards = [...$("#x-problems").children];
