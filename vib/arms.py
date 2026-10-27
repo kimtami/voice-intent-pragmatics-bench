@@ -237,3 +237,25 @@ def screen_arms() -> dict[str, Arm]:
                                          extra={"mode": code.lower(), "base_arm": "mercury.A1"})
     return arms
 
+
+
+# 6차 여행 개인화: 응답은 Mercury 3 instant. 기억을 어떻게 넘기느냐만 다르다.
+TRAVEL_CONDS = {
+    "TN": "기억 없음 (프로필만)",
+    "TM": "기억 전체",
+    "TV": "기억 전체 + v2 추정",
+    "TP": "기억 전체 + 여행 플래너 관점 추정",
+    "TG": "기억 전체 + 목표·조건 목록",
+    "TJ4": "게이트 0.4 (Jev 관련도 0.4 이상 기억만)",
+    "TJ5": "게이트 0.5 (Jev 관련도 0.5 이상 기억만)",
+}
+
+
+def travel_arms() -> dict[str, Arm]:
+    m = MODELS["mercury"]
+    arms = {}
+    for cond in TRAVEL_CONDS:
+        keys = [m["key"]] + (["TYPESAFE_API_KEY"] if cond.startswith("TJ") else [])
+        arms[f"mercury.A0+{cond}"] = Arm(f"mercury.A0+{cond}", "mercury", cond, m["provider"], m["model"], m["A0"], keys,
+                                         extra={"mode": "travel", "base_arm": "mercury.A0"})
+    return arms

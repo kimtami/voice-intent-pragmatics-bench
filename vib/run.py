@@ -19,13 +19,14 @@ import sys
 import threading
 import time
 from collections import defaultdict
+from dataclasses import replace
 from datetime import datetime, timezone
 from pathlib import Path
 
 from dotenv import load_dotenv
 
 from . import prompts
-from .arms import Arm, all_arms, fake_arms, screen_arms, selfhyp_arms
+from .arms import Arm, all_arms, fake_arms, screen_arms, selfhyp_arms, travel_arms
 from .providers import json_call, stream_reply
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -42,7 +43,12 @@ def _screen(name: str) -> dict:
     return json.loads((SCREEN / f"{name}.json").read_text(encoding="utf-8"))["data"]
 
 
-def select_arms(spec: str, dry_run: bool, screen: bool = False, selfhyp: bool = False) -> list[Arm]:
+def select_arms(spec: str, dry_run: bool, screen: bool = False, selfhyp: bool = False, travel: bool = False) -> list[Arm]:
+    if travel:  # 6차 여행 개인화. dry-run 이면 조건은 그대로 두고 제공자만 가짜로 바꾼다
+        pool = travel_arms()
+        if dry_run:
+            pool = {k: replace(a, provider="fake", model="fake", keys=[]) for k, a in pool.items()}
+        return list(pool.values()) if spec == "all" else [a for a in pool.values() if a.arm_id in spec.split(",")]
     if selfhyp:  # 5차: 같은 모델 추정 + 같은 시각 비교군
         pool = selfhyp_arms()
         return list(pool.values()) if spec == "all" else [a for a in pool.values() if a.arm_id in spec.split(",")]
@@ -76,6 +82,8 @@ AUTO = ROOT / "data" / "auto_context.json"
 HYPS = ROOT / "data" / "hypotheses.json"
 SELF_HYPS = ROOT / "data" / "hypotheses_self"  # <family>.json: 응답 모델이 직접 만든 추정
 SCREEN = ROOT / "data" / "screen"
+TRAVEL = ROOT / "data" / "travel"
+TRAVEL_RES = ROOT / "results" / "travel"
 
 
 def run_one(arm: Arm, item: dict, rep: int) -> dict:
@@ -150,6 +158,25 @@ def run_one(arm: Arm, item: dict, rep: int) -> dict:
             extra = base + "\n\n" + prompts.candidates_block(_screen(source)[item["id"]])
         else:  # m6: 발화 앞부분으로 만든 가설
             extra = base + "\n\n" + prompts.hypotheses_block(_screen("m6_prefix")[item["id"]])
+    elif mode == "travel":  # 6차: 기억을 넘기는 방식만 조건마다 다르다
+        t = json.loads((TRAVEL / "travelers.json").read_text(encoding="utf-8"))["travelers"][item["traveler"]]
+        cond, mem = arm.condition, t["memories"]
+        if cond == "TN":
+            mem = []
+        elif cond.startswith("TJ"):  # 게이트: 미리 잰 Jev 점수로 거르고, 같은 문항의 게이트 시간 측정값을 반복 차수별로 더한다
+            g = json.loads((TRAVEL_RES / "gate.json").read_text(encoding="utf-8"))["items"][item["id"]]
+            assert g["memories"] == mem
+            mem = [m for m, p in zip(mem, g["probs"]) if p >= int(cond[2:]) / 10]
+            analysis_ms = g["timing_ms"][(rep - 1) % len(g["timing_ms"])]
+            row["gate_ms"], row["gate_kept"] = analysis_ms, len(mem)
+        extra = prompts.travel_context(t["profile"], mem)
+        if cond in ("TV", "TP"):
+            hyps = json.loads((TRAVEL_RES / "prep" / f"{'v2' if cond == 'TV' else 'planner'}.json").read_text(encoding="utf-8"))
+            row["hypotheses"] = hyps["hypotheses"][item["id"]]
+            extra += "\n\n" + prompts.hypotheses_block(row["hypotheses"])
+        elif cond == "TG":
+            goals = json.loads((TRAVEL_RES / "prep" / "goals.json").read_text(encoding="utf-8"))["goals"][item["traveler"]]
+            extra += "\n\n" + prompts.goals_block(goals)
     elif mode == "context_checklist":
         cg = prompts.common_ground(json.loads(PROFILE.read_text(encoding="utf-8")), item["events"])
         extra = prompts.PRAGMATIC_CHECKLIST + "\n\n" + cg
@@ -162,7 +189,7 @@ def run_one(arm: Arm, item: dict, rep: int) -> dict:
             "ttft_ms": res.ttft_ms,
             "first_sentence_ms": res.first_sentence_ms,
             "total_ms": res.total_ms,
-            "analysis_ms": analysis_ms if arm.analyzer else None,
+            "analysis_ms": analysis_ms if arm.analyzer else None,  # 게이트 조건은 gate_ms 로 따로 남긴다
             # 사용자가 실제로 기다리는 시간: 분석이 끝나야 응답 생성을 시작하므로 분석 시간을 더한다.
             "e2e_first_ms": None if res.ttft_ms is None else round(analysis_ms + res.ttft_ms, 1),
             "e2e_sentence_ms": None if res.first_sentence_ms is None else round(analysis_ms + res.first_sentence_ms, 1),
@@ -225,10 +252,11 @@ def main() -> None:
     ap.add_argument("--screen", action="store_true", help="4차 선별 실험 (M1~M8, 24문항)")
     ap.add_argument("--selfhyp", action="store_true", help="5차 같은 모델 추정 실험")
     ap.add_argument("--items", default=None, help="문항 id 목록 (쉼표 구분)")
+    ap.add_argument("--travel", action="store_true", help="6차 여행 개인화 실험 (data/travel/items.json)")
     args = ap.parse_args()
 
     load_dotenv(ROOT / ".env", override=True)
-    keys = ["OPENAI_API_KEY", "INCEPTION_API_KEY", "ANTHROPIC_API_KEY", "GEMINI_API_KEY"]
+    keys = ["OPENAI_API_KEY", "INCEPTION_API_KEY", "ANTHROPIC_API_KEY", "GEMINI_API_KEY", "TYPESAFE_API_KEY"]
     present = {k: bool(os.environ.get(k, "").strip()) for k in keys}
     if args.check:
         for k, v in present.items():
@@ -240,7 +268,7 @@ def main() -> None:
         sys.exit("dry-run 결과는 results/ 밖에 저장해야 합니다 (--out 지정)")
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    arms = select_arms(args.arms, args.dry_run, args.screen, args.selfhyp)
+    arms = select_arms(args.arms, args.dry_run, args.screen, args.selfhyp, args.travel)
     runnable, skipped = [], []
     for a in arms:
         (runnable if all(present.get(k) for k in a.keys) else skipped).append(a)
@@ -249,7 +277,7 @@ def main() -> None:
     if not runnable:
         sys.exit("실행할 조건이 없습니다")
 
-    items = load_items(args.limit)
+    items = json.loads((TRAVEL / "items.json").read_text(encoding="utf-8")) if args.travel else load_items(args.limit)
     if args.screen:
         from .screen_prep import SATURATED
         items = [it for it in items if it["category"] not in SATURATED]

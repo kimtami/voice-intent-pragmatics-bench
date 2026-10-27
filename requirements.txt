@@ -4,3 +4,4 @@ google-genai==2.33.0
 python-dotenv==1.2.4
 matplotlib==3.11.2
 numpy==2.5.4
+typesafe-sdk==0.7.5

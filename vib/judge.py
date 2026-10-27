@@ -84,10 +84,11 @@ def main() -> None:
     ap.add_argument("--judge", default="anthropic:claude-opus-5-5")
     ap.add_argument("--workers", type=int, default=8)
     ap.add_argument("--analysis-only", action="store_true", help="analysis(화용 분석·추정 목록)만 채점 (응답 채점 건너뜀)")
+    ap.add_argument("--items", default=str(ROOT / "data" / "queries.json"), help="문항 파일 (6차 여행: data/travel/items.json)")
     args = ap.parse_args()
     load_dotenv(ROOT / ".env", override=True)
 
-    items = {q["id"]: q for q in json.loads((ROOT / "data" / "queries.json").read_text(encoding="utf-8"))}
+    items = {q["id"]: q for q in json.loads(Path(args.items).read_text(encoding="utf-8"))}
     raw_dir, out_dir = Path(args.raw), Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
 

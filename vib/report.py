@@ -566,6 +566,7 @@ def main() -> None:
     selfhyp_instant()
     selfhyp_luna()
     selfhyp_persona()
+    travel_summary()
     gap = gap_closure(table, per_item_by_arm)
     write_gap(gap, table)
     for fname, methods, colors, note in GAP_CHARTS:
@@ -1174,6 +1175,70 @@ def selfhyp_persona() -> None:
             lines[-1] += " 같은 시각 지연 대조, 첫 발화 p50 / p90: " + ", ".join(cells) + "."
     (pdir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
+
+
+def travel_summary() -> None:
+    """6차 여행 개인화: 기억을 넘기는 방식 7가지를 Mercury 3 instant 응답에서 비교한다. 짝 문항(기억에 따라 정답이 갈림)과 대조 문항을 나눈다."""
+    from .arms import TRAVEL_CONDS
+    tdir = RES / "travel"
+    if not (tdir / "judged").exists():
+        return
+    items = {x["id"]: x for x in json.loads((ROOT / "data" / "travel" / "items.json").read_text(encoding="utf-8"))}
+    paired = sorted(k for k, x in items.items() if x["pair"])
+    control = sorted(k for k, x in items.items() if not x["pair"])
+    arms = [(f"mercury.A0+{c}", info) for c, info in TRAVEL_CONDS.items() if (tdir / "judged" / f"mercury.A0+{c}.jsonl").exists()]
+    per = {a: _per_item_judged(tdir / "judged" / f"{a}.jsonl") for a, _ in arms}
+    prep = tdir / "prep"
+    gen = {c: statistics.mean(_call_cost("mercury-3", v["usage"]) for v in json.loads((prep / f).read_text(encoding="utf-8"))["calls"].values())
+           for c, f in (("TV", "v2.json"), ("TP", "planner.json")) if (prep / f).exists()}
+    gate = json.loads((tdir / "gate.json").read_text(encoding="utf-8")) if (tdir / "gate.json").exists() else None
+    gate_cost = gate["summary"]["cost_per_1k_turns_usd"] / 1000 if gate else 0.0
+
+    def diff(a: str, b: str, ks: list[str]) -> str:
+        if a == b or a not in per or b not in per:
+            return "–"
+        m, lo, hi, _ = _boot_diff({k: per[a][k] - per[b][k] for k in ks})
+        return f"{m * 100:+.1f}%p ({lo * 100:.1f}–{hi * 100:.1f})"
+
+    reps = max(r["rep"] for r in _jsonl(tdir / "raw" / f"{arms[0][0]}.jsonl"))
+    lines = [f"Mercury 3 instant 응답, 여행 {len(items)}문항(짝 {len(paired)}문항 = 8쌍, 대조 {len(control)}문항) × {reps}회. "
+             "짝 문항은 상태·직전 대화·발화가 같고 여행자의 기억만 달라서, 기억을 봐야 정답이 갈립니다. "
+             "게이트 조건의 첫 발화에는 게이트(Jev) 시간이 더해져 있습니다.", "",
+             "| 조건 | 전체 | 짝 문항 | 대조 문항 | 기억 전체 대비, 짝 (95% CI) | v2 추정 대비, 짝 (95% CI) | 2점 응답 | 잘못된 행동 | 되물음 | 첫 발화 p50 / p90 | 1,000턴당 비용 |",
+             "|---|---|---|---|---|---|---|---|---|---|---|"]
+    for arm, info in arms:
+        raw = [r for r in _jsonl(tdir / "raw" / f"{arm}.jsonl") if not r.get("error")]
+        jd = [j for j in _jsonl(tdir / "judged" / f"{arm}.jsonl") if not j.get("judge_error")]
+        sc = [j["score"] for j in jd]
+        bad = sum(1 for j in jd if j.get("over_action") or j.get("wrong_target_or_value"))
+        ask = sum(1 for j in jd if j.get("asked_clarification"))
+        t = [r["e2e_first_ms"] for r in raw]
+        cond = arm.split("+")[1]
+        cost = (gen.get(cond, 0.0) + (gate_cost if cond.startswith("TJ") else 0.0) + statistics.mean(_call_cost(r["model"], r["usage"]) for r in raw)) * 1000
+        acc = lambda ks: f"{statistics.mean(per[arm][k] for k in ks) * 100:.1f}%"
+        vs_v2 = diff(arm, "mercury.A0+TV", paired) if cond in ("TP", "TG") else "–"
+        lines.append(f"| {info} | {acc(sorted(items))} | {acc(paired)} | {acc(control)} | {diff(arm, 'mercury.A0+TM', paired)} | {vs_v2} | "
+                     f"{sc.count(2)}/{len(sc)} | {bad} | {ask} | {_pct(t, 0.5):,.0f} / {_pct(t, 0.9):,.0f}ms | ${cost:.2f} |")
+    types = sorted({items[k]["pair_type"] for k in paired})
+    lines += ["", "**짝 문항 유형별 정확도**", "", "| 조건 | " + " | ".join(f"{t} ({sum(items[k]['pair_type'] == t for k in paired)})" for t in types) + " |",
+              "|---|" + "---|" * len(types)]
+    for arm, info in arms:
+        lines.append(f"| {info} | " + " | ".join(f"{statistics.mean(per[arm][k] for k in paired if items[k]['pair_type'] == t) * 100:.0f}%"
+                                                   for t in types) + " |")
+    grows = []
+    for path, label in ((RES / "gate" / "existing.json", "기존 30문항 로그 (관련 기록 = 2차에서 사람이 고른 events, 나머지 = 잡음 10개)"),
+                        (tdir / "gate.json", "여행 20문항 기억 (관련 기록 = 문항마다 표시한 결정적 기억)")):
+        if not path.exists():
+            continue
+        g = json.loads(path.read_text(encoding="utf-8"))["summary"]
+        for t in ("0.4", "0.5"):
+            x = g[t]
+            grows.append(f"| {label} | {t} | {x['relevant_recall']:.0%} | {x['items_all_relevant_kept']}/{x['items_with_relevant']} | "
+                         f"{x['other_pass_rate']:.0%} | {x['items_zero_kept']} | {g['latency_ms']['p50']:,.0f} / {g['latency_ms']['p90']:,.0f}ms |")
+    if grows:
+        lines += ["", "**게이트(Jev) 점검**", "", "| 대상 | 기준 | 관련 기록 재현율 | 관련 기록을 모두 남긴 문항 | 그 밖의 기록 통과율 | 아무것도 남지 않은 문항 | 게이트 시간 p50 / p90 |",
+                  "|---|---|---|---|---|---|---|", *grows]
+    (tdir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 def _per_item_judged(path: Path) -> dict[str, float]:
     d = defaultdict(list)

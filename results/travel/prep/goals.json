@@ -1,0 +1,138 @@
+{
+  "meta": {
+    "generator": {
+      "provider": "inception",
+      "model": "mercury-3",
+      "params": {
+        "reasoning_effort": "instant",
+        "temperature": 0.75,
+        "realtime": true,
+        "diffusing": false,
+        "max_completion_tokens": 8192
+      }
+    },
+    "created_at": "2026-10-27T08:36:21.853945+00:00",
+    "prompt": "goals",
+    "sees": "profile, memories only (batch, no dialogue)"
+  },
+  "goals": {
+    "A": {
+      "goals": [
+        "제주 가족 여행 준비하기"
+      ],
+      "constraints": [
+        "성인 2명과 36개월 유아 1명이 동행한다",
+        "숙소는 애월의 키즈 수영장 있는 리조트로 11월 5일부터 8일까지 예약되어 있다",
+        "렌터카에 카시트를 반드시 신청해야 한다",
+        "아이는 낮잠을 1시부터 3시까지 자고 저녁은 6시 전후로 먹는다",
+        "유모차 대여와 평지 산책로 정보를 저장해 두었다",
+        "아이 의자와 놀이방이 있는 식당 '돌담키즈밥상'을 저장해 두었다"
+      ]
+    },
+    "B": {
+      "goals": [
+        "제주 여행 준비하기 (11월 5~8일)"
+      ],
+      "constraints": [
+        "여행 예산은 하루 5만 원 (숙소 포함)",
+        "렌터카 없이 버스로만 이동",
+        "11월 7일 성산일출봉 일출 보기 (일출 06:58, 숙소에서 정상까지 40분)",
+        "제주에서 꽃게탕, 고등어회, 갈치조림 먹기",
+        "저장해 둔 올레길 7코스와 10코스 걷기",
+        "성산 '쉼표 게스트하우스'에 11월 6~7일 1박 예약됨"
+      ]
+    },
+    "C": {
+      "goals": [
+        "11월 5~8일 제주 출장 준비하기",
+        "11월 6일 한라에너지 발표 자료 준비하기",
+        "제주 고객사 선물 고르기"
+      ],
+      "constraints": [
+        "숙박은 1박 15만 원 한도",
+        "교통·숙박은 법인카드로 결제",
+        "렌터카는 법인 계약 코드 JEJU-2611 입력 필요",
+        "출장 정산 마감은 11월 15일",
+        "11월 6일 오전 10시 한라에너지 현장 방문",
+        "11월 6일 오후 4시 화상회의 (발표 20분)",
+        "발표 자료는 11월 6일 오전까지 팀장에게 공유",
+        "영수증은 출장 정산 앱에 사진으로 올리기"
+      ]
+    },
+    "D": {
+      "goals": [
+        "11월 5~8일 제주 신혼여행 준비하기"
+      ],
+      "constraints": [
+        "아내는 갑각류 알레르기가 있어 새우·게가 든 음식은 피해야 함",
+        "신혼여행 경비는 공동 통장 체크카드로 쓰기로 함",
+        "11월 5~8일 제주행 항공과 '노을채' 풀빌라를 예약함",
+        "11월 7일 오전 9시 협재해변 웨딩 스냅 촬영이 예약되어 있고 오전 7시 30분 헤어·메이크업을 위해 숙소 방문해야 함",
+        "11월 5~8일 오픈카 렌터카를 예약함",
+        "협재해변 노을 시간을 저장해 둠"
+      ]
+    }
+  },
+  "calls": {
+    "A": {
+      "total_ms": 1062.0,
+      "usage": {
+        "completion_tokens": 355,
+        "prompt_tokens": 1278,
+        "total_tokens": 1633,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "failures": []
+    },
+    "B": {
+      "total_ms": 915.4,
+      "usage": {
+        "completion_tokens": 322,
+        "prompt_tokens": 1311,
+        "total_tokens": 1633,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "failures": []
+    },
+    "C": {
+      "total_ms": 1059.9,
+      "usage": {
+        "completion_tokens": 318,
+        "prompt_tokens": 1250,
+        "total_tokens": 1568,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 253
+        }
+      },
+      "failures": []
+    },
+    "D": {
+      "total_ms": 868.2,
+      "usage": {
+        "completion_tokens": 303,
+        "prompt_tokens": 1262,
+        "total_tokens": 1565,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 256
+        }
+      },
+      "failures": []
+    }
+  }
+}

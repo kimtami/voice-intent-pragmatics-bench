@@ -297,3 +297,52 @@ def analysis_judge_user_message(item: dict, analysis: dict | str) -> str:
         ensure_ascii=False,
         indent=1,
     )
+
+
+# ---------- 6차 여행 개인화 ----------
+# 기억은 5차 로그와 같은 머리말로 넣는다. 그래야 v2 추정 지시("시스템 로그")를 고치지 않고 그대로 쓸 수 있다.
+def travel_context(profile: dict, memories: list[str]) -> str:
+    lines = ["[공유 맥락: 사용자 프로필]"] + [f"- {k}: {v}" for k, v in profile.items()]
+    lines.append("[최근 기록 (시스템 로그, 선별하지 않음)]")
+    lines += [f"- {m}" for m in memories] if memories else ["- (없음)"]
+    return "\n".join(lines)
+
+
+def travel_hypothesis_user_message(profile: dict, memories: list[str], state: str, context: list[dict]) -> str:
+    lines = [travel_context(profile, memories), f"[기기 상태] {state}", "[직전 대화]"]
+    lines += [f"{'사용자' if t['role'] == 'user' else '비서'}: {t['content']}" for t in context] or ["(없음)"]
+    lines.append("위 형식의 JSON 하나만 출력한다.")
+    return "\n".join(lines)
+
+
+# 여행 플래너 관점: v2 지시에 관점 한 단락만 넣는다. 한 번 부르므로 개수는 v2 와 같은 0~5개로 둔다.
+TRAVEL_PLANNER_VIEW = ("관점: 너는 이 여행을 함께 준비해 온 여행 플래너다. 여행의 목적, 동행, 예산, 일정과 예약, 지켜야 할 조건을 "
+                       "바탕으로 사용자가 지금 무엇을 원하거나 신경 쓸지를 추정한다.\n")
+HYPOTHESIS_TRAVEL_PLANNER = HYPOTHESIS_SYSTEM_V2.replace(_V2_HEAD, _V2_HEAD + TRAVEL_PLANNER_VIEW)
+
+# 목표 목록: Pinterest 의 여정 추론(활동 기록 → 순위 매긴 목표 이름)을 따르되, 비서에게 필요한 조건·사실 목록을 더했다(원문과 다른 점).
+# 대화와 무관하게 여행자마다 한 번 만든다고 가정한다(배치). 기기 상태·직전 대화·발화를 보지 않는다.
+GOALS_SYSTEM = (
+    "너는 음성 비서의 사용자 이해 모듈이다. 대화와 상관없이 하루 한 번, 사용자의 프로필과 최근 30일 활동 기록만 보고 "
+    "사용자가 지금 진행 중인 목표와 그 목표에 따르는 조건을 정리한다.\n"
+    "목표는 관심사가 아니라 이루려는 일이다 (예: '여름 원피스'는 관심사, '8월 결혼식에 입을 옷 고르기'는 목표). "
+    "검색·저장·예약·메시지로 여러 번 뒷받침되는 것, 최근 것, 구체적인 것을 앞에 둔다. 한 번뿐인 알림이나 일상 기록으로 "
+    "목표를 만들지 않는다. 근거 없는 목표를 지어내지 않고, 없으면 빈 목록을 낸다.\n"
+    "조건은 목표를 이룰 때 비서가 알아야 할 사실이다: 동행, 예산·한도, 건강·식이 제약, 결제 수단 규칙, 정해 둔 일정·예약, "
+    "저장해 둔 곳. 기록에 있는 것만 쓴다.\n"
+    "목표는 최대 8개, 조건은 최대 8개, 각각 한 문장.\n"
+    'JSON 하나만 출력한다: {"goals": [str], "constraints": [str]}'
+)
+
+
+def goals_user_message(profile: dict, memories: list[str]) -> str:
+    return travel_context(profile, memories) + "\n위 형식의 JSON 하나만 출력한다."
+
+
+def goals_block(goals: dict) -> str:
+    lines = ["[사용자 목표와 조건 (활동 기록에서 미리 정리한 것, 추정이 섞여 있음)]", "목표:"]
+    lines += [f"- {g}" for g in goals["goals"]] or ["- (없음)"]
+    lines.append("조건:")
+    lines += [f"- {c}" for c in goals["constraints"]] or ["- (없음)"]
+    lines.append("이 정리는 사용자의 이번 발화와 맞을 때만 참고한다.")
+    return "\n".join(lines)

@@ -1,0 +1,758 @@
+{
+  "meta": {
+    "generator": {
+      "provider": "inception",
+      "model": "mercury-3",
+      "params": {
+        "reasoning_effort": "instant",
+        "temperature": 0.75,
+        "realtime": true,
+        "diffusing": false,
+        "max_completion_tokens": 8192
+      }
+    },
+    "created_at": "2026-10-27T08:36:21.853945+00:00",
+    "prompt": "planner",
+    "sees": "profile, memories, state, prior dialogue"
+  },
+  "hypotheses": {
+    "T-P1-B": [
+      {
+        "text": "사용자는 꽃게탕을 좋아하므로 모살물항 예약을 수락할 가능성이 높다.",
+        "confidence": 0.8
+      },
+      {
+        "text": "사용자는 하루 예산 5만 원(숙소 포함)을 고려해 식당 가격을 신경 쓸 것이다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "내일 성산일출봉 일출(06:58)을 위해 일찍 일어나야 하므로 저녁 식사를 일찍 끝내고 싶어 할 것이다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 버스로만 이동한다고 정했으므로 식당까지의 버스 이동 시간과 막차 시간을 확인하려 할 것이다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 친구에게 올레길 사진을 보내기로 했으므로 오늘 걷거나 본 풍경 사진을 정리할 수도 있다.",
+        "confidence": 0.3
+      }
+    ],
+    "T-P1-D": [
+      {
+        "text": "사용자는 아내의 갑각류 알레르기 때문에 꽃게탕 식당 추천을 거절하고, 새우·게가 없는 다른 해산물이나 일반 식당을 요청할 것이다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "사용자는 내일 오전 협재해변 웨딩 스냅 촬영 일정(헤어·메이크업 7:30 숙소 방문)을 다시 확인하거나 날씨를 물어볼 것이다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 오늘 저녁 식사 비용을 공동 통장 체크카드로 결제할 것임을 언급하거나 확인할 것이다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 내일 촬영을 위해 필요한 준비물(커플룩, 반지, 삼각대)을 챙겼는지 확인하거나 비서에게 일정 알림을 요청할 것이다.",
+        "confidence": 0.4
+      },
+      {
+        "text": "사용자는 오늘 저녁 이후 일정(숙소 주변 산책이나 휴식)에 대한 추천을 요청할 수 있다.",
+        "confidence": 0.3
+      }
+    ],
+    "T-P2-A": [
+      {
+        "text": "사용자는 유아와 함께 걷기 쉬운 코스인지 확인하려 할 것이다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "사용자는 유모차를 가져왔는지 또는 대여했는지 떠올리며 길 안내 시 유모차 가능 여부를 물을 수 있다.",
+        "confidence": 0.8
+      },
+      {
+        "text": "사용자는 오전 10시에 시작해 아이 낮잠 시간(1시) 전에 끝낼 수 있는지 계산할 것이다.",
+        "confidence": 0.75
+      },
+      {
+        "text": "사용자는 11월 제주 날씨에 맞는 옷차림이나 우산 필요 여부를 신경 쓸 것이다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 엉또폭포까지의 이동 시간이나 주차 편의성을 확인하려 할 것이다.",
+        "confidence": 0.55
+      }
+    ],
+    "T-P2-B": [
+      {
+        "text": "사용자는 오늘 아침에 제안된 엉또폭포보다는, 이미 계획한 올레길 코스나 성산일출봉 일정을 우선시할 가능성이 높다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 11/7 성산일출봉 일출을 보기 위해 숙소에서 정상까지 40분 이동 시간을 계산 중일 수 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 친구의 요청대로 올레길에서 사진을 찍어 보낼 장소를 고려하고 있을 수 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 하루 5만 원 예산(숙소 포함) 내에서 오늘의 식비와 이동비를 어떻게 배분할지 신경 쓸 수 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 버스 노선 앱을 통해 내일 성산일출봉으로 가는 버스 시간을 확인하려 할 수 있다.",
+        "confidence": 0.4
+      }
+    ],
+    "T-P3-A": [
+      {
+        "text": "사용자는 점심을 아이 낮잠(1시) 전에 끝내기 위해 숙소 근처의 키즈 친화적 식당을 찾을 것이다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "사용자는 저장해 둔 '돌담키즈밥상'을 점심 장소로 고려할 가능성이 높다.",
+        "confidence": 0.85
+      },
+      {
+        "text": "사용자는 유모차로 이동하기 쉬운 거리나 평지 경로를 신경 쓸 것이다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 아이가 앉을 의자나 놀이방이 있는지 확인하려 할 것이다.",
+        "confidence": 0.65
+      },
+      {
+        "text": "사용자는 오전에 이동하느라 아이가 배고플 것을 걱정하며 빠른 점심 식사를 원할 것이다.",
+        "confidence": 0.6
+      }
+    ],
+    "T-P3-B": [
+      {
+        "text": "사용자는 지금 점심 식당을 찾고 있으며, 예산 5만 원 안에서 숙소 근처의 저렴한 식당을 원할 것이다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "사용자는 오후에 올레길(7코스 또는 10코스)을 걷기 위해 버스 노선을 확인할 것이다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 내일(11/7) 성산일출봉 일출을 보기 위해 이동 시간과 일정을 다시 확인할 것이다.",
+        "confidence": 0.65
+      },
+      {
+        "text": "사용자는 친구에게 보낼 올레길 사진을 찍기 위해 카메라나 휴대폰을 준비할 것이다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 예산을 지키기 위해 점심 값을 계산하거나 가계부 앱을 확인할 것이다.",
+        "confidence": 0.5
+      }
+    ],
+    "T-P4-A": [
+      {
+        "text": "렌터카 예약을 수락하면서 카시트가 포함되어 있는지 확인할 것이다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "아이의 낮잠 시간(1시~3시)이 지났는지 확인하거나 숙소로 바로 이동할 방법을 물을 것이다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "유모차를 렌터카에 실을 수 있는지 또는 대여 업체에서 받을 수 있는지 문의할 것이다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "렌터카 업체의 위치와 픽업 시간을 확인하거나 픽업 장소로 가는 방법을 물을 것이다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "숙소(애월 바당키즈리조트) 체크인 시간과 도착 예정 시각을 확인할 것이다.",
+        "confidence": 0.5
+      }
+    ],
+    "T-P4-C": [
+      {
+        "text": "사용자는 렌터카 예약을 진행하면서 법인 계약 코드 JEJU-2611이 적용되는지 확인하려 할 것이다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "사용자는 내일 오전 10시 한라에너지 현장 방문 일정을 다시 확인하거나 경로를 물어볼 수 있다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 숙박비가 1박 15만 원 한도를 초과하지 않는지 확인하려 할 수 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 출장 정산 마감일(11/15)을 염두에 두고 영수증 정리 방법을 물어볼 수 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 렌터카를 빌린 뒤 오늘 남은 시간에 할 일(예: 호텔 체크인, 회의 준비)을 정리하려 할 수 있다.",
+        "confidence": 0.4
+      }
+    ],
+    "T-P5-C": [
+      {
+        "text": "사용자는 렌터카 요금을 법인카드로 결제해야 한다는 출장비 규정을 알고 있을 것이며, 지금 법인카드를 선택할 가능성이 높다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "사용자는 렌터카 반납 시각(11/8 오전 10시)과 장소를 염두에 두고, 반납 전 연료 채우기나 추가 요금 발생 여부를 확인하려 할 수 있다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 11/6 오전까지 발표 자료를 팀장에게 공유해야 하므로, 현재 자료 준비 상태를 확인하거나 관련 알림을 기대할 수 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 출장 정산 마감(11/15)을 앞두고 영수증 사진 촬영 필요성을 다시 떠올릴 수 있으며, 렌터카 영수증도 정산 앱에 올리려 할 것이다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 11/6 오후 4시 화상회의 링크와 현장 방문(오전 10시) 일정을 함께 고려해, 회의 준비나 이동 시간을 확인하려 할 수 있다.",
+        "confidence": 0.4
+      }
+    ],
+    "T-P5-D": [
+      {
+        "text": "사용자는 렌터카 결제를 공동 통장 체크카드로 할 가능성이 높다.",
+        "confidence": 0.8
+      },
+      {
+        "text": "사용자는 여행 식당 선택 시 아내의 갑각류 알레르기를 고려할 것이다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 11월 8일 오전 10시 렌터카 반납 일정을 신경 쓸 것이다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 여행 전날 준비물 체크리스트(커플룩, 반지, 삼각대)를 확인할 것이다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 결제 완료 후 항공권과 숙소 예약 확인을 요청할 수 있다.",
+        "confidence": 0.4
+      }
+    ],
+    "T-P6-B": [
+      {
+        "text": "사용자는 내일 아침 성산일출봉 일출(06:58)을 보기 위해 지금 일어날 시간이나 알람 설정을 신경 쓰고 있을 것이다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "사용자는 내일 일출 관람을 위해 버스 시간표나 이동 경로를 다시 확인하려 할 것이다.",
+        "confidence": 0.8
+      },
+      {
+        "text": "사용자는 숙소에서 내일 아침 일찍 나가기 전에 간단히 먹을 것(예: 편의점 음식)을 준비하거나 찾아볼 것이다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 오늘 저녁이나 내일 식사로 기억해 둔 꽃게탕이나 고등어회 맛집을 다시 검색하거나 예약하려 할 것이다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 여행 예산(하루 5만 원, 숙소 포함)을 지키기 위해 오늘 지출을 가계부에 기록하거나 확인할 것이다.",
+        "confidence": 0.4
+      }
+    ],
+    "T-P6-D": [
+      {
+        "text": "사용자는 내일 아침 7시 30분 헤어·메이크업 방문을 위해 오늘 밤 일찍 자야 한다는 점을 신경 쓰고 있을 것이다.",
+        "confidence": 0.8
+      },
+      {
+        "text": "사용자는 내일 협재해변 웨딩 스냅 촬영에 필요한 준비물(커플룩, 반지, 삼각대 등)을 다시 확인하거나 챙길지 고민하고 있을 것이다.",
+        "confidence": 0.75
+      },
+      {
+        "text": "사용자는 내일 촬영 전후로 아내의 갑각류 알레르기를 고려해 식사 장소나 메뉴를 미리 정하고 싶어할 것이다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 신혼여행 경비를 공동 통장 체크카드로 쓰기로 했으므로, 오늘 밤 지출이나 내일 촬영 관련 비용을 어떻게 결제할지 확인하고 싶어할 것이다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 내일 촬영 일정에 맞춰 날씨나 노을 시간(협재해변)을 확인하고 싶어할 것이다.",
+        "confidence": 0.45
+      }
+    ],
+    "T-P7-B": [
+      {
+        "text": "사용자는 18만 원짜리 호텔이 예산(하루 5만 원)을 크게 초과한다고 여겨 거절하거나 더 저렴한 대안을 요구할 것이다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "사용자는 오늘 밤 묵을 곳을 찾기 위해 제주시 주변 저렴한 게스트하우스나 모텔을 검색할 가능성이 높다.",
+        "confidence": 0.8
+      },
+      {
+        "text": "사용자는 이미 예약한 성산 게스트하우스로 이동하는 방법(버스)을 확인하려 할 것이다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 11/7 성산일출봉 일출(06:58)을 보기 위해 숙소에서 정상까지 40분 이동 시간을 고려해 일정을 조정할 것이다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 친구에게 올레길 사진을 보내기로 약속했으므로, 내일부터 올레길 코스(7, 10코스) 관련 정보를 다시 확인하거나 계획을 세울 것이다.",
+        "confidence": 0.5
+      }
+    ],
+    "T-P7-C": [
+      {
+        "text": "사용자는 숙박비 18만 원이 총무팀 규정(1박 15만 원 한도)을 초과함을 인지하고 예약을 거절하거나 더 저렴한 대안을 요청할 것이다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "사용자는 내일 오전 10시 한라에너지 현장 방문을 위해 숙소가 제주시에서 이동하기 편리한 위치인지 확인하려 할 것이다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 내일 오후 4시 화상회의 발표(20분) 준비와 팀장에게 오전까지 공유할 자료를 아직 정리하지 않았다면 지금부터 작업을 시작할 것이다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 출장 정산을 위해 오늘 밤 숙박 영수증을 사진으로 찍어 정산 앱에 올리는 것을 염두에 둘 것이다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 11/5~8 출장 일정 중 렌터카 코드 JEJU-2611을 사용해야 한다는 사실을 기억하고, 필요 시 차량 예약이나 이동 수단을 확인할 것이다.",
+        "confidence": 0.4
+      }
+    ],
+    "T-P8-C": [
+      {
+        "text": "사용자는 오후 4시 화상회의를 앞두고 카페에서 회의 준비를 할 가능성이 높다.",
+        "confidence": 0.85
+      },
+      {
+        "text": "비서가 제안한 카페 '봄날'에 갈지 결정해야 하며, 조용하고 일하기 좋은 장소를 원할 것이다.",
+        "confidence": 0.8
+      },
+      {
+        "text": "팀장이 요청한 발표 자료를 오전까지 공유하지 못했을 수 있어, 지금 급히 자료를 정리하거나 전송할 수 있다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 출장비 정산 규정(숙박 한도, 법인카드 결제, 렌터카 코드)을 염두에 두고 영수증이나 결제 내역을 확인할 수 있다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 오늘 오전 현장 방문 후 오후 회의까지의 일정 공백을 활용해 근처에서 휴식하거나 점심을 해결했을 수 있다.",
+        "confidence": 0.5
+      }
+    ],
+    "T-P8-D": [
+      {
+        "text": "사용자는 지금 카페에서 메뉴를 주문할 때 아내의 갑각류 알레르기를 고려해 새우·게가 들어간 메뉴를 피하려 할 것이다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "사용자는 오늘 저녁 식사 장소를 정하기 위해 주변 식당을 검색하거나 비서에게 추천을 요청할 것이다.",
+        "confidence": 0.8
+      },
+      {
+        "text": "사용자는 내일 아침 웨딩 스냅 촬영을 위해 일정을 재확인하거나 필요한 준비물(반지, 삼각대 등)을 점검하려 할 것이다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 오늘 오후 시간을 활용해 렌터카로 이동하거나 협재해변 주변을 둘러볼 계획을 세울 것이다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 내일 촬영을 위해 날씨나 노을 시간을 확인하거나 촬영 장소까지의 이동 경로를 물어볼 것이다.",
+        "confidence": 0.5
+      }
+    ],
+    "T-CT-A": [
+      {
+        "text": "사용자는 내일(11/7) 일정을 확인하거나 계획하려 할 것이다.",
+        "confidence": 0.85
+      },
+      {
+        "text": "사용자는 아이의 잠자리나 밤중 케어 상태를 점검하려 할 것이다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 내일 아이가 먹을 식당이나 끼니를 찾아볼 것이다.",
+        "confidence": 0.65
+      },
+      {
+        "text": "사용자는 유모차나 카시트 같은 이동 준비물을 다시 확인할 것이다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 남편과 내일 일정을 조율하려 할 것이다.",
+        "confidence": 0.55
+      }
+    ],
+    "T-CT-B": [
+      {
+        "text": "사용자는 내일 새벽 성산일출봉 일출을 보기 위해 일어날 시간과 버스 이동 경로를 다시 확인하려 할 것이다.",
+        "confidence": 0.9
+      },
+      {
+        "text": "사용자는 내일 일출을 보기 위해 오늘 일찍 자야 한다는 점을 신경 쓰고 있을 것이다.",
+        "confidence": 0.8
+      },
+      {
+        "text": "사용자는 오늘 저녁 식사 비용을 여행 예산(하루 5만 원)에 맞춰 확인하려 할 것이다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 친구가 요청한 올레길 사진을 보내기 위해 오늘 또는 내일 찍은 사진을 정리하려 할 것이다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 내일 날씨와 일출 시간이 메모한 대로인지 확인하려 할 것이다.",
+        "confidence": 0.7
+      }
+    ],
+    "T-CT-C": [
+      {
+        "text": "사용자는 내일 오전 10시 한라에너지 현장 방문을 앞두고 이동 경로나 준비물을 확인하려 할 것이다.",
+        "confidence": 0.8
+      },
+      {
+        "text": "사용자는 내일 오후 4시 화상회의 발표를 위해 오늘 밤 발표 자료를 마무리하거나 검토하려 할 것이다.",
+        "confidence": 0.75
+      },
+      {
+        "text": "사용자는 팀장이 요청한 발표 자료 공유(6일 오전까지)를 위해 파일을 보내거나 일정을 확인하려 할 것이다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 내일 일정을 위해 알람 설정이나 아침 준비를 요청할 수 있다.",
+        "confidence": 0.5
+      },
+      {
+        "text": "사용자는 호텔 객실 편의시설(와이파이, 조식 등)이나 주변 식당 정보를 문의할 가능성이 있다.",
+        "confidence": 0.4
+      }
+    ],
+    "T-CT-D": [
+      {
+        "text": "사용자는 지금 저녁 식사 장소나 메뉴를 찾고 있을 가능성이 높으며, 아내의 갑각류 알레르기를 반영한 식당을 확인하려 할 것이다.",
+        "confidence": 0.8
+      },
+      {
+        "text": "사용자는 내일 오전 7시 30분 헤어·메이크업 방문을 위해 일정을 재확인하거나 알람을 설정하려 할 것이다.",
+        "confidence": 0.7
+      },
+      {
+        "text": "사용자는 렌터카 픽업 시간이나 위치를 확인하거나, 내일 이동 경로를 계획하려 할 것이다.",
+        "confidence": 0.6
+      },
+      {
+        "text": "사용자는 오늘 저녁 숙소 주변 오션뷰나 분위기 좋은 식당을 검색하거나 추천을 요청할 것이다.",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "calls": {
+    "T-P1-B": {
+      "total_ms": 1007.1,
+      "usage": {
+        "completion_tokens": 414,
+        "prompt_tokens": 1371,
+        "total_tokens": 1785,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "failures": []
+    },
+    "T-P1-D": {
+      "total_ms": 1160.4,
+      "usage": {
+        "completion_tokens": 468,
+        "prompt_tokens": 1398,
+        "total_tokens": 1866,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "failures": []
+    },
+    "T-P2-A": {
+      "total_ms": 1058.6,
+      "usage": {
+        "completion_tokens": 351,
+        "prompt_tokens": 1390,
+        "total_tokens": 1741,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "failures": []
+    },
+    "T-P2-B": {
+      "total_ms": 1208.9,
+      "usage": {
+        "completion_tokens": 432,
+        "prompt_tokens": 1428,
+        "total_tokens": 1860,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 9
+        }
+      },
+      "failures": []
+    },
+    "T-P3-A": {
+      "total_ms": 1281.5,
+      "usage": {
+        "completion_tokens": 490,
+        "prompt_tokens": 1379,
+        "total_tokens": 1869,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 264
+        }
+      },
+      "failures": []
+    },
+    "T-P3-B": {
+      "total_ms": 1371.3,
+      "usage": {
+        "completion_tokens": 489,
+        "prompt_tokens": 1386,
+        "total_tokens": 1875,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1019
+        }
+      },
+      "failures": []
+    },
+    "T-P4-A": {
+      "total_ms": 1109.5,
+      "usage": {
+        "completion_tokens": 453,
+        "prompt_tokens": 1382,
+        "total_tokens": 1835,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1012
+        }
+      },
+      "failures": []
+    },
+    "T-P4-C": {
+      "total_ms": 1190.1,
+      "usage": {
+        "completion_tokens": 441,
+        "prompt_tokens": 1361,
+        "total_tokens": 1802,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 253
+        }
+      },
+      "failures": []
+    },
+    "T-P5-C": {
+      "total_ms": 1160.4,
+      "usage": {
+        "completion_tokens": 500,
+        "prompt_tokens": 1440,
+        "total_tokens": 1940,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 263
+        }
+      },
+      "failures": []
+    },
+    "T-P5-D": {
+      "total_ms": 839.7,
+      "usage": {
+        "completion_tokens": 362,
+        "prompt_tokens": 1434,
+        "total_tokens": 1796,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1021
+        }
+      },
+      "failures": []
+    },
+    "T-P6-B": {
+      "total_ms": 998.5,
+      "usage": {
+        "completion_tokens": 422,
+        "prompt_tokens": 1336,
+        "total_tokens": 1758,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 991
+        }
+      },
+      "failures": []
+    },
+    "T-P6-D": {
+      "total_ms": 1310.0,
+      "usage": {
+        "completion_tokens": 505,
+        "prompt_tokens": 1370,
+        "total_tokens": 1875,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "failures": []
+    },
+    "T-P7-B": {
+      "total_ms": 1361.2,
+      "usage": {
+        "completion_tokens": 485,
+        "prompt_tokens": 1373,
+        "total_tokens": 1858,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 988
+        }
+      },
+      "failures": []
+    },
+    "T-P7-C": {
+      "total_ms": 1407.8,
+      "usage": {
+        "completion_tokens": 503,
+        "prompt_tokens": 1421,
+        "total_tokens": 1924,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1023
+        }
+      },
+      "failures": []
+    },
+    "T-P8-C": {
+      "total_ms": 1300.5,
+      "usage": {
+        "completion_tokens": 412,
+        "prompt_tokens": 1373,
+        "total_tokens": 1785,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 995
+        }
+      },
+      "failures": []
+    },
+    "T-P8-D": {
+      "total_ms": 1624.6,
+      "usage": {
+        "completion_tokens": 513,
+        "prompt_tokens": 1373,
+        "total_tokens": 1886,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 256
+        }
+      },
+      "failures": []
+    },
+    "T-CT-A": {
+      "total_ms": 1208.7,
+      "usage": {
+        "completion_tokens": 411,
+        "prompt_tokens": 1374,
+        "total_tokens": 1785,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1033
+        }
+      },
+      "failures": []
+    },
+    "T-CT-B": {
+      "total_ms": 1186.6,
+      "usage": {
+        "completion_tokens": 421,
+        "prompt_tokens": 1400,
+        "total_tokens": 1821,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1006
+        }
+      },
+      "failures": []
+    },
+    "T-CT-C": {
+      "total_ms": 1381.3,
+      "usage": {
+        "completion_tokens": 487,
+        "prompt_tokens": 1384,
+        "total_tokens": 1871,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 993
+        }
+      },
+      "failures": []
+    },
+    "T-CT-D": {
+      "total_ms": 931.4,
+      "usage": {
+        "completion_tokens": 343,
+        "prompt_tokens": 1356,
+        "total_tokens": 1699,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 1008
+        }
+      },
+      "failures": []
+    }
+  }
+}
