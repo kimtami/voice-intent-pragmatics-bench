@@ -65,7 +65,7 @@ body {
   position: relative;
 }
 .scene-inner { width: 100%; max-width: var(--maxw); margin: 0 auto; }
-.two-col { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px; align-items: center; }
+.two-col, .split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px; align-items: center; }
 .kicker { color: var(--text-muted); font-size: 15px; margin: 0 0 8px; letter-spacing: 0.02em; }
 h1, h2 { margin: 0 0 16px; line-height: 1.3; font-weight: 700; letter-spacing: -0.01em; }
 h1 { font-size: clamp(30px, 4.2vw, 46px); }
@@ -109,7 +109,6 @@ canvas.plane { width: 100%; height: min(62vh, 520px); display: block; touch-acti
 .legend i { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
 
 /* 4. 방법 */
-.methods-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; margin-top: 20px; align-items: start; }
 .families { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 .family { background: var(--surface-2); border-radius: var(--radius); padding: 8px 10px; }
 .family h3 { margin: 2px 0 2px 8px; font-size: 14px; color: var(--text-muted); font-weight: 600; }
@@ -122,12 +121,6 @@ canvas.plane { width: 100%; height: min(62vh, 520px); display: block; touch-acti
 .family button:hover { background: var(--surface-3); }
 .family button.on { background: var(--surface-3); border-color: var(--text-muted); color: var(--text-primary); }
 .family button i { width: 4px; align-self: stretch; border-radius: 2px; flex: none; }
-.detail { background: var(--surface-2); border-radius: var(--radius); padding: 20px 22px; min-height: 230px; }
-.detail .row { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; margin: 12px 0; }
-.detail .row > span { color: var(--text-muted); font-size: 14px; padding-top: 2px; }
-.detail .row > div { font-size: 16px; }
-.detail .prompt { color: var(--text-secondary); }
-.detail h3 { margin: 0 0 4px; font-size: 20px; }
 .timing-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-secondary); }
 .timing-chip i { width: 10px; height: 10px; border-radius: 50%; }
 
@@ -180,11 +173,9 @@ table.data td.num { font-variant-numeric: tabular-nums; }
 .next-list li { margin: 6px 0; }
 .howto { background: var(--surface-2); border-radius: var(--radius); padding: 18px 20px; margin-top: 24px; color: var(--text-secondary); font-size: 15px; }
 .howto code { font-family: inherit; color: var(--text-primary); background: var(--surface-3); padding: 1px 6px; border-radius: 4px; }
-footer { padding: 32px 24px 48px; color: var(--text-muted); font-size: 14px; max-width: var(--maxw); margin: 0 auto; }
-footer a { color: var(--text-secondary); }
 
 @media (max-width: 900px) {
-  .two-col, .methods-layout { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .two-col, .split { grid-template-columns: minmax(0, 1fr); gap: 28px; }
   .problems { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .families { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -196,7 +187,6 @@ footer a { color: var(--text-secondary); }
   .speed button { padding: 4px 6px; font-size: 12px; }
   .families { grid-template-columns: minmax(0, 1fr); }
   .problems, .example .pair { grid-template-columns: minmax(0, 1fr); }
-  .detail .row { grid-template-columns: minmax(0, 1fr); gap: 2px; }
   .bubble { font-size: 19px; }
   .replay { right: 16px; }
 }
@@ -204,19 +194,127 @@ footer a { color: var(--text-secondary); }
 /* 대화 무대 */
 /* 대화 무대: Remotion Player (video/src/web.tsx 를 묶은 js/stage-player.js) */
 .stage-player { width: 100%; aspect-ratio: 3 / 2; background: #16171a; border-radius: var(--radius); overflow: hidden; }
-.detail .stage-player { margin: 12px 0; }
 .stage-player.turn-player { aspect-ratio: 1536 / 940; margin-top: 18px; }
-.detail { padding: 16px 18px; }
-.detail-head h3 { margin: 0 0 4px; font-size: 19px; }
-.detail-head .role { color: var(--text-secondary); font-size: 15px; margin-top: 2px; }
 .detail-foot { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: baseline; font-size: 14px; color: var(--text-secondary); }
 .detail-foot .chip { background: var(--surface-3); border-radius: var(--radius); padding: 3px 9px; color: var(--text-primary); font-weight: 600; }
 .detail-foot details { width: 100%; color: var(--text-muted); }
 .detail-foot summary { cursor: pointer; }
-.winner-stage { margin-top: 28px; background: var(--surface-2); border-radius: var(--radius); padding: 16px 18px; }
 
-.stacked > div:first-child { max-width: 760px; }
-.stacked .visual { margin-top: 20px; }
-canvas#p-stage, canvas#v-stage { height: 420px; }
 .caveat-box { color: var(--text-muted); font-size: 15px; margin-top: 8px; }
 .caveat-box summary { cursor: pointer; }
+
+/* 긴 페이지(?scroll)에서 칸 */
+.fit .chart-wrap + .table-panel { margin-top: 8px; }
+.swap + .swap { margin-top: 20px; }
+.families { margin: 12px 0; }
+.next-list + .howto { margin-top: 16px; }
+.deckbar, .m-select { display: none; }
+
+/* ---------- 한 화면 발표 (기본) ----------
+   장면을 한 자리에 겹쳐 두고 지금 장면만 보인다. 글자와 간격은 창 높이에 맞춰 줄고, 무대와 차트는 남은 칸을 채운다 */
+body.deck { height: 100vh; height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
+body.deck .topbar { position: relative; flex: none; }
+body.deck main { position: relative; flex: 1 1 auto; min-height: 0; overflow: hidden; }
+body.deck .scene {
+  position: absolute; inset: 0; min-height: 0; display: block; border: 0;
+  padding: clamp(12px, 2.6vh, 32px) clamp(16px, 3vw, 44px);
+  visibility: hidden; opacity: 0; transform: translateY(10px);
+  transition: opacity 0.45s cubic-bezier(.22,.61,.36,1), transform 0.45s cubic-bezier(.22,.61,.36,1), visibility 0s 0.45s;
+}
+body.deck .scene.on { visibility: visible; opacity: 1; transform: none; transition-delay: 0s; }
+body.deck .scene-inner { max-width: 1480px; height: 100%; margin: 0 auto; }
+body.deck .split { grid-template-columns: minmax(260px, 30%) minmax(0, 1fr); gap: clamp(18px, 2.8vw, 44px); align-items: stretch; height: 100%; }
+body.deck .stack { display: grid; grid-template-rows: auto minmax(0, 1fr); gap: clamp(8px, 1.6vh, 18px); }
+body.deck .copy { display: flex; flex-direction: column; justify-content: center; min-height: 0; overflow: hidden; }
+body.deck .stack > .copy { justify-content: flex-start; }
+body.deck .fit { position: relative; min-width: 0; min-height: 0; display: flex; align-items: center; justify-content: center; }
+body.deck .fit .chart-wrap { width: 100%; height: 100%; }
+body.deck .fit canvas.plane { height: 100%; }
+body.deck .stage-player { flex: none; }
+body.deck .replay { display: none; }
+body.deck h1 { font-size: clamp(22px, min(3.8vh, 3vw), 42px); margin-bottom: clamp(6px, 1.4vh, 16px); }
+body.deck h2 { font-size: clamp(20px, min(3.4vh, 2.6vw), 34px); margin-bottom: clamp(6px, 1.4vh, 16px); }
+body.deck .kicker { font-size: clamp(12px, 1.6vh, 15px); margin-bottom: 4px; }
+body.deck .lead { font-size: clamp(14px, 2vh, 18px); margin-bottom: clamp(4px, 1vh, 12px); }
+body.deck .note { font-size: clamp(12px, 1.6vh, 14px); margin: 0 0 6px; }
+
+/* 시도한 방법: 목록을 두 단으로 */
+body.deck .families { display: block; columns: 2; column-gap: 10px; margin: clamp(4px, 1vh, 10px) 0; }
+body.deck .family { break-inside: avoid; margin: 0 0 clamp(4px, 0.8vh, 8px); padding: 4px 4px; }
+body.deck .family h3 { font-size: clamp(11px, 1.4vh, 13px); margin: 0 0 1px 6px; }
+body.deck .family button { font-size: clamp(11.5px, 1.55vh, 14px); padding: 2px 6px; line-height: 1.3; }
+body.deck .detail-foot { font-size: clamp(12px, 1.5vh, 14px); }
+body.deck .detail-foot details[open] > :not(summary) { display: block; max-height: 24vh; overflow: auto; }
+
+/* 결과: 장 선택과 설명은 왼쪽, 차트는 오른쪽 칸 전체. 표는 차트 위에 덮는다 */
+body.deck .tabs { margin: clamp(4px, 1vh, 12px) 0 4px; }
+body.deck .tabs button { font-size: clamp(12px, 1.6vh, 15px); padding: 4px 10px; }
+body.deck .chapter-title { font-size: clamp(15px, 2vh, 20px); margin: 6px 0 2px; }
+body.deck .legend { margin-top: 6px; font-size: clamp(12px, 1.5vh, 14px); }
+body.deck .takeaway { min-height: 0; font-size: clamp(13px, 1.8vh, 16px); }
+body.deck .table-panel { position: absolute; inset: 0; z-index: 6; background: var(--surface-1); overflow: auto; }
+
+/* 문제점: 18장을 6×3 칸에 */
+body.deck .fit.grid { display: block; }
+body.deck .problems { height: 100%; margin: 0; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); gap: clamp(6px, 1vh, 12px); }
+body.deck .problem { display: flex; flex-direction: column; min-height: 0; padding-bottom: 8px; }
+body.deck .problem img { flex: 1 1 0; min-height: 0; height: 0; aspect-ratio: auto; object-fit: cover; margin-bottom: 6px; }
+body.deck .problem .name, body.deck .problem .value, body.deck .problem .text { padding: 0 10px; }
+body.deck .problem .name { font-size: clamp(10.5px, 1.35vh, 13px); white-space: nowrap; overflow: hidden; }
+body.deck .problem .value { font-size: clamp(14px, 2.1vh, 22px); margin: 2px 0; }
+body.deck .problem .text { font-size: clamp(10.5px, 1.35vh, 13px); }
+
+/* 가장 나은 방법: 오른쪽 칸에서 차트 → 대화 무대 순서로 바뀐다 */
+body.deck #v-fit .swap { position: absolute; inset: 0; transition: opacity 0.5s cubic-bezier(.22,.61,.36,1), visibility 0s; }
+body.deck #v-fit .swap + .swap { margin: 0; }
+body.deck #v-stage-box { opacity: 0; visibility: hidden; }
+body.deck #v-fit.show-stage #v-chart { opacity: 0; visibility: hidden; }
+body.deck #v-fit.show-stage #v-stage-box { opacity: 1; visibility: visible; }
+body.deck .winner-badge { margin-bottom: 6px; }
+body.deck .caveat-box { font-size: clamp(12px, 1.6vh, 15px); }
+body.deck .caveat-box[open] ul { max-height: 26vh; overflow: auto; }
+
+/* 다음 */
+body.deck .next-list { font-size: clamp(14px, 2vh, 18px); }
+body.deck .howto { font-size: clamp(12px, 1.6vh, 15px); padding: 14px 16px; }
+
+/* 아래 발표 막대 */
+body.deck .deckbar { flex: none; display: flex; align-items: center; gap: 10px; height: 52px; padding: 0 clamp(12px, 2vw, 24px); border-top: 1px solid var(--grid); background: rgba(22, 23, 26, 0.96); }
+.deckbar button { background: none; border: 1px solid var(--grid); color: var(--text-secondary); border-radius: var(--radius); padding: 6px 12px; font: inherit; font-size: 14px; cursor: pointer; white-space: nowrap; }
+.deckbar button:hover { color: var(--text-primary); border-color: var(--text-muted); }
+.deckbar #d-auto[aria-pressed="true"] { color: var(--text-primary); border-color: var(--series-3); }
+.deckbar .dots { display: flex; gap: 4px; }
+.deckbar .dots button { width: 24px; height: 24px; padding: 9px 0; border: 0; border-radius: 3px; background: var(--grid); background-clip: content-box; }
+.deckbar .dots button.seen { background-color: var(--text-muted); }
+.deckbar .dots button.on { background-color: var(--text-primary); }
+.deckbar .d-title { flex: 1; min-width: 0; font-size: 14px; color: var(--text-secondary); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+/* 세로로 긴 창(휴대폰): 설명을 위에, 화면을 아래에 두고 설명은 몇 줄로 줄인다 */
+@media (max-aspect-ratio: 11/10), (max-width: 760px) {
+  body.deck .split { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); gap: 10px; }
+  body.deck .copy { justify-content: flex-start; }
+  body.deck .copy .lead, body.deck .copy .note, body.deck .takeaway { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  body.deck #winner .copy .lead { -webkit-line-clamp: 2; }
+  body.deck .families { columns: auto; }
+  body.deck .family { display: inline; padding: 0; margin: 0; background: none; }
+  body.deck .family h3 { display: none; }
+  body.deck .family button { display: inline-flex; width: auto; margin: 0 4px 4px 0; border-color: var(--grid); }
+  body.deck .problems { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(6, minmax(0, 1fr)); }
+  body.deck .problem .text { display: none; }
+}
+@media (max-width: 600px) {
+  .deckbar .wide-only, body.deck .d-title, body.deck #d-replay, body.deck .topbar nav { display: none; }
+  .deckbar button { padding: 6px 9px; }
+  .deckbar .dots button { width: 16px; }
+}
+
+/* 휴대폰: 무대·차트 칸을 넓히려고 설명은 제목만 남기고, 방법 목록은 한 줄 선택 상자로 바꾼다 */
+@media (max-width: 600px) {
+  body.deck .split > .copy .kicker, body.deck .split > .copy .note, body.deck #problem .lead, body.deck #when .lead,
+  body.deck #v-why, body.deck #v-nums, body.deck .caveat-box, body.deck #methods .families, body.deck #methods .detail-foot { display: none; }
+  body.deck .split > .copy .lead { -webkit-line-clamp: 2; }
+  body.deck h1, body.deck h2 { font-size: 19px; margin-bottom: 4px; }
+  body.deck .m-select { display: block; width: 100%; margin: 4px 0 0; padding: 8px 10px; font: inherit; font-size: 15px; color: var(--text-primary); background: var(--surface-2); border: 1px solid var(--grid); border-radius: var(--radius); }
+  body.deck .tabs button { padding: 3px 8px; }
+  body.deck .legend { font-size: 11px; gap: 4px 10px; }
+}

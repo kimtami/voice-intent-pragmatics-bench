@@ -2,6 +2,12 @@ import { T, Run, dur, hide, reveal, setSpeed, getSpeed, sleep, tween, isReduced 
 import { Plane } from "./plane.js";
 import { mountStage, stageList } from "./stage-player.js";
 
+// 기본은 한 화면 발표(장면이 제자리에서 바뀌고, 끝나면 다음 장면으로). ?scroll 이면 아래로 이어진 긴 페이지
+const params = new URLSearchParams(location.search);
+const DECK = !params.has("scroll");
+if (DECK) document.body.classList.add("deck");
+let auto = DECK && !isReduced(); // 자동 넘김. 사용자가 무엇이든 누르면 멈춘다
+
 const $ = (s) => document.querySelector(s);
 const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 const fmtMs = (ms) => (ms >= 1000 ? `${(ms / 1000).toFixed(1)}초` : `${ms}ms`);
@@ -17,7 +23,8 @@ const STAGES = stageList(S, D, M);
 const stageOf = (id) => STAGES.find((s) => s.id === id);
 const stageOpts = () => (isReduced() ? { end: true } : { play: true });
 const players = [];
-const player = (el) => { const p = mountStage(el, "media/", getSpeed()); players.push(p); return p; };
+// 발표 화면에서는 무대가 칸에 맞춰 크기와 배치(넓은·세로)를 고른다
+const player = (el) => { const p = mountStage(el, "media/", getSpeed(), DECK); players.push(p); return p; };
 window.__players = players; // 점검용 (브라우저 콘솔에서 재생 상태 확인)
 
 function tooltipHtml(label, m, meth) {
@@ -52,7 +59,7 @@ const cancelled = (e) => e && e.message === "cancel";
 
 // ---------- 1. 문제 ----------
 const pStage = player($("#p-stage"));
-function playProblem() { pStage.show(stageOf("problem"), stageOpts()); }
+function playProblem() { return pStage.show(stageOf("problem"), stageOpts()); }
 
 // ---------- 2. 목표 ----------
 const goalPlane = new Plane($("#g-plane"), $("#g-tip"));
@@ -82,7 +89,7 @@ async function playGoal() {
 // ---------- 3. 언제 일하나 ----------
 // 줄 정의와 첫 소리 값은 video/src/turn/Turn.tsx (페이지와 스튜디오가 같이 쓴다)
 const wTurn = player($("#w-turn"));
-function playWhen() { wTurn.showTurn(M, D, stageOpts()); }
+function playWhen() { return wTurn.showTurn(M, D, stageOpts()); }
 
 // ---------- 4. 시도한 방법 ----------
 const runM = new Run();
@@ -95,43 +102,58 @@ function renderFamilies() {
         <button data-method="${m.id}" class="${m.id === selected ? "on" : ""}"><i style="background:${timingColor(m.timing)}"></i>${m.name}</button>`).join("")}
     </div>`).join("");
   $("#m-families").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => {
-    // 목록이 무대 위에 있으므로, 누르면 무대가 보이게 내려간다
-    $("#m-detail").scrollIntoView({ behavior: isReduced() ? "auto" : "smooth", block: "nearest" });
+    userAct();
+    // 긴 페이지에서는 목록이 무대 위에 있으므로, 누르면 무대가 보이게 내려간다
+    if (!DECK) $("#m-detail").scrollIntoView({ behavior: isReduced() ? "auto" : "smooth", block: "nearest" });
+    runM.start();
     showMethod(b.dataset.method, true);
   }));
 }
 const mStage = player($("#m-stage"));
+// 휴대폰 발표 화면에서 쓰는 한 줄 선택 상자 (묶음별로)
+$("#m-select").innerHTML = D.families.map((f) => `<optgroup label="${f.title}">${D.methods.filter((m) => m.family === f.id).map((m) => `<option value="${m.id}">${m.name}</option>`).join("")}</optgroup>`).join("");
+$("#m-select").addEventListener("change", (e) => { userAct(); runM.start(); showMethod(e.target.value, true); });
 async function showMethod(mid, animate) {
   selected = mid;
   $("#m-families").querySelectorAll("button").forEach((b) => b.classList.toggle("on", b.dataset.method === mid));
+  $("#m-select").value = mid;
   const m = method(mid);
-  // 계산 시점, 응답·도우미 모델, 방법, 수치는 무대 아래 정보 띠에 있다
-  $("#m-head").innerHTML = `<h3>${m.name}</h3>`;
   $("#m-foot").innerHTML = `<span class="chip">${m.problem.value}</span><span>${m.problem.text}</span>
-    <details><summary>덧붙인 프롬프트 보기</summary>${m.prompt}</details>`;
-  mStage.show(stageOf(`m-${mid}`), animate ? stageOpts() : { end: true });
+    <details><summary>덧붙인 프롬프트 보기</summary><div>${m.prompt}</div></details>`;
+  $("#m-foot details").addEventListener("toggle", (e) => { if (e.target.open) userAct(); });
+  // 계산 시점, 응답·도우미 모델, 방법, 수치는 무대 아래 정보 띠에 있다
+  return mStage.show(stageOf(`m-${mid}`), animate ? stageOpts() : { end: true });
 }
 async function playMethods() {
   const id = runM.start();
   renderFamilies();
   const cards = [...$("#m-families").children];
   cards.forEach(hide);
-  hide($("#m-detail"));
+  if (!DECK) hide($("#m-detail")); // 발표 화면에서는 무대가 처음부터 자리를 지킨다
   try {
     cards.forEach((c, i) => reveal(c, i * T.stagger * 2));
-    await sleep(dur(T.enter + cards.length * T.stagger * 2), runM, id);
-    reveal($("#m-detail"));
-    await showMethod(selected, true);
+    await sleep(dur(DECK ? T.enter : T.enter + cards.length * T.stagger * 2), runM, id);
+    if (!DECK) reveal($("#m-detail"));
+    // 자동 넘김이면 계산 시점마다 하나씩 보여 준다. 아니면 고른 방법 하나
+    const list = auto ? METHODS_AUTO : [selected];
+    for (const mid of list) {
+      if (!runM.alive(id)) return;
+      await showMethod(mid, true);
+      if (auto && mid !== list[list.length - 1]) await sleep(dur(1500), runM, id);
+    }
   } catch (e) { if (!cancelled(e)) throw e; }
 }
+const METHODS_AUTO = ["checklist", "subagent", "upper"]; // 답하면서 · 답하기 전에 · 미리
 
 // ---------- 5. 결과 ----------
 const resPlane = new Plane($("#r-plane"), $("#r-tip"));
 const runR = new Run();
 let chapterIdx = 0;
 $("#r-tabs").innerHTML = C.chapters.map((c, i) => `<button role="tab" data-i="${i}">${c.tab}</button>`).join("");
-$("#r-tabs").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { chapterIdx = +b.dataset.i; playResults(); }));
+const runRL = new Run(); // 자동 넘김일 때 장을 차례로 넘기는 흐름
+$("#r-tabs").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { userAct(); runRL.start(); chapterIdx = +b.dataset.i; playChapter(); }));
 $("#r-table-btn").addEventListener("click", () => {
+  userAct();
   const t = $("#r-table");
   t.hidden = !t.hidden;
   $("#r-table-btn").textContent = t.hidden ? "표로 보기" : "표 닫기";
@@ -143,6 +165,18 @@ function renderTable(ch, pts) {
   }</tbody></table><p class="note">${pts[0] ? `${metric(pts[0].id).items}문항 기준.` : ""} 장마다 문항과 반복이 달라 장끼리는 비교하지 않습니다.</p>`;
 }
 async function playResults() {
+  if (!auto) return playChapter();
+  const lid = runRL.start();
+  try {
+    for (let i = 0; i < C.chapters.length; i += 1) {
+      if (!runRL.alive(lid)) return;
+      chapterIdx = i;
+      await playChapter();
+      await sleep(dur(Math.min(6000, 2000 + 30 * (C.chapters[i].takeaway ?? "").length)), runRL, lid);
+    }
+  } catch (e) { if (!cancelled(e)) throw e; }
+}
+async function playChapter() {
   const id = runR.start();
   const ch = C.chapters[chapterIdx];
   $("#r-tabs").querySelectorAll("button").forEach((b, i) => { b.classList.toggle("on", i === chapterIdx); b.setAttribute("aria-selected", i === chapterIdx); });
@@ -189,8 +223,11 @@ $("#x-problems").innerHTML = D.methods.map((m) => `
     <div class="text">${m.problem.text}</div>
   </button>`).join("");
 $("#x-problems").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => {
+  userAct();
+  selected = b.dataset.method;
+  if (DECK) { goTo("methods"); return; }
   $("#m-detail").scrollIntoView({ behavior: isReduced() ? "auto" : "smooth", block: "center" });
-  showMethod(b.dataset.method, true);
+  showMethod(selected, true);
 }));
 async function playProblems() {
   const id = runX.start();
@@ -213,11 +250,13 @@ $("#v-why").textContent = W.why;
   const a = metric(W.points[0]), b = metric(W.points[1]), t = metric(W.target), r = metric(W.runner_up.metric);
   const sgn = (v) => `${v > 0 ? "+" : v < 0 ? "−" : "±"}${Math.abs(v)}ms`;
   $("#v-nums").innerHTML = `Mercury 3 instant + 미리 짐작: <b>${pct(a.accuracy)}</b>, 첫 소리 변화 ${sgn(a.first_delta)}. Mercury 3 + 미리 짐작: <b>${pct(b.accuracy)}</b>, 첫 소리 변화 ${sgn(b.first_delta)}. 목표인 Gemini 3.8 Flash 는 ${pct(t.accuracy)}, 첫 소리 ${fmtMs(t.first_p50)} 입니다. (첫 소리 변화는 같은 시각에 잰 기준 설정 대비)`;
-  $("#v-caveats").innerHTML = [...W.caveats, `${W.runner_up.text} (instant: ${pct(r.accuracy)}, 1,000턴당 ${won(r.cost_1k)})`].map((c) => `<li>${c}</li>`).join("");
+  $(".caveat-box").addEventListener("toggle", (e) => { if (e.target.open) userAct(); });
+$("#v-caveats").innerHTML = [...W.caveats, `${W.runner_up.text} (instant: ${pct(r.accuracy)}, 1,000턴당 ${won(r.cost_1k)})`].map((c) => `<li>${c}</li>`).join("");
 }
 const vStage = player($("#v-stage"));
 async function playWinner() {
   const id = runV.start();
+  $("#v-fit").classList.remove("show-stage");
   const main = C.chapters.find((c) => c.id === "main");
   const tgt = metric(W.target);
   const pts = chapterPoints(main);
@@ -235,12 +274,14 @@ async function playWinner() {
     }, undefined, runV, id);
     for (const p of winPlane.points) if (W.points.includes(p.id)) { p.ciAlpha = 1; p.showCi = true; }
     winPlane.draw();
-    // 예시를 하나씩 이어 튼다 (침실 SAR-02 → 거실 POL-02)
-    const ws = STAGES.filter((s) => s.id.startsWith("w-"));
-    let k = 0;
-    const next = () => { if (k < ws.length && runV.alive(id)) vStage.show(ws[k++], stageOpts()); };
-    vStage.onEnded(() => { if (!isReduced()) next(); });
-    next();
+    // 차트를 읽을 시간을 두고, 같은 칸에서 대화 무대로 바꿔 예시를 하나씩 이어 튼다 (침실 SAR-02 → 거실 POL-02)
+    await sleep(dur(2200), runV, id);
+    $("#v-fit").classList.add("show-stage");
+    for (const w of STAGES.filter((s) => s.id.startsWith("w-"))) {
+      if (!runV.alive(id)) return;
+      await vStage.show(w, stageOpts());
+      if (isReduced()) break;
+    }
   } catch (e) { if (!cancelled(e)) throw e; }
 }
 
@@ -253,37 +294,113 @@ $("#n-list").innerHTML = D.next.map((n) => `<li>${n}</li>`).join("");
 
 // ---------- 재생 연결 ----------
 const PLAY = { problem: playProblem, goal: playGoal, when: playWhen, methods: playMethods, results: playResults, problems: playProblems, winner: playWinner };
-// 발표·공유용: ?scene=<장면 id> 면 그 장면만 보여 준다
-const only = new URLSearchParams(location.search).get("scene");
-if (only && document.getElementById(only)) document.querySelectorAll(".scene").forEach((s) => { if (s.id !== only) s.remove(); });
-const played = new Set();
+// 장면을 떠날 때: 진행 중인 움직임을 끊고 무대를 멈춘다
+const LEAVE = {
+  problem: () => pStage.pause(), goal: () => runG.start(), when: () => wTurn.pause(),
+  methods: () => { runM.start(); mStage.pause(); }, results: () => { runR.start(); runRL.start(); },
+  problems: () => runX.start(), winner: () => { runV.start(); vStage.pause(); },
+};
 const scenes = [...document.querySelectorAll(".scene")];
 $("#nav").innerHTML = scenes.map((s) => `<a href="#${s.id}" data-id="${s.id}">${s.dataset.title}</a>`).join("");
-// 장면의 윗부분이 화면 위쪽 60% 안에 들어오면 재생한다. 비율 기준이면 화면보다 훨씬 긴 장면(휴대폰)은 끝내 시작되지 않는다
-const io = new IntersectionObserver((entries) => {
-  for (const e of entries) {
-    if (e.isIntersecting && !played.has(e.target.id) && PLAY[e.target.id]) { played.add(e.target.id); PLAY[e.target.id](); }
+
+// 한 화면 발표: 한 번에 한 장면. 들어가면 재생하고, 다 끝나면 읽을 시간만큼 머문 뒤 다음 장면으로
+const deck = { cur: -1, token: 0, done: -1, timer: 0, seen: new Set() };
+function userAct() { if (DECK) setAuto(false); }
+function setAuto(on) {
+  auto = on;
+  $("#d-auto").setAttribute("aria-pressed", String(on));
+  $("#d-auto-state").textContent = on ? "켬" : "끔";
+  clearTimeout(deck.timer);
+  if (on && deck.done === deck.token) schedule(deck.token);
+}
+// 머무는 시간: 장면 글 길이에 비례, 2.5~7초 (카드가 많은 장면은 data-hold 까지). 속도 설정을 따른다
+const holdOf = (s) => dur(Math.min(+(s.dataset.hold ?? 7000), 2500 + 15 * s.innerText.replace(/\s+/g, "").length));
+function schedule(my) {
+  clearTimeout(deck.timer);
+  if (!auto || deck.cur >= scenes.length - 1) return;
+  deck.timer = setTimeout(() => { if (my === deck.token && auto) go(deck.cur + 1); }, holdOf(scenes[deck.cur]));
+}
+function go(i, user = false) {
+  i = Math.max(0, Math.min(scenes.length - 1, i));
+  if (user) setAuto(false);
+  clearTimeout(deck.timer);
+  if (deck.cur >= 0) {
+    LEAVE[scenes[deck.cur].id]?.();
+    if (i !== deck.cur) { scenes[deck.cur].classList.remove("on"); scenes[deck.cur].inert = true; }
   }
-}, { rootMargin: "0px 0px -40% 0px", threshold: 0 });
-// 메뉴 표시는 화면 가운데 가는 띠에 걸친 장면 하나만
-const navIo = new IntersectionObserver((entries) => {
-  for (const e of entries) if (e.isIntersecting) $("#nav").querySelectorAll("a").forEach((a) => a.classList.toggle("on", a.dataset.id === e.target.id));
-}, { rootMargin: "-45% 0px -54% 0px", threshold: 0 });
-scenes.forEach((s) => { io.observe(s); navIo.observe(s); });
-document.querySelectorAll("[data-replay]").forEach((b) => b.addEventListener("click", () => PLAY[b.dataset.replay]?.()));
+  deck.cur = i;
+  deck.seen.add(i);
+  const s = scenes[i];
+  s.classList.add("on");
+  s.inert = false;
+  $("#nav").querySelectorAll("a").forEach((a) => a.classList.toggle("on", a.dataset.id === s.id));
+  $("#d-dots").querySelectorAll("button").forEach((b, k) => { b.classList.toggle("on", k === i); b.classList.toggle("seen", deck.seen.has(k) && k !== i); });
+  $("#d-title").textContent = s.dataset.title;
+  history.replaceState(null, "", `${location.search}#${s.id}`);
+  const my = ++deck.token;
+  Promise.resolve(PLAY[s.id]?.()).then(() => { if (my !== deck.token) return; deck.done = my; schedule(my); }, () => {});
+}
+function goTo(id) { const k = scenes.findIndex((s) => s.id === id); if (k >= 0) go(k, true); }
+
+if (DECK) {
+  scenes.forEach((s) => { s.inert = true; });
+  $("#d-dots").innerHTML = scenes.map((s, k) => `<button data-i="${k}" aria-label="${s.dataset.title}"></button>`).join("");
+  $("#d-dots").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => go(+b.dataset.i, true)));
+  $("#nav").querySelectorAll("a").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); goTo(a.dataset.id); }));
+  $("#d-prev").addEventListener("click", () => go(deck.cur - 1, true));
+  $("#d-next").addEventListener("click", () => go(deck.cur + 1, true));
+  $("#d-replay").addEventListener("click", () => go(deck.cur, true));
+  $("#d-auto").addEventListener("click", () => setAuto(!auto));
+  setAuto(auto);
+  // 키보드: → PageDown Space 다음, ← PageUp 이전, Home End
+  document.addEventListener("keydown", (e) => {
+    const onControl = e.target.closest && e.target.closest("button, a, summary, input, select, textarea");
+    if (["ArrowRight", "PageDown"].includes(e.key) || (e.key === " " && !onControl)) { e.preventDefault(); go(deck.cur + 1, true); }
+    else if (["ArrowLeft", "PageUp"].includes(e.key)) { e.preventDefault(); go(deck.cur - 1, true); }
+    else if (e.key === "Home") go(0, true);
+    else if (e.key === "End") go(scenes.length - 1, true);
+  });
+  // 터치: 옆으로 쓸면 넘긴다
+  let sx = 0, sy = 0;
+  $("#deck").addEventListener("pointerdown", (e) => { sx = e.clientX; sy = e.clientY; });
+  $("#deck").addEventListener("pointerup", (e) => {
+    const dx = e.clientX - sx, dy = e.clientY - sy;
+    if (e.pointerType !== "mouse" && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) go(deck.cur + (dx < 0 ? 1 : -1), true);
+  });
+  // 처음 장면: 주소의 #장면 이나 ?scene=장면
+  const start = scenes.findIndex((s) => s.id === (location.hash.slice(1) || params.get("scene")));
+  go(Math.max(0, start));
+} else {
+  // 긴 페이지: ?scene=<장면 id> 면 그 장면만 남긴다
+  const only = params.get("scene");
+  if (only && document.getElementById(only)) scenes.forEach((s) => { if (s.id !== only) s.remove(); });
+  const played = new Set();
+  // 장면의 윗부분이 화면 위쪽 60% 안에 들어오면 재생한다. 비율 기준이면 화면보다 훨씬 긴 장면(휴대폰)은 끝내 시작되지 않는다
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting && !played.has(e.target.id) && PLAY[e.target.id]) { played.add(e.target.id); PLAY[e.target.id](); }
+    }
+  }, { rootMargin: "0px 0px -40% 0px", threshold: 0 });
+  // 메뉴 표시는 화면 가운데 가는 띠에 걸친 장면 하나만
+  const navIo = new IntersectionObserver((entries) => {
+    for (const e of entries) if (e.isIntersecting) $("#nav").querySelectorAll("a").forEach((a) => a.classList.toggle("on", a.dataset.id === e.target.id));
+  }, { rootMargin: "-45% 0px -54% 0px", threshold: 0 });
+  document.querySelectorAll(".scene").forEach((s) => { io.observe(s); navIo.observe(s); });
+  document.querySelectorAll("[data-replay]").forEach((b) => b.addEventListener("click", () => PLAY[b.dataset.replay]?.()));
+  // 발표용: PageDown/PageUp 으로 장면 단위 이동
+  document.addEventListener("keydown", (e) => {
+    if (!["PageDown", "PageUp"].includes(e.key)) return;
+    e.preventDefault();
+    const list = [...document.querySelectorAll(".scene")];
+    const y = window.scrollY + 60;
+    const idx = list.findIndex((s) => s.offsetTop + s.offsetHeight > y);
+    const next = list[Math.max(0, Math.min(list.length - 1, idx + (e.key === "PageDown" ? 1 : -1)))];
+    next.scrollIntoView({ behavior: isReduced() ? "auto" : "smooth" });
+  });
+}
 
 // 속도
 const speedBtns = document.querySelectorAll(".speed button");
 const markSpeed = () => speedBtns.forEach((b) => b.classList.toggle("on", +b.dataset.speed === getSpeed()));
 speedBtns.forEach((b) => b.addEventListener("click", () => { setSpeed(+b.dataset.speed); markSpeed(); players.forEach((p) => p.setRate(getSpeed())); }));
 markSpeed();
-
-// 발표용: PageDown/PageUp 으로 장면 단위 이동
-document.addEventListener("keydown", (e) => {
-  if (!["PageDown", "PageUp"].includes(e.key)) return;
-  e.preventDefault();
-  const y = window.scrollY + 60;
-  const idx = scenes.findIndex((s) => s.offsetTop + s.offsetHeight > y);
-  const next = scenes[Math.max(0, Math.min(scenes.length - 1, idx + (e.key === "PageDown" ? 1 : -1)))];
-  next.scrollIntoView({ behavior: isReduced() ? "auto" : "smooth" });
-});

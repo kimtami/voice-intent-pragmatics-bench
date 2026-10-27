@@ -21,16 +21,17 @@
     </div>
   </header>
 
-  <main>
+  <!-- 기본은 한 화면 발표: 장면이 제자리에서 바뀌며 끝나면 다음 장면으로 넘어간다. ?scroll 이면 예전처럼 아래로 이어진 긴 페이지 -->
+  <main id="deck">
     <section class="scene" id="problem" data-title="문제">
-      <div class="scene-inner stacked">
-        <div>
+      <div class="scene-inner split">
+        <div class="copy">
           <p class="kicker">문제</p>
           <h1>빠른 음성 비서는 말을 글자 그대로 받아들입니다</h1>
           <p class="lead">헤비메탈을 틀어 놓고 "잠 참 잘 오겠다"면 불평입니다. 이렇게 상황으로 말뜻을 읽는 것을 화용론이라고 합니다.</p>
           <p class="note">비서의 말풍선은 모두 실제 측정에서 나온 응답입니다.</p>
         </div>
-        <div class="visual">
+        <div class="fit">
           <div class="stage-player" id="p-stage" role="img" aria-label="새벽 1시 침실에서 사용자와 스피커 비서의 대화"></div>
         </div>
       </div>
@@ -38,121 +39,147 @@
     </section>
 
     <section class="scene" id="goal" data-title="목표">
-      <div class="scene-inner two-col">
-        <div>
+      <div class="scene-inner split">
+        <div class="copy">
           <p class="kicker">목표</p>
           <h2>정확한 모델은 느립니다</h2>
           <p class="lead">가장 정확한 모델은 첫 소리까지 2초. 빠른 모델로 그 정확도에 다가가는 것이 목표입니다.</p>
           <p class="note">점 하나 = 모델 하나 (30문항 × 3회). 점에 마우스를 올리면 수치.</p>
         </div>
-        <div class="chart-wrap">
-          <canvas class="plane" id="g-plane" role="img" aria-label="모델별 첫 소리까지 시간과 정확도"></canvas>
-          <div class="tooltip" id="g-tip" hidden></div>
+        <div class="fit">
+          <div class="chart-wrap">
+            <canvas class="plane" id="g-plane" role="img" aria-label="모델별 첫 소리까지 시간과 정확도"></canvas>
+            <div class="tooltip" id="g-tip" hidden></div>
+          </div>
         </div>
       </div>
       <button class="replay" data-replay="goal">다시 보기</button>
     </section>
 
     <section class="scene" id="when" data-title="언제 일하나">
-      <div class="scene-inner">
-        <p class="kicker">핵심 구분</p>
-        <h2>같은 아이디어도 언제 계산하느냐에 따라 속도가 갈립니다</h2>
-        <p class="lead">말이 끝난 뒤에 더 생각하면 사용자가 기다립니다. 말하기 전에 미리 해 두면 기다림은 그대로입니다.</p>
-        <p class="note">Mercury 3 의 첫 소리 시간. 미리 짐작은 다른 시각에 돌아, 같은 시각에 잰 변화(+13ms)를 기준에 더함.</p>
-        <div class="stage-player turn-player" id="w-turn" role="img" aria-label="방법별 첫 소리까지 시간"></div>
+      <div class="scene-inner split">
+        <div class="copy">
+          <p class="kicker">핵심 구분</p>
+          <h2>같은 아이디어도 언제 계산하느냐에 따라 속도가 갈립니다</h2>
+          <p class="lead">말이 끝난 뒤에 더 생각하면 사용자가 기다립니다. 말하기 전에 미리 해 두면 기다림은 그대로입니다.</p>
+          <p class="note">Mercury 3 의 첫 소리 시간. 미리 짐작은 다른 시각에 돌아, 같은 시각에 잰 변화(+13ms)를 기준에 더함.</p>
+        </div>
+        <div class="fit">
+          <div class="stage-player turn-player" id="w-turn" role="img" aria-label="방법별 첫 소리까지 시간"></div>
+        </div>
       </div>
       <button class="replay" data-replay="when">다시 보기</button>
     </section>
 
     <section class="scene" id="methods" data-title="시도한 방법">
-      <div class="scene-inner">
-        <p class="kicker">시도한 방법</p>
-        <h2>6가지 방향, 18가지 방법을 시험했습니다</h2>
-        <p class="lead">방법을 누르면 그 방법이 비서의 머릿속에서 무엇을 하는지 대화로 보여 줍니다.</p>
-        <div class="methods-layout">
+      <div class="scene-inner split">
+        <div class="copy">
+          <p class="kicker">시도한 방법</p>
+          <h2>6가지 방향, 18가지 방법을 시험했습니다</h2>
+          <p class="note">방법을 누르면 그 방법이 하는 일을 무대로 보여 줍니다.</p>
           <div class="families" id="m-families"></div>
-          <div class="detail" id="m-detail">
-            <div class="detail-head" id="m-head" aria-live="polite"></div>
-            <div class="stage-player" id="m-stage" role="img" aria-label="방법이 하는 일을 보여 주는 대화"></div>
-            <div class="detail-foot" id="m-foot"></div>
-          </div>
+          <select class="m-select" id="m-select" aria-label="방법 고르기"></select>
+          <div class="detail-foot" id="m-foot"></div>
+        </div>
+        <div class="fit" id="m-detail">
+          <div class="stage-player" id="m-stage" role="img" aria-label="방법이 하는 일을 보여 주는 대화"></div>
         </div>
       </div>
       <button class="replay" data-replay="methods">다시 보기</button>
     </section>
 
     <section class="scene" id="results" data-title="결과">
-      <div class="scene-inner">
-        <p class="kicker">결과</p>
-        <h2>방법마다 점이 어디로 움직였나</h2>
-        <p class="lead">위로 갈수록 말뜻을 잘 맞힘, 오른쪽으로 갈수록 느림. 점은 기준에서 방법을 더한 결과로 이동합니다.</p>
-        <div class="tabs" id="r-tabs" role="tablist"></div>
-        <div class="chapter-title" id="r-title"></div>
-        <div class="chart-wrap">
-          <canvas class="plane" id="r-plane" role="img" aria-label="방법별 결과"></canvas>
-          <div class="tooltip" id="r-tip" hidden></div>
+      <div class="scene-inner split">
+        <div class="copy">
+          <p class="kicker">결과</p>
+          <h2>방법마다 점이 어디로 움직였나</h2>
+          <p class="lead">위로 갈수록 말뜻을 잘 맞힘, 오른쪽으로 갈수록 느림. 점은 기준에서 방법을 더한 결과로 이동합니다.</p>
+          <div class="tabs" id="r-tabs" role="tablist"></div>
+          <div class="chapter-title" id="r-title"></div>
+          <div class="legend" id="r-legend"></div>
+          <p class="takeaway" id="r-take"></p>
+          <button class="table-toggle" id="r-table-btn">표로 보기</button>
         </div>
-        <div class="legend" id="r-legend"></div>
-        <p class="takeaway" id="r-take"></p>
-        <button class="table-toggle" id="r-table-btn">표로 보기</button>
-        <div id="r-table" hidden></div>
+        <div class="fit">
+          <div class="chart-wrap">
+            <canvas class="plane" id="r-plane" role="img" aria-label="방법별 결과"></canvas>
+            <div class="tooltip" id="r-tip" hidden></div>
+          </div>
+          <div class="table-panel" id="r-table" hidden></div>
+        </div>
       </div>
       <button class="replay" data-replay="results">다시 보기</button>
     </section>
 
-    <section class="scene" id="problems" data-title="문제점">
-      <div class="scene-inner">
-        <p class="kicker">문제점</p>
-        <h2>좋아 보였던 방법도 대가가 있었습니다</h2>
-        <p class="lead">카드를 누르면 그 방법이 하는 일을 무대로 다시 보여 줍니다.</p>
-
-        <div class="problems" id="x-problems"></div>
+    <section class="scene" id="problems" data-title="문제점" data-hold="12000">
+      <div class="scene-inner stack">
+        <div class="copy">
+          <p class="kicker">문제점</p>
+          <h2>좋아 보였던 방법도 대가가 있었습니다</h2>
+          <p class="note">카드를 누르면 그 방법이 하는 일을 무대로 다시 보여 줍니다.</p>
+        </div>
+        <div class="fit grid">
+          <div class="problems" id="x-problems"></div>
+        </div>
       </div>
       <button class="replay" data-replay="problems">다시 보기</button>
     </section>
 
     <section class="scene" id="winner" data-title="가장 나은 방법">
-      <div class="scene-inner">
-        <div class="two-col">
-          <div>
-            <p class="kicker">가장 나은 방법</p>
-            <div class="winner-badge"><i></i><span id="v-badge"></span></div>
-            <h2 id="v-head"></h2>
-            <p class="lead" id="v-why"></p>
-            <p class="lead" id="v-nums"></p>
-            <details class="caveat-box"><summary>주의할 점</summary><ul class="caveats" id="v-caveats"></ul></details>
-          </div>
-          <div class="chart-wrap">
-            <canvas class="plane" id="v-plane" role="img" aria-label="가장 나은 방법의 위치"></canvas>
-            <div class="tooltip" id="v-tip" hidden></div>
-          </div>
+      <div class="scene-inner split">
+        <div class="copy">
+          <p class="kicker">가장 나은 방법</p>
+          <div class="winner-badge"><i></i><span id="v-badge"></span></div>
+          <h2 id="v-head"></h2>
+          <p class="lead" id="v-why"></p>
+          <p class="lead" id="v-nums"></p>
+          <details class="caveat-box"><summary>주의할 점</summary><ul class="caveats" id="v-caveats"></ul></details>
         </div>
-        <div class="winner-stage">
-          <div class="stage-player" id="v-stage" role="img" aria-label="미리 짐작 전후의 대화"></div>
+        <div class="fit" id="v-fit">
+          <div class="swap" id="v-chart">
+            <div class="chart-wrap">
+              <canvas class="plane" id="v-plane" role="img" aria-label="가장 나은 방법의 위치"></canvas>
+              <div class="tooltip" id="v-tip" hidden></div>
+            </div>
+          </div>
+          <div class="swap fit" id="v-stage-box">
+            <div class="stage-player" id="v-stage" role="img" aria-label="미리 짐작 전후의 대화"></div>
+          </div>
         </div>
       </div>
       <button class="replay" data-replay="winner">다시 보기</button>
     </section>
 
     <section class="scene" id="next" data-title="다음">
-      <div class="scene-inner">
-        <p class="kicker">다음</p>
-        <h2>남은 질문</h2>
-        <ul class="next-list" id="n-list"></ul>
-        <div class="howto">
-          이 페이지는 결과 파일에서 수치를 다시 계산해 그립니다. 새 방법을 시험하면
-          <code>vib/site_data.py</code> 에 결과 파일을, <code>site/data/methods.json</code> 에 카드를,
-          <code>site/data/chapters.json</code> 에 차트 점을 더하면 이 페이지에 그대로 나타납니다.
-          결과 장면의 다른 시안: <a href="drafts/chart-b.html">B. 전후 막대</a>, <a href="drafts/chart-c.html">C. 입체</a>.
+      <div class="scene-inner stack">
+        <div class="copy">
+          <p class="kicker">다음</p>
+          <h2>남은 질문</h2>
+          <ul class="next-list" id="n-list"></ul>
+          <div class="howto">
+            이 페이지는 결과 파일에서 수치를 다시 계산해 그립니다. 새 방법을 시험하면
+            <code>vib/site_data.py</code> 에 결과 파일을, <code>site/data/methods.json</code> 에 카드를,
+            <code>site/data/chapters.json</code> 에 차트 점을 더하면 이 페이지에 그대로 나타납니다.
+            결과 장면의 다른 시안: <a href="drafts/chart-b.html">B. 전후 막대</a>, <a href="drafts/chart-c.html">C. 입체</a>. 긴 페이지로 보기: <a href="?scroll">?scroll</a>.
+          </div>
+          <p class="note">
+            측정: 2026-10-26~27, 각 사 공개 API. 채점: claude-opus-5-5 블라인드. 자세한 방법과 한계는
+            <a href="https://github.com/kimtami/voice-intent-pragmatics-bench">GitHub 저장소의 README</a> 에 있습니다.
+          </p>
         </div>
       </div>
     </section>
   </main>
 
-  <footer>
-    측정: 2026-10-26~27, 각 사 공개 API. 채점: claude-opus-5-5 블라인드. 자세한 방법과 한계는
-    <a href="https://github.com/kimtami/voice-intent-pragmatics-bench">GitHub 저장소의 README</a> 에 있습니다.
-  </footer>
+  <!-- 발표 막대: 이전·다음, 장면 표시, 자동 넘김, 다시 보기 (?scroll 에서는 숨김) -->
+  <nav class="deckbar" id="deckbar" aria-label="장면 넘기기">
+    <button id="d-prev" aria-label="이전 장면">←<span class="wide-only"> 이전</span></button>
+    <div class="dots" id="d-dots"></div>
+    <div class="d-title" id="d-title" aria-live="polite"></div>
+    <button id="d-auto" aria-pressed="true">자동<span class="wide-only"> 넘김</span> <span id="d-auto-state">켬</span></button>
+    <button id="d-replay">다시 보기</button>
+    <button id="d-next" aria-label="다음 장면"><span class="wide-only">다음 </span>→</button>
+  </nav>
 
   <script type="module" src="js/main.js"></script>
 </body>
