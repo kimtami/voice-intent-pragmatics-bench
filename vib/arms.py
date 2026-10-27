@@ -135,11 +135,13 @@ def _cross(analyzer_family: str, responder_family: str) -> Arm:
 FAST_BASES = [("mercury", "A0"), ("mercury", "A1"), ("luna", "A1"), ("gemini", "A1")]
 # 3차(자동 맥락): 2차에서 맥락 효과가 있던 빠른 설정 3개
 AUTO_BASES = [("mercury", "A0"), ("mercury", "A1"), ("luna", "A1")]
+# 5차(같은 모델 추정): 응답 모델이 자기 추정을 미리 만든다. Mercury 3 기본(medium), GPT-6 Luna low
+SELF_BASES = [("mercury", "A1"), ("luna", "A2")]
 
 
 def _pragmatic(family: str, base: str, mode: str) -> Arm:
     m = MODELS[family]
-    cond = {"context": "C", "context_checklist": "CK", "auto": "CA", "auto_hyp": "CH"}[mode]
+    cond = {"context": "C", "context_checklist": "CK", "auto": "CA", "auto_hyp": "CH", "auto_selfhyp": "CS"}[mode]
     return Arm(
         f"{family}.{base}+{cond}", family, cond, m["provider"], m["model"], m[base], [m["key"]],
         extra={"mode": mode, "base_arm": f"{family}.{base}"},
@@ -164,6 +166,17 @@ def all_arms() -> dict[str, Arm]:
     for fam, base in AUTO_BASES:
         for mode in ("auto", "auto_hyp"):
             a = _pragmatic(fam, base, mode)
+            arms[a.arm_id] = a
+    return arms
+
+
+def selfhyp_arms() -> dict[str, Arm]:
+    """5차: Luna none·low 지연 비교 + 같은 모델 추정(CS)을 로그만(CA)·상위 모델 추정(CH)과 같은 시각에 비교한다."""
+    base = all_arms()
+    arms = {k: base[k] for k in ("luna.A1", "luna.A2")}
+    for fam, b in SELF_BASES:
+        for mode in ("auto", "auto_hyp", "auto_selfhyp"):
+            a = _pragmatic(fam, b, mode)
             arms[a.arm_id] = a
     return arms
 

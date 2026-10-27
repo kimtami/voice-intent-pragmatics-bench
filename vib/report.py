@@ -560,6 +560,7 @@ def main() -> None:
     hypothesis_checks(per_item_by_arm, items)
     screening()
     chart_screen()
+    selfhyp()
     gap = gap_closure(table, per_item_by_arm)
     write_gap(gap, table)
     for fname, methods, colors, note in GAP_CHARTS:
@@ -890,6 +891,66 @@ def chart_screen() -> None:
     fig.tight_layout(rect=(0, 0.04, 0.8, 1))
     fig.savefig(sdir / "screen_xy.png", dpi=160)
     plt.close(fig)
+
+
+SELF_ITEMS = ["QFR-01", "IMP-01", "ELL-01", "REP-02", "AMB-01", "SAR-01", "POL-01", "HON-01", "MUL-01", "PHA-01"]
+SELF_ARMS = {
+    "luna.A1": "GPT-6 Luna none", "luna.A2": "GPT-6 Luna low",
+    "luna.A2+CA": "Luna low + 로그", "luna.A2+CH": "Luna low + 로그 + Gemini 추정", "luna.A2+CS": "Luna low + 로그 + 자기 추정",
+    "mercury.A1+CA": "Mercury 3 기본 + 로그", "mercury.A1+CH": "Mercury 3 기본 + 로그 + Gemini 추정",
+    "mercury.A1+CS": "Mercury 3 기본 + 로그 + 자기 추정",
+}
+
+
+def selfhyp() -> None:
+    """5차: Luna none·low 지연 비교와 같은 모델 추정(CS). 10문항 × 1회, 같은 실행에서 잰다."""
+    sdir = RES / "selfhyp"
+    if not (sdir / "judged").exists():
+        return
+    lines = [
+        f"{len(SELF_ITEMS)}문항 × 1회 ({', '.join(SELF_ITEMS)}), 모든 조건을 같은 실행에서 잼. 한 문항 차이가 정확도 10%p 입니다.",
+        "",
+        "| 응답 조건 | 정확도 | 2점 문항 | 잘못된 행동 | 되묻기 | 첫 발화 p50 / p90 / 최대 | 응답 1,000턴당 |",
+        "|---|---|---|---|---|---|---|",
+    ]
+    for arm, name in SELF_ARMS.items():
+        raw = [r for r in _jsonl(sdir / "raw" / f"{arm}.jsonl") if not r.get("error")]
+        jd = [j for j in _jsonl(sdir / "judged" / f"{arm}.jsonl") if not j.get("judge_error")]
+        sc = [j["score"] for j in jd]
+        bad = sum(1 for j in jd if j.get("over_action") or j.get("wrong_target_or_value"))
+        ask = sum(1 for j in jd if j.get("asked_clarification"))
+        t = [r["e2e_first_ms"] for r in raw]
+        cost = statistics.mean(_call_cost(r["model"], r["usage"]) for r in raw) * 1000
+        lines.append(f"| {name} | {statistics.mean(sc) / 2 * 100:.0f}% | {sc.count(2)}/{len(sc)} | {bad} | {ask} | "
+                     f"{_pct(t, 0.5):,.0f} / {_pct(t, 0.9):,.0f} / {max(t):,.0f}ms | ${cost:.2f} |")
+    lines += ["", "| 추정 생성기 | 생성 시간 p50 (최소~최대) | 재시도 | 재시도 포함 최대 대기 | 추정 적중 (0~2, 평균) | 추정 1,000턴당 |",
+              "|---|---|---|---|---|---|"]
+    for fam, arm, name, model in (("mercury", "mercury.A1+CS", "Mercury 3 기본 (자기 추정)", "mercury-3"),
+                                  ("luna", "luna.A2+CS", "GPT-6 Luna low (자기 추정)", "gpt-6-luna")):
+        calls = json.loads((ROOT / "data" / "hypotheses_self" / f"{fam}.json").read_text(encoding="utf-8"))["calls"]
+        ms = [calls[i]["total_ms"] for i in SELF_ITEMS]
+        waits = [calls[i]["total_ms"] + sum(f["total_ms"] for f in calls[i]["failures"]) for i in SELF_ITEMS]
+        retries = sum(len(calls[i]["failures"]) for i in SELF_ITEMS)
+        hit = [j["score"] for j in _jsonl(sdir / "judged" / f"{arm}.analysis.jsonl") if not j.get("judge_error")]
+        cost = statistics.mean(_call_cost(model, calls[i]["usage"]) for i in SELF_ITEMS) * 1000
+        lines.append(f"| {name} | {_pct(ms, 0.5) / 1000:.1f}s ({min(ms) / 1000:.1f}~{max(ms) / 1000:.1f}s) | {retries}/{len(SELF_ITEMS)} | "
+                     f"{max(waits) / 1000:.1f}s | {statistics.mean(hit):.1f} | ${cost:.2f} |")
+    # 3차 Gemini 추정: 생성 시간은 다시 잰 값, 적중은 3차 때 따로 채점한 값
+    gt = json.loads((RES / "latency_control" / "hypothesis_timing.json").read_text(encoding="utf-8"))["total_ms"]
+    ms = [gt[i] for i in SELF_ITEMS]
+    hit = {j["item_id"]: j["score"] for j in _jsonl(RES / "judged" / "hypotheses.analysis.jsonl")}
+    ids = [q["id"] for q in json.loads((ROOT / "data" / "queries.json").read_text(encoding="utf-8"))]
+    usage = dict(zip(ids, json.loads((ROOT / "data" / "hypotheses.json").read_text(encoding="utf-8"))["usage"]))
+    cost = statistics.mean(_call_cost("gemini-3.8-flash", usage[i]) for i in SELF_ITEMS) * 1000
+    lines.append(f"| Gemini 3.8 Flash (3차 추정, 참고) | {_pct(ms, 0.5) / 1000:.1f}s ({min(ms) / 1000:.1f}~{max(ms) / 1000:.1f}s) | 기록 없음 | – | "
+                 f"{statistics.mean(hit[i] for i in SELF_ITEMS):.1f} (3차 때 별도 채점) | ${cost:.2f} |")
+    ref = ["luna.A1", "luna.A2", "mercury.A1", "mercury.A1+CA", "mercury.A1+CH", "luna.A1+CA", "luna.A1+CH"]
+    vals = []
+    for arm in ref:
+        jd = [j for j in _jsonl(RES / "judged" / f"{arm}.jsonl") if not j.get("judge_error") and j["item_id"] in SELF_ITEMS]
+        vals.append(f"{arm} {statistics.mean(j['score'] for j in jd) / 2 * 100:.1f}%")
+    lines += ["", "참고: 같은 10문항의 기존 3회 반복 정확도 — " + ", ".join(vals) + "."]
+    (sdir / "summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 BASE_ARM = "mercury.A1"  # 모델 간 비교의 기준: Inception 공식 음성 가이드 설정

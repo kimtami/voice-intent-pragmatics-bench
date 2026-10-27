@@ -25,7 +25,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from . import prompts
-from .arms import Arm, all_arms, fake_arms, screen_arms
+from .arms import Arm, all_arms, fake_arms, screen_arms, selfhyp_arms
 from .providers import json_call, stream_reply
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -42,7 +42,10 @@ def _screen(name: str) -> dict:
     return json.loads((SCREEN / f"{name}.json").read_text(encoding="utf-8"))["data"]
 
 
-def select_arms(spec: str, dry_run: bool, screen: bool = False) -> list[Arm]:
+def select_arms(spec: str, dry_run: bool, screen: bool = False, selfhyp: bool = False) -> list[Arm]:
+    if selfhyp:  # 5차: 같은 모델 추정 + 같은 시각 비교군
+        pool = selfhyp_arms()
+        return list(pool.values()) if spec == "all" else [a for a in pool.values() if a.arm_id in spec.split(",")]
     if screen:  # 선별 실험: M1~M6 + 같은 시각 지연 대조용 기준 설정
         pool = screen_arms() | {"mercury.A1": all_arms()["mercury.A1"]}
         return list(pool.values()) if spec == "all" else [a for a in pool.values() if a.arm_id in spec.split(",")]
@@ -71,6 +74,7 @@ def done_keys(path: Path) -> set[tuple[str, int]]:
 PROFILE = ROOT / "data" / "profile.json"
 AUTO = ROOT / "data" / "auto_context.json"
 HYPS = ROOT / "data" / "hypotheses.json"
+SELF_HYPS = ROOT / "data" / "hypotheses_self"  # <family>.json: 응답 모델이 직접 만든 추정
 SCREEN = ROOT / "data" / "screen"
 
 
@@ -109,12 +113,16 @@ def run_one(arm: Arm, item: dict, rep: int) -> dict:
         extra = prompts.PRAGMATIC_CHECKLIST
     elif mode == "context":
         extra = prompts.common_ground(json.loads(PROFILE.read_text(encoding="utf-8")), item["events"])
-    elif mode in ("auto", "auto_hyp"):
+    elif mode in ("auto", "auto_hyp", "auto_selfhyp"):
         log = json.loads(AUTO.read_text(encoding="utf-8"))["logs"][item["id"]]
         extra = prompts.auto_context(json.loads(PROFILE.read_text(encoding="utf-8")), log)
         if mode == "auto_hyp":
             hyps = json.loads(HYPS.read_text(encoding="utf-8"))["hypotheses"][item["id"]]
             extra += "\n\n" + prompts.hypotheses_block(hyps)
+        elif mode == "auto_selfhyp":
+            hyps = json.loads((SELF_HYPS / f"{arm.family}.json").read_text(encoding="utf-8"))["hypotheses"][item["id"]]
+            extra += "\n\n" + prompts.hypotheses_block(hyps)
+            row["analysis"] = hyps  # 채점기가 추정 목록도 정답 의도와 대조하도록 analysis 로 남긴다
     elif mode in ("m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m5b", "m5c"):
         profile = json.loads(PROFILE.read_text(encoding="utf-8"))
         log = json.loads(AUTO.read_text(encoding="utf-8"))["logs"][item["id"]]
@@ -207,6 +215,8 @@ def main() -> None:
     ap.add_argument("--check", action="store_true")
     ap.add_argument("--no-warmup", action="store_true")
     ap.add_argument("--screen", action="store_true", help="4차 선별 실험 (M1~M8, 24문항)")
+    ap.add_argument("--selfhyp", action="store_true", help="5차 같은 모델 추정 실험")
+    ap.add_argument("--items", default=None, help="문항 id 목록 (쉼표 구분)")
     args = ap.parse_args()
 
     load_dotenv(ROOT / ".env", override=True)
@@ -222,7 +232,7 @@ def main() -> None:
         sys.exit("dry-run 결과는 results/ 밖에 저장해야 합니다 (--out 지정)")
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    arms = select_arms(args.arms, args.dry_run, args.screen)
+    arms = select_arms(args.arms, args.dry_run, args.screen, args.selfhyp)
     runnable, skipped = [], []
     for a in arms:
         (runnable if all(present.get(k) for k in a.keys) else skipped).append(a)
@@ -235,6 +245,9 @@ def main() -> None:
     if args.screen:
         from .screen_prep import SATURATED
         items = [it for it in items if it["category"] not in SATURATED]
+    if args.items:
+        wanted = args.items.split(",")
+        items = [it for it in items if it["id"] in wanted]
     groups: dict[str, list[Arm]] = defaultdict(list)
     for a in runnable:
         groups[a.provider].append(a)
