@@ -23,6 +23,8 @@ GENERATORS = {
     "gemini38": {"provider": "gemini", "model": "gemini-3.8-flash", "params": {"thinking_level": "MEDIUM", "max_output_tokens": 4096}},
     "mercury": {"provider": "inception", "model": "mercury-3", "params": MODELS["mercury"]["A1"]},
     "luna": {"provider": "openai", "model": "gpt-6-luna", "params": MODELS["luna"]["A2"]},
+    # 생성 시간 비교용: 같은 Mercury 3 를 생각 없이(instant). 5차에서는 응답에 쓰지 않고 시간만 잰다
+    "mercury_instant": {"provider": "inception", "model": "mercury-3", "params": MODELS["mercury"]["A0"]},
 }
 
 
