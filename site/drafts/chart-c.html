@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>결과 시안 C: 입체</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="../css/site.css">
+  <style>
+    .stage { position: relative; width: 100%; height: min(64vh, 560px); margin-top: 12px; }
+    .stage canvas { width: 100%; height: 100%; display: block; }
+    .lab { position: absolute; transform: translate(10px, -50%); font-size: 13px; color: var(--text-secondary); white-space: nowrap; pointer-events: none;
+           text-shadow: 0 0 3px var(--surface-1), 0 0 3px var(--surface-1); }
+    .lab.base { color: var(--text-primary); }
+    .axis { position: absolute; font-size: 13px; color: var(--text-muted); pointer-events: none; }
+  </style>
+</head>
+<body>
+  <section class="scene" style="min-height:100vh">
+    <div class="scene-inner">
+      <p class="kicker">결과 장면 시안 C · 입체</p>
+      <h2>속도, 정확도, 비용을 한 공간에</h2>
+      <p class="lead">가로는 첫 소리까지 시간, 세로는 말뜻 정확도, 깊이는 1,000턴당 비용입니다(가로·깊이는 로그 눈금). 방법 점이 기준점에서 떠올라 자리를 잡고, 시점이 천천히 돕니다. 바닥까지 내린 선이 비용 위치를 보여 줍니다.</p>
+      <div class="tabs" id="tabs"></div>
+      <div class="chapter-title" id="title"></div>
+      <div class="stage" id="stage"></div>
+      <div class="legend" id="legend"></div>
+      <p class="takeaway" id="take"></p>
+      <p class="note"><a href="../index.html">본 페이지(시안 A, 지도)로 돌아가기</a> · <a href="chart-b.html">시안 B 전후 막대</a></p>
+    </div>
+  </section>
+  <script type="module">
+    import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js";
+    import { T, Run, dur, sleep, tween, reveal, isReduced } from "../js/motion.js";
+    const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+    const [M, D, C] = await Promise.all(["../data/metrics.json", "../data/methods.json", "../data/chapters.json"].map((u) => fetch(u).then((r) => r.json())));
+    const met = (k) => M.metrics[k], meth = (id) => D.methods.find((m) => m.id === id);
+    const color = (t) => css(`--series-${D.timings[t].slot}`);
+
+    const stage = document.querySelector("#stage");
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(devicePixelRatio || 1);
+    stage.appendChild(renderer.domElement);
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.75));
+    const sun = new THREE.DirectionalLight(0xffffff, 0.9); sun.position.set(3, 6, 4); scene.add(sun);
+    const world = new THREE.Group(); scene.add(world);
+    const S = 4; // 공간 한 변 (-S/2 ~ S/2)
+
+    function resize() {
+      const r = stage.getBoundingClientRect();
+      renderer.setSize(r.width, r.height, false);
+      camera.aspect = r.width / r.height; camera.updateProjectionMatrix();
+    }
+    new ResizeObserver(resize).observe(stage); resize();
+
+    let items = [], labels = [], angle = -0.5, scales = null;
+    const run = new Run();
+    let ci = 0;
+    document.querySelector("#tabs").innerHTML = C.chapters.map((c, i) => `<button data-i="${i}">${c.tab}</button>`).join("");
+    document.querySelectorAll("#tabs button").forEach((b) => b.addEventListener("click", () => { ci = +b.dataset.i; play(); }));
+
+    function frame() {
+      const grid = new THREE.GridHelper(S, 8, 0x3a3d44, 0x2c2f35); grid.position.y = -S / 2; world.add(grid);
+      const box = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(S, S, S)), new THREE.LineBasicMaterial({ color: 0x2c2f35 }));
+      world.add(box);
+    }
+    const toPos = (x, y, z) => new THREE.Vector3(scales.x(x), scales.y(y), scales.z(z));
+
+    function project(v) {
+      const p = v.clone().applyMatrix4(world.matrixWorld).project(camera);
+      const r = stage.getBoundingClientRect();
+      return [(p.x + 1) / 2 * r.width, (1 - p.y) / 2 * r.height, p.z];
+    }
+
+    async function play() {
+      const id = run.start();
+      const ch = C.chapters[ci];
+      document.querySelectorAll("#tabs button").forEach((b, i) => b.classList.toggle("on", i === ci));
+      document.querySelector("#title").textContent = ch.title;
+      world.clear(); labels.forEach((l) => l.remove()); labels = []; items = [];
+      frame();
+      const pts = ch.points.map((p) => ({ ...p, m: met(p.metric), mm: p.method ? meth(p.method) : null }));
+      const costs = pts.map((p) => p.m.cost_1k);
+      const lg = (v) => Math.log(Math.max(v, 0.01));
+      const cmin = lg(Math.min(...costs) * 0.8), cmax = lg(Math.max(...costs) * 1.25);
+      scales = {
+        x: (ms) => ((lg(ms) - lg(ch.x.min)) / (lg(ch.x.max) - lg(ch.x.min)) - 0.5) * S,
+        y: (a) => ((a - ch.y.min) / (ch.y.max - ch.y.min) - 0.5) * S,
+        z: (c) => ((lg(c) - cmin) / (cmax - cmin || 1) - 0.5) * S,
+      };
+      for (const p of pts) {
+        const col = new THREE.Color(p.mm ? color(p.mm.timing) : p.ref ? css("--text-muted") : css("--text-primary"));
+        const ball = new THREE.Mesh(new THREE.SphereGeometry(p.ref ? 0.06 : 0.085, 24, 16), new THREE.MeshStandardMaterial({ color: col, roughness: 0.5 }));
+        const end = toPos(p.m.first_p50, p.m.accuracy, p.m.cost_1k);
+        const start = p.from ? toPos(met(p.from).first_p50, met(p.from).accuracy, met(p.from).cost_1k) : end.clone();
+        ball.position.copy(start);
+        const stemGeo = new THREE.BufferGeometry().setFromPoints([start.clone(), new THREE.Vector3(start.x, -S / 2, start.z)]);
+        const stem = new THREE.Line(stemGeo, new THREE.LineBasicMaterial({ color: col, transparent: true, opacity: 0.35 }));
+        world.add(ball); world.add(stem);
+        const lab = document.createElement("div");
+        lab.className = `lab${p.base ? " base" : ""}`;
+        lab.textContent = p.label || (p.mm ? p.mm.name.replace(/ \(.*\)$/, "") : p.metric);
+        lab.style.opacity = p.from ? "0" : "1";
+        stage.appendChild(lab); labels.push(lab);
+        items.push({ p, ball, stem, start, end, lab, prog: p.from ? 0 : 1 });
+      }
+      const ts = [...new Set(pts.filter((p) => p.mm).map((p) => p.mm.timing))];
+      document.querySelector("#legend").innerHTML = ["during", "before", "ahead"].filter((t) => ts.includes(t)).map((t) => `<span><i style="background:${color(t)}"></i>${D.timings[t].label}</span>`).join("")
+        + `<span><i style="background:${css("--text-primary")}"></i>기준 설정</span>`;
+      const take = document.querySelector("#take"); take.textContent = "";
+      try {
+        const movers = items.filter((it) => it.p.from);
+        await Promise.all(movers.map(async (it, i) => {
+          await sleep(dur(600 + i * 500), run, id);
+          await tween(dur(T.travel), (_, v) => { it.prog = v; }, undefined, run, id);
+          it.lab.style.opacity = "1";
+        }));
+        take.textContent = ch.takeaway; reveal(take);
+        renderOnce();
+      } catch (e) { if (e.message !== "cancel") throw e; }
+    }
+
+    function renderOnce() {
+      camera.position.set(Math.sin(angle) * 6.4, 2.3, Math.cos(angle) * 6.4);
+      camera.lookAt(0, 0, 0);
+      for (const it of items) {
+        const pos = it.start.clone().lerp(it.end, it.prog);
+        it.ball.position.copy(pos);
+        const arr = it.stem.geometry.attributes.position.array;
+        arr[0] = pos.x; arr[1] = pos.y; arr[2] = pos.z; arr[3] = pos.x; arr[4] = -S / 2; arr[5] = pos.z;
+        it.stem.geometry.attributes.position.needsUpdate = true;
+      }
+      world.updateMatrixWorld();
+      for (const it of items) {
+        const [x, y, z] = project(it.ball.position);
+        it.lab.style.left = `${x}px`; it.lab.style.top = `${y}px`; it.lab.style.visibility = z < 1 ? "visible" : "hidden";
+      }
+      renderer.render(scene, camera);
+    }
+    function loop() {
+      if (!isReduced()) angle += 0.0018; // 한 바퀴 약 58초: 눈이 따라갈 수 있는 느린 회전
+      renderOnce();
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+    await play();
+    renderOnce(); // 움직임 줄이기(?still)나 숨은 탭에서도 마지막 화면을 한 번 그린다
+  </script>
+</body>
+</html>

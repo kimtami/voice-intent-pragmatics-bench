@@ -1,0 +1,278 @@
+{
+ "note": "결과 장면의 장. 점은 metrics.json 키를 가리킨다. method 가 있으면 methods.json 의 색(계산 시점)과 이름을 쓰고, 없으면 회색 기준점이다. from 이 있으면 그 점에서 출발해 이동한다.",
+ "chapters": [
+  {
+   "id": "main",
+   "tab": "1~3차 본실험",
+   "title": "30문항 × 3회: 무엇이 점을 위로 올렸나",
+   "takeaway": "미리 짐작해 둔 방법만 빠른 모델을 목표 가까이 올렸고, 첫 소리는 그대로였다. 생각을 더 시키거나 따로 분석하면 오른쪽(느린 쪽)으로 밀렸다.",
+   "x": {
+    "min": 380,
+    "max": 6500,
+    "log": true
+   },
+   "y": {
+    "min": 78,
+    "max": 100
+   },
+   "target": {
+    "metric": "main.gemini38.A1",
+    "label": "목표: Gemini 3.8 Flash"
+   },
+   "points": [
+    {
+     "metric": "main.gemini.A1",
+     "label": "Gemini 3.5 Flash-Lite",
+     "ref": true
+    },
+    {
+     "metric": "main.haiku.A1",
+     "label": "Claude Haiku 5.5",
+     "ref": true
+    },
+    {
+     "metric": "main.luna.A1",
+     "label": "GPT-6 Luna",
+     "ref": true
+    },
+    {
+     "metric": "main.mercury.A0",
+     "label": "Mercury 3 instant",
+     "base": true
+    },
+    {
+     "metric": "main.mercury.A1",
+     "label": "Mercury 3",
+     "base": true
+    },
+    {
+     "metric": "main.mercury.A2",
+     "from": "main.mercury.A1",
+     "method": "effort"
+    },
+    {
+     "metric": "main.mercury.A3",
+     "from": "main.mercury.A1",
+     "method": "subagent"
+    },
+    {
+     "metric": "main.mercury.A4",
+     "from": "main.mercury.A1",
+     "method": "checklist"
+    },
+    {
+     "metric": "main.mercury.A1+C",
+     "from": "main.mercury.A1",
+     "method": "shared"
+    },
+    {
+     "metric": "main.mercury.A1+CA",
+     "from": "main.mercury.A1",
+     "method": "log"
+    },
+    {
+     "metric": "main.mercury.A1+CH",
+     "from": "main.mercury.A1+CA",
+     "method": "upper",
+     "label": "Mercury 3 + 미리 짐작"
+    },
+    {
+     "metric": "main.mercury.A0+CA",
+     "from": "main.mercury.A0",
+     "method": "log",
+     "label": "instant + 로그"
+    },
+    {
+     "metric": "main.mercury.A0+CH",
+     "from": "main.mercury.A0+CA",
+     "method": "upper",
+     "label": "instant + 미리 짐작"
+    }
+   ]
+  },
+  {
+   "id": "screen",
+   "tab": "후보 선별",
+   "title": "24문항 × 1회: 관련 연구에서 뽑은 후보 10개",
+   "takeaway": "답하면서 해석을 숨겨 쓰는 방법은 정확했지만 느렸고, 상황을 많이 유추할수록 오히려 빗나갔다. 1회 측정이라 5%p 안쪽 차이는 순위를 정할 수 없다.",
+   "x": {
+    "min": 600,
+    "max": 2400,
+    "log": true
+   },
+   "y": {
+    "min": 78,
+    "max": 100
+   },
+   "points": [
+    {
+     "metric": "screen.base",
+     "label": "Mercury 3 (같은 24문항)",
+     "base": true
+    },
+    {
+     "metric": "screen.M1",
+     "from": "screen.base",
+     "method": "situations"
+    },
+    {
+     "metric": "screen.M5",
+     "from": "screen.base",
+     "method": "choose"
+    },
+    {
+     "metric": "screen.M6",
+     "from": "screen.base",
+     "method": "prefix"
+    },
+    {
+     "metric": "screen.M4",
+     "from": "screen.base",
+     "method": "inline"
+    },
+    {
+     "metric": "screen.M8",
+     "from": "screen.base",
+     "method": "silent"
+    }
+   ]
+  },
+  {
+   "id": "cheap",
+   "tab": "싼 추정",
+   "title": "24문항: 짐작을 싼 모델로 만들면",
+   "takeaway": "싼 Mercury 3 instant 가 만든 짐작은 instant 응답을 올렸지만 GPT-6 Luna 응답에는 효과가 없었다. 관점을 둘로 나눠도 나아지지 않았다.",
+   "x": {
+    "min": 330,
+    "max": 1000,
+    "log": true
+   },
+   "y": {
+    "min": 72,
+    "max": 96
+   },
+   "points": [
+    {
+     "metric": "cheap.instant.CA",
+     "label": "instant + 로그",
+     "base": true
+    },
+    {
+     "metric": "cheap.luna.CA",
+     "label": "Luna + 로그",
+     "base": true
+    },
+    {
+     "metric": "cheap.instant.CIv2",
+     "from": "cheap.instant.CA",
+     "method": "cheap",
+     "label": "instant + 싼 짐작"
+    },
+    {
+     "metric": "cheap.luna.CIv2",
+     "from": "cheap.luna.CA",
+     "method": "cheap",
+     "label": "Luna + 싼 짐작"
+    },
+    {
+     "metric": "cheap.instant.CP",
+     "from": "cheap.instant.CA",
+     "method": "persona2",
+     "label": "instant + 관점 2개"
+    }
+   ]
+  },
+  {
+   "id": "travel",
+   "tab": "여행 개인화",
+   "title": "여행 짝 16문항 × 2회: 같은 말, 사람마다 다른 뜻",
+   "takeaway": "기록이 없으면 31% 로 떨어져, 이 세트가 개인화를 시험한다는 것은 확인됐다. 목표·조건 목록이 가장 높았지만 한 문항에 기댔고, 게이트는 기다림만 늘렸다.",
+   "x": {
+    "min": 380,
+    "max": 900,
+    "log": true
+   },
+   "y": {
+    "min": 25,
+    "max": 100
+   },
+   "points": [
+    {
+     "metric": "travel.TN",
+     "label": "기록 없음",
+     "ref": true
+    },
+    {
+     "metric": "travel.TM",
+     "label": "기록 전체",
+     "base": true
+    },
+    {
+     "metric": "travel.TV",
+     "from": "travel.TM",
+     "method": "cheap",
+     "label": "+ v2 짐작"
+    },
+    {
+     "metric": "travel.TP",
+     "from": "travel.TM",
+     "method": "planner"
+    },
+    {
+     "metric": "travel.TG",
+     "from": "travel.TM",
+     "method": "goals"
+    },
+    {
+     "metric": "travel.TJ5",
+     "from": "travel.TM",
+     "method": "gate"
+    },
+    {
+     "metric": "travel.TK5",
+     "from": "travel.TM",
+     "method": "gatectx"
+    }
+   ]
+  },
+  {
+   "id": "temp",
+   "tab": "응답 온도",
+   "title": "여행 20문항 × 3회: 응답 모델의 온도만 바꾸면",
+   "takeaway": "온도를 낮추면 정확도가 올랐고(1 < 0.75 < 0.5), 같은 입력에 다르게 답하는 비율(약 30%)은 그대로였다. 두 실행에서 0.75 자체가 7.5%p 달라 같은 실행 안에서만 비교한다.",
+   "x": {
+    "min": 380,
+    "max": 650,
+    "log": false
+   },
+   "y": {
+    "min": 55,
+    "max": 95
+   },
+   "points": [
+    {
+     "metric": "temp.r2.t075",
+     "label": "0.75 (2회째 실행)",
+     "base": true
+    },
+    {
+     "metric": "temp.r1.t075",
+     "label": "0.75 (1회째 실행)",
+     "base": true
+    },
+    {
+     "metric": "temp.r2.t05",
+     "from": "temp.r2.t075",
+     "method": "temp",
+     "label": "0.5"
+    },
+    {
+     "metric": "temp.r1.t1",
+     "from": "temp.r1.t075",
+     "method": "temp",
+     "label": "1"
+    }
+   ]
+  }
+ ]
+}

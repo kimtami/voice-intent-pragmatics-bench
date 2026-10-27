@@ -1,0 +1,682 @@
+{
+ "note": "python -m vib.site_data 로 결과 파일에서 생성. 손으로 고치지 않는다.",
+ "metrics": {
+  "main.gemini38.A1": {
+   "accuracy": 95.0,
+   "ci": [
+    90.0,
+    99.4
+   ],
+   "first_p50": 2020,
+   "first_p90": 2874,
+   "items": 30,
+   "reps": 3,
+   "cost_1k": 0.279
+  },
+  "main.gemini.A1": {
+   "accuracy": 90.6,
+   "ci": [
+    82.2,
+    97.2
+   ],
+   "first_p50": 628,
+   "first_p90": 983,
+   "items": 30,
+   "reps": 3,
+   "cost_1k": 0.109
+  },
+  "main.haiku.A1": {
+   "accuracy": 86.1,
+   "ci": [
+    77.8,
+    93.3
+   ],
+   "first_p50": 777,
+   "first_p90": 1324,
+   "items": 30,
+   "reps": 3,
+   "cost_1k": 0.06
+  },
+  "main.luna.A1": {
+   "accuracy": 85.6,
+   "ci": [
+    76.7,
+    92.8
+   ],
+   "first_p50": 851,
+   "first_p90": 1773,
+   "items": 30,
+   "reps": 3,
+   "cost_1k": 0.036
+  },
+  "main.mercury.A0": {
+   "accuracy": 85.6,
+   "ci": [
+    76.7,
+    93.3
+   ],
+   "first_p50": 474,
+   "first_p90": 641,
+   "items": 30,
+   "reps": 3,
+   "cost_1k": 0.034
+  },
+  "main.mercury.A1": {
+   "accuracy": 88.9,
+   "ci": [
+    79.4,
+    96.1
+   ],
+   "first_p50": 758,
+   "first_p90": 1446,
+   "items": 30,
+   "reps": 3,
+   "cost_1k": 0.107
+  },
+  "main.mercury.A2": {
+   "accuracy": 89.4,
+   "ci": [
+    81.7,
+    95.6
+   ],
+   "first_p50": 848,
+   "first_p90": 1517,
+   "items": 30,
+   "reps": 3,
+   "cost_1k": 0.117
+  },
+  "main.mercury.A3": {
+   "accuracy": 93.9,
+   "ci": [
+    89.4,
+    97.8
+   ],
+   "first_p50": 4735,
+   "first_p90": 12610,
+   "items": 30,
+   "reps": 3,
+   "cost_1k": 0.985
+  },
+  "main.mercury.A4": {
+   "accuracy": 92.8,
+   "ci": [
+    86.7,
+    97.2
+   ],
+   "first_p50": 933,
+   "first_p90": 1541,
+   "items": 30,
+   "reps": 3,
+   "cost_1k": 0.153
+  },
+  "main.mercury.A1+C": {
+   "accuracy": 93.3,
+   "ci": [
+    87.2,
+    97.8
+   ],
+   "first_p50": 830,
+   "first_p90": 1483,
+   "items": 30,
+   "reps": 3,
+   "cost_1k": 0.126
+  },
+  "main.mercury.A1+CK": {
+   "accuracy": 93.9,
+   "ci": [
+    86.1,
+    98.9
+   ],
+   "first_p50": 823,
+   "first_p90": 1444,
+   "items": 30,
+   "reps": 3,
+   "cost_1k": 0.15
+  },
+  "main.mercury.A1+CA": {
+   "accuracy": 92.8,
+   "ci": [
+    86.7,
+    97.8
+   ],
+   "first_p50": 800,
+   "first_p90": 1379,
+   "items": 30,
+   "reps": 3,
+   "cost_1k": 0.141
+  },
+  "main.mercury.A1+CH": {
+   "accuracy": 96.1,
+   "ci": [
+    90.6,
+    100.0
+   ],
+   "first_p50": 844,
+   "first_p90": 1457,
+   "items": 30,
+   "reps": 3,
+   "cost_1k": 3.491
+  },
+  "main.mercury.A0+C": {
+   "accuracy": 89.4,
+   "ci": [
+    80.6,
+    96.1
+   ],
+   "first_p50": 455,
+   "first_p90": 692,
+   "items": 30,
+   "reps": 3,
+   "cost_1k": 0.053
+  },
+  "main.mercury.A0+CK": {
+   "accuracy": 88.3,
+   "ci": [
+    79.4,
+    95.6
+   ],
+   "first_p50": 462,
+   "first_p90": 656,
+   "items": 30,
+   "reps": 3,
+   "cost_1k": 0.075
+  },
+  "main.mercury.A0+CA": {
+   "accuracy": 87.2,
+   "ci": [
+    76.1,
+    96.7
+   ],
+   "first_p50": 465,
+   "first_p90": 627,
+   "items": 30,
+   "reps": 3,
+   "cost_1k": 0.068
+  },
+  "main.mercury.A0+CH": {
+   "accuracy": 93.3,
+   "ci": [
+    86.7,
+    98.3
+   ],
+   "first_p50": 477,
+   "first_p90": 697,
+   "items": 30,
+   "reps": 3,
+   "cost_1k": 3.41
+  },
+  "main.luna.A2": {
+   "accuracy": 84.4,
+   "ci": [
+    75.6,
+    91.7
+   ],
+   "first_p50": 1815,
+   "first_p90": 4210,
+   "items": 30,
+   "reps": 3,
+   "cost_1k": 0.083
+  },
+  "main.luna.A3": {
+   "accuracy": 89.4,
+   "ci": [
+    82.2,
+    95.0
+   ],
+   "first_p50": 5092,
+   "first_p90": 10393,
+   "items": 30,
+   "reps": 3,
+   "cost_1k": 0.242
+  },
+  "main.luna.A4": {
+   "accuracy": 89.4,
+   "ci": [
+    80.6,
+    96.7
+   ],
+   "first_p50": 780,
+   "first_p90": 1825,
+   "items": 30,
+   "reps": 3,
+   "cost_1k": 0.057
+  },
+  "main.luna.A1+C": {
+   "accuracy": 91.7,
+   "ci": [
+    84.4,
+    97.2
+   ],
+   "first_p50": 960,
+   "first_p90": 2152,
+   "items": 30,
+   "reps": 3,
+   "cost_1k": 0.054
+  },
+  "main.luna.A1+CK": {
+   "accuracy": 92.8,
+   "ci": [
+    86.1,
+    97.8
+   ],
+   "first_p50": 924,
+   "first_p90": 1698,
+   "items": 30,
+   "reps": 3,
+   "cost_1k": 0.075
+  },
+  "main.luna.A1+CA": {
+   "accuracy": 87.8,
+   "ci": [
+    79.4,
+    94.4
+   ],
+   "first_p50": 761,
+   "first_p90": 951,
+   "items": 30,
+   "reps": 3,
+   "cost_1k": 0.068
+  },
+  "main.luna.A1+CH": {
+   "accuracy": 94.4,
+   "ci": [
+    86.7,
+    98.9
+   ],
+   "first_p50": 768,
+   "first_p90": 1113,
+   "items": 30,
+   "reps": 3,
+   "cost_1k": 3.408
+  },
+  "screen.M1": {
+   "accuracy": 91.7,
+   "ci": [
+    81.2,
+    100.0
+   ],
+   "first_p50": 887,
+   "first_delta": 90,
+   "items": 24,
+   "reps": 1,
+   "cost_1k": 7.65,
+   "gen_p50_ms": 18117
+  },
+  "screen.M2": {
+   "accuracy": 87.5,
+   "ci": [
+    75.0,
+    97.9
+   ],
+   "first_p50": 743,
+   "first_delta": -53,
+   "items": 24,
+   "reps": 1,
+   "cost_1k": 1.19,
+   "gen_p50_ms": 5300
+  },
+  "screen.M3": {
+   "accuracy": 91.7,
+   "ci": [
+    81.2,
+    100.0
+   ],
+   "first_p50": 928,
+   "first_delta": 132,
+   "items": 24,
+   "reps": 1,
+   "cost_1k": 0.51,
+   "gen_p50_ms": 1918
+  },
+  "screen.M4": {
+   "accuracy": 95.8,
+   "ci": [
+    89.6,
+    100.0
+   ],
+   "first_p50": 1405,
+   "first_delta": 609,
+   "items": 24,
+   "reps": 1,
+   "cost_1k": 0.27,
+   "gen_p50_ms": null
+  },
+  "screen.M5": {
+   "accuracy": 97.9,
+   "ci": [
+    93.8,
+    100.0
+   ],
+   "first_p50": 886,
+   "first_delta": 90,
+   "items": 24,
+   "reps": 1,
+   "cost_1k": 7.65,
+   "gen_p50_ms": 18117
+  },
+  "screen.M6": {
+   "accuracy": 91.7,
+   "ci": [
+    81.2,
+    100.0
+   ],
+   "first_p50": 1038,
+   "first_delta": 242,
+   "items": 24,
+   "reps": 1,
+   "cost_1k": 0.36,
+   "gen_p50_ms": 1179
+  },
+  "screen.M7": {
+   "accuracy": 97.9,
+   "ci": [
+    93.8,
+    100.0
+   ],
+   "first_p50": 1895,
+   "first_delta": 1066,
+   "items": 24,
+   "reps": 1,
+   "cost_1k": 0.33,
+   "gen_p50_ms": null
+  },
+  "screen.M8": {
+   "accuracy": 91.7,
+   "ci": [
+    81.2,
+    100.0
+   ],
+   "first_p50": 816,
+   "first_delta": -12,
+   "items": 24,
+   "reps": 1,
+   "cost_1k": 0.15,
+   "gen_p50_ms": null
+  },
+  "screen.M5b": {
+   "accuracy": 91.7,
+   "ci": [
+    81.2,
+    100.0
+   ],
+   "first_p50": 863,
+   "first_delta": 35,
+   "items": 24,
+   "reps": 1,
+   "cost_1k": 1.19,
+   "gen_p50_ms": 5300
+  },
+  "screen.M5c": {
+   "accuracy": 85.4,
+   "ci": [
+    72.9,
+    95.8
+   ],
+   "first_p50": 811,
+   "first_delta": -18,
+   "items": 24,
+   "reps": 1,
+   "cost_1k": 0.4,
+   "gen_p50_ms": 1179
+  },
+  "cheap.instant.CA": {
+   "accuracy": 80.6,
+   "ci": [
+    67.3,
+    91.7
+   ],
+   "first_p50": 399,
+   "first_p90": 576,
+   "items": 24,
+   "reps": 3,
+   "cost_1k": 0.07
+  },
+  "cheap.instant.CIv1": {
+   "accuracy": 88.2,
+   "ci": [
+    77.1,
+    95.9
+   ],
+   "first_p50": 410,
+   "first_p90": 561,
+   "items": 24,
+   "reps": 3,
+   "cost_1k": 0.29
+  },
+  "cheap.instant.CIv2": {
+   "accuracy": 89.6,
+   "ci": [
+    81.2,
+    95.8
+   ],
+   "first_p50": 386,
+   "first_p90": 588,
+   "items": 24,
+   "reps": 3,
+   "cost_1k": 0.3
+  },
+  "cheap.instant.CP": {
+   "accuracy": 84.7,
+   "ci": [
+    72.2,
+    95.1
+   ],
+   "first_p50": 469,
+   "first_p90": 599,
+   "items": 24,
+   "reps": 3,
+   "cost_1k": 0.49
+  },
+  "cheap.luna.CA": {
+   "accuracy": 85.4,
+   "ci": [
+    74.0,
+    94.8
+   ],
+   "first_p50": 774,
+   "first_p90": 1003,
+   "items": 24,
+   "reps": 2,
+   "cost_1k": 0.07
+  },
+  "cheap.luna.CIv2": {
+   "accuracy": 87.5,
+   "ci": [
+    78.1,
+    95.8
+   ],
+   "first_p50": 749,
+   "first_p90": 1033,
+   "items": 24,
+   "reps": 2,
+   "cost_1k": 0.3
+  },
+  "cheap.luna.CP": {
+   "accuracy": 89.6,
+   "ci": [
+    81.2,
+    95.8
+   ],
+   "first_p50": 836,
+   "first_p90": 1738,
+   "items": 24,
+   "reps": 2,
+   "cost_1k": 0.48
+  },
+  "travel.TN": {
+   "accuracy": 31.2,
+   "ci": [
+    14.1,
+    50.0
+   ],
+   "first_p50": 422,
+   "first_p90": 588,
+   "items": 16,
+   "reps": 2,
+   "cost_1k": 0.05
+  },
+  "travel.TM": {
+   "accuracy": 73.4,
+   "ci": [
+    53.1,
+    90.6
+   ],
+   "first_p50": 464,
+   "first_p90": 625,
+   "items": 16,
+   "reps": 2,
+   "cost_1k": 0.12
+  },
+  "travel.TV": {
+   "accuracy": 78.1,
+   "ci": [
+    64.1,
+    90.6
+   ],
+   "first_p50": 500,
+   "first_p90": 783,
+   "items": 16,
+   "reps": 2,
+   "cost_1k": 0.43
+  },
+  "travel.TP": {
+   "accuracy": 76.6,
+   "ci": [
+    57.8,
+    92.2
+   ],
+   "first_p50": 449,
+   "first_p90": 639,
+   "items": 16,
+   "reps": 2,
+   "cost_1k": 0.45
+  },
+  "travel.TG": {
+   "accuracy": 87.5,
+   "ci": [
+    75.0,
+    98.4
+   ],
+   "first_p50": 443,
+   "first_p90": 625,
+   "items": 16,
+   "reps": 2,
+   "cost_1k": 0.15
+  },
+  "travel.TJ4": {
+   "accuracy": 57.8,
+   "ci": [
+    37.5,
+    76.6
+   ],
+   "first_p50": 655,
+   "first_p90": null,
+   "items": 16,
+   "reps": 2,
+   "cost_1k": 0.36,
+   "first_delta": 191,
+   "first_note": "기억 전체 p50 + 같은 시각 대조의 게이트 증가분"
+  },
+  "travel.TJ5": {
+   "accuracy": 65.6,
+   "ci": [
+    45.3,
+    85.9
+   ],
+   "first_p50": 667,
+   "first_p90": null,
+   "items": 16,
+   "reps": 2,
+   "cost_1k": 0.35,
+   "first_delta": 203,
+   "first_note": "기억 전체 p50 + 같은 시각 대조의 게이트 증가분"
+  },
+  "travel.TK4": {
+   "accuracy": 70.3,
+   "ci": [
+    54.7,
+    85.9
+   ],
+   "first_p50": 729,
+   "first_p90": null,
+   "items": 16,
+   "reps": 2,
+   "cost_1k": 0.42,
+   "first_delta": 265,
+   "first_note": "기억 전체 p50 + 같은 시각 대조의 게이트 증가분"
+  },
+  "travel.TK5": {
+   "accuracy": 81.2,
+   "ci": [
+    64.1,
+    95.3
+   ],
+   "first_p50": 777,
+   "first_p90": null,
+   "items": 16,
+   "reps": 2,
+   "cost_1k": 0.41,
+   "first_delta": 313,
+   "first_note": "기억 전체 p50 + 같은 시각 대조의 게이트 증가분"
+  },
+  "temp.r2.t075": {
+   "accuracy": 70.8,
+   "ci": [
+    55.0,
+    85.9
+   ],
+   "first_p50": 464,
+   "first_p90": 739,
+   "items": 20,
+   "reps": 3,
+   "cost_1k": 0.12
+  },
+  "temp.r2.t05": {
+   "accuracy": 82.5,
+   "ci": [
+    70.0,
+    93.3
+   ],
+   "first_p50": 440,
+   "first_p90": 597,
+   "items": 20,
+   "reps": 3,
+   "cost_1k": 0.12
+  },
+  "temp.r1.t075": {
+   "accuracy": 78.3,
+   "ci": [
+    66.7,
+    90.0
+   ],
+   "first_p50": 552,
+   "first_p90": 1091,
+   "items": 20,
+   "reps": 3,
+   "cost_1k": 0.12
+  },
+  "temp.r1.t1": {
+   "accuracy": 65.0,
+   "ci": [
+    47.5,
+    81.7
+   ],
+   "first_p50": 532,
+   "first_p90": 1214,
+   "items": 20,
+   "reps": 3,
+   "cost_1k": 0.12
+  },
+  "screen.base": {
+   "accuracy": 86.1,
+   "ci": [
+    74.3,
+    95.8
+   ],
+   "first_p50": 796,
+   "items": 24,
+   "reps": 3,
+   "cost_1k": 0.107
+  }
+ }
+}

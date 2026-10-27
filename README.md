@@ -2,6 +2,8 @@
 
 음성 대화 서비스에서 **빠르면서도 사용자의 실제 의도를 정확히 파악하는 방법**을 찾기 위한 실측 벤치마크입니다. 한국어 음성 발화 30문항을 화용론(말이 상황 속에서 하는 일을 다루는 언어학) 기준으로 만들고, 모델·설정·방법별로 **첫 발화까지 지연**과 **의도 파악 정확도**를 함께 잽니다.
 
+**결과 페이지 (모션):** https://kimtami.github.io/voice-intent-pragmatics-bench/ — 비개발자용으로 시도한 방법, 결과, 문제점, 가장 나은 방법을 움직이는 차트로 보여 줍니다.
+
 <!-- RESULTS:START -->
 ## 결과
 
@@ -646,6 +648,7 @@ results/gate/          6차 게이트 점검 (기존 30문항 재현율, 순서 
 results/*.md, *.csv    집계 표 (summary, paired, models_vs_base, gap, hypothesis_checks, by_category)
 results/*.png          차트 (상위 모델까지의 격차, 개요, 방법별 위치, 화용 현상별)
 docs/                  화용론 개요, 필요성, 실험 설계, 모델 설정
+site/                  결과 페이지 (GitHub Pages). 수치는 python -m vib.site_data 로 결과 파일에서 생성, 구성은 site/STORYBOARD.md
 ```
 
 ## 한계

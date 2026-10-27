@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>결과 시안 B: 전후 막대</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="../css/site.css">
+  <style>
+    .bars-wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; margin-top: 12px; }
+    .bars-wrap h3 { font-size: 15px; color: var(--text-secondary); font-weight: 500; margin: 0 0 6px; }
+    canvas.bars { width: 100%; display: block; }
+    @media (max-width: 760px) { .bars-wrap { grid-template-columns: minmax(0, 1fr); } }
+  </style>
+</head>
+<body>
+  <section class="scene" style="min-height:100vh">
+    <div class="scene-inner">
+      <p class="kicker">결과 장면 시안 B · 전후 막대</p>
+      <h2>방법마다 무엇을 얻고 무엇을 잃었나</h2>
+      <p class="lead">같은 기준 설정과 비교해, 왼쪽은 말뜻 정확도가 얼마나 올랐는지, 오른쪽은 첫 소리가 얼마나 늦어졌는지입니다. 막대가 0 에서 자라납니다. 가는 선은 정확도 결과의 95% 신뢰구간을 기준값만큼 옮긴 것입니다(근사).</p>
+      <div class="tabs" id="tabs"></div>
+      <div class="chapter-title" id="title"></div>
+      <div class="bars-wrap">
+        <div><h3>정확도 변화 (%p, 오른쪽이 좋아짐)</h3><canvas class="bars" id="acc"></canvas></div>
+        <div><h3>첫 소리 변화 (ms, 오른쪽이 늦어짐)</h3><canvas class="bars" id="lat"></canvas></div>
+      </div>
+      <div class="legend" id="legend"></div>
+      <p class="takeaway" id="take"></p>
+      <p class="note"><a href="../index.html">본 페이지(시안 A, 지도)로 돌아가기</a> · <a href="chart-c.html">시안 C 입체</a></p>
+    </div>
+  </section>
+  <script type="module">
+    import { T, Run, dur, sleep, tween, reveal } from "../js/motion.js";
+    const css = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+    const [M, D, C] = await Promise.all(["../data/metrics.json", "../data/methods.json", "../data/chapters.json"].map((u) => fetch(u).then((r) => r.json())));
+    const met = (k) => M.metrics[k], meth = (id) => D.methods.find((m) => m.id === id);
+    const color = (t) => css(`--series-${D.timings[t].slot}`);
+    const run = new Run();
+    let ci = 0;
+    document.querySelector("#tabs").innerHTML = C.chapters.map((c, i) => `<button data-i="${i}">${c.tab}</button>`).join("");
+    document.querySelectorAll("#tabs button").forEach((b) => b.addEventListener("click", () => { ci = +b.dataset.i; play(); }));
+
+    function setup(cv, n) {
+      const dpr = devicePixelRatio || 1, w = cv.getBoundingClientRect().width, h = 30 + n * 44;
+      cv.style.height = `${h}px`; cv.width = w * dpr; cv.height = h * dpr;
+      const c = cv.getContext("2d"); c.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { c, w, h };
+    }
+    function drawPanel(cv, rows, key, unit, prog) {
+      const { c, w, h } = setup(cv, rows.length);
+      const labelW = Math.min(170, w * 0.42), x0 = labelW + 8, x1 = w - 52;
+      const vals = rows.map((r) => r[key]);
+      const lo = Math.min(0, ...rows.map((r) => (key === "dacc" ? r.cilo : r[key]))), hi = Math.max(0, ...rows.map((r) => (key === "dacc" ? r.cihi : r[key])));
+      const sx = (v) => x0 + ((v - lo) / (hi - lo || 1)) * (x1 - x0);
+      c.font = "13px Pretendard Variable, system-ui, sans-serif"; c.textBaseline = "middle";
+      c.strokeStyle = css("--text-muted"); c.lineWidth = 1;
+      c.beginPath(); c.moveTo(sx(0), 8); c.lineTo(sx(0), h - 4); c.stroke();
+      rows.forEach((r, i) => {
+        const y = 24 + i * 44, p = prog[i] ?? 0, v = r[key] * p;
+        c.fillStyle = css("--text-secondary"); c.textAlign = "left";
+        c.fillText(r.label.length > 16 ? r.label.slice(0, 15) + "…" : r.label, 0, y);
+        c.fillStyle = r.color; c.globalAlpha = 0.9;
+        const a = sx(Math.min(0, v)), b = sx(Math.max(0, v));
+        c.beginPath(); c.roundRect(a, y - 9, Math.max(1, b - a), 18, v >= 0 ? [0, 4, 4, 0] : [4, 0, 0, 4]); c.fill();
+        c.globalAlpha = 1;
+        if (key === "dacc" && p >= 1) { // 신뢰구간 (근사)
+          c.strokeStyle = css("--text-primary"); c.globalAlpha = 0.6; c.lineWidth = 1.5;
+          c.beginPath(); c.moveTo(sx(r.cilo), y); c.lineTo(sx(r.cihi), y); c.stroke(); c.globalAlpha = 1;
+        }
+        if (p >= 1) {
+          c.fillStyle = css("--text-primary"); c.textAlign = "left";
+          const txt = key === "dacc" ? `${r.dacc > 0 ? "+" : ""}${r.dacc.toFixed(1)}%p` : `${r.dlat > 0 ? "+" : ""}${Math.round(r.dlat)}ms`;
+          c.fillText(txt, Math.min(sx(Math.max(0, r[key], key === "dacc" ? r.cihi : 0)) + 6, w - 50), y);
+        }
+      });
+    }
+    async function play() {
+      const id = run.start();
+      const ch = C.chapters[ci];
+      document.querySelectorAll("#tabs button").forEach((b, i) => b.classList.toggle("on", i === ci));
+      document.querySelector("#title").textContent = ch.title;
+      const rows = ch.points.filter((p) => p.from).map((p) => {
+        const m = met(p.metric), b = met(p.from), mm = meth(p.method);
+        return { label: p.label || mm.name.replace(/ \(.*\)$/, ""), color: color(mm.timing), timing: mm.timing,
+          dacc: m.accuracy - b.accuracy, cilo: m.ci[0] - b.accuracy, cihi: m.ci[1] - b.accuracy, dlat: m.first_p50 - b.first_p50 };
+      });
+      const prog = rows.map(() => 0);
+      const ts = [...new Set(rows.map((r) => r.timing))];
+      document.querySelector("#legend").innerHTML = ["during", "before", "ahead"].filter((t) => ts.includes(t)).map((t) => `<span><i style="background:${color(t)}"></i>${D.timings[t].label}</span>`).join("");
+      const take = document.querySelector("#take"); take.textContent = "";
+      const draw = () => { drawPanel(document.querySelector("#acc"), rows, "dacc", "%p", prog); drawPanel(document.querySelector("#lat"), rows, "dlat", "ms", prog); };
+      draw();
+      try {
+        await Promise.all(rows.map(async (_, i) => {
+          await sleep(dur(i * 260), run, id);
+          await tween(dur(T.travel), (__, v) => { prog[i] = v; draw(); }, undefined, run, id);
+        }));
+        take.textContent = ch.takeaway; reveal(take);
+      } catch (e) { if (e.message !== "cancel") throw e; }
+    }
+    let lastW = 0; // 막대 높이가 바뀔 때가 아니라 폭이 바뀔 때만 다시 그린다
+    new ResizeObserver((es) => { const w = Math.round(es[0].contentRect.width); if (w !== lastW) { lastW = w; play(); } }).observe(document.querySelector(".bars-wrap"));
+  </script>
+</body>
+</html>
