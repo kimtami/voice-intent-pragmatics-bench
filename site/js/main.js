@@ -18,6 +18,7 @@ const stageOf = (id) => STAGES.find((s) => s.id === id);
 const stageOpts = () => (isReduced() ? { end: true } : { play: true });
 const players = [];
 const player = (el) => { const p = mountStage(el, "media/", getSpeed()); players.push(p); return p; };
+window.__players = players; // 점검용 (브라우저 콘솔에서 재생 상태 확인)
 
 function tooltipHtml(label, m, meth) {
   const lines = [`<b>${label}</b>`];

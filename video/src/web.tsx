@@ -23,23 +23,30 @@ export type PlayerHandle = {
   play: () => void;
   setRate: (r: number) => void;
   onEnded: (fn: () => void) => void;
+  readonly player: PlayerRef | null; // 점검용: 지금 붙은 Remotion Player
 };
 
 // el 안에 플레이어를 띄운다. assetBase 는 그림 폴더 (예: "media/")
+// 보여 줄 때마다 새 키로 플레이어를 새로 붙이고, 재생 여부와 시작 프레임은 속성(autoPlay, initialFrame)으로 넘긴다.
+// 붙은 직후에 명령으로 play() 를 부르면 아직 바뀌기 전의 플레이어에 걸리는 경우가 있었다.
 export function mountStage(el: HTMLElement, assetBase: string, rate = 1): PlayerHandle {
   const root = createRoot(el);
-  const ref = React.createRef<PlayerRef>();
-  const hooked = new WeakSet<PlayerRef>(); // 같은 것을 다시 보여도 끝 알림은 한 번만 단다
-  let cur: Shown | null = null;
+  let current: PlayerRef | null = null;
+  let cur: (Shown & { autoPlay: boolean; initialFrame: number }) | null = null;
+  let n = 0;
   let r = rate;
   let ended: (() => void) | null = null;
-  let pending: { play?: boolean; end?: boolean } = {};
+  const hooked = new WeakSet<PlayerRef>();
+  const setRef = (p: PlayerRef | null) => {
+    current = p;
+    if (p && !hooked.has(p)) { hooked.add(p); p.addEventListener("ended", () => ended?.()); }
+  };
   const render = () => {
     if (!cur) return;
     root.render(
       <Player
         key={cur.key}
-        ref={ref}
+        ref={setRef}
         component={cur.component}
         inputProps={{ ...cur.props, assetBase }}
         durationInFrames={cur.frames}
@@ -47,6 +54,11 @@ export function mountStage(el: HTMLElement, assetBase: string, rate = 1): Player
         compositionWidth={cur.w}
         compositionHeight={cur.h}
         playbackRate={r}
+        autoPlay={cur.autoPlay}
+        initialFrame={cur.initialFrame}
+        // 무대에는 소리가 없다. 음소거로 띄워야 클릭 없이 시작할 때 오디오 재개를 기다리다 멈추지 않는다
+        initiallyMuted
+        numberOfSharedAudioTags={0}
         controls={false}
         clickToPlay={false}
         doubleClickToFullscreen={false}
@@ -55,15 +67,11 @@ export function mountStage(el: HTMLElement, assetBase: string, rate = 1): Player
       />,
     );
   };
-  // Player 가 붙은 다음 프레임에 재생·끝 화면 이동을 적용한다
-  const apply = () => {
-    const p = ref.current;
-    if (!p || !cur) { requestAnimationFrame(apply); return; }
-    if (!hooked.has(p)) { hooked.add(p); p.addEventListener("ended", () => ended?.()); }
-    if (pending.end) p.seekTo(cur.frames - 1);
-    else { p.seekTo(0); if (pending.play) p.play(); }
+  const open = (next: Shown, opts: { play?: boolean; end?: boolean }) => {
+    n += 1;
+    cur = { ...next, key: `${next.key}#${n}`, autoPlay: Boolean(opts.play) && !opts.end, initialFrame: opts.end ? next.frames - 1 : 0 };
+    render();
   };
-  const open = (next: Shown, opts: { play?: boolean; end?: boolean }) => { cur = next; pending = opts; render(); requestAnimationFrame(apply); };
   return {
     show(e, opts = {}) {
       open({ key: e.id, component: Stage as unknown as Loose, props: { scene: e.scene, acts: e.acts }, frames: stageDuration(e.acts, FPS), w: W, h: H }, opts);
@@ -72,8 +80,9 @@ export function mountStage(el: HTMLElement, assetBase: string, rate = 1): Player
       const props = turnProps(M, D);
       open({ key: "turn", component: Turn as unknown as Loose, props, frames: turnDuration(props.rows, FPS), w: TW, h: TH }, opts);
     },
-    play() { const p = ref.current; if (p) { p.seekTo(0); p.play(); } },
+    play() { if (cur) open({ ...cur, key: cur.key.split("#")[0] }, { play: true }); },
     setRate(v) { r = v; render(); },
     onEnded(fn) { ended = fn; },
+    get player() { return current; },
   };
 }
