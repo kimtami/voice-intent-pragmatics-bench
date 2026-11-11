@@ -61,6 +61,22 @@
 - Anthropic API 는 2026-10-21 부터 temperature·top_p·top_k 를 보내면 400 오류를 냅니다. 샘플링 값은 보내지 않습니다.
 - Messages API 는 첫 메시지가 user 여야 해서, 비서 발화로 시작하는 맥락 앞에 "(대화 시작)"이라는 user 메시지를 둡니다. Gemini 도 같은 방식으로 맞춥니다.
 
+### Claude Sonnet 5.5 (`claude-sonnet-5-5`, Anthropic) — 7차에서 추가
+
+| 조건 | stream | effort | thinking |
+|---|---|---|---|
+| A1 기본 | true | low | between_tools |
+| A2 effort 상향 | true | medium | adaptive |
+
+- 가격(1M 토큰당): 입력 $2, 출력 $10. Claude Haiku 5.5·GPT-6 Luna 의 20배입니다.
+- Sonnet 5.5 는 `thinking: {type: "disabled"}` 를 400 오류로 거절합니다. 가장 낮은 설정은 `between_tools` 이고 effort high 이하에서만 받습니다. 그래서 A1 은 Haiku 의 "생각 끔"에 가장 가까운 `between_tools` + effort low 로 두었습니다. 실행에서 A1 의 생각 토큰은 0 이었습니다.
+- effort 기본값은 high 입니다. A2 는 Haiku 와 같은 medium + adaptive 로 맞췄습니다.
+- `--arms all` 에는 들어 있지 않습니다(1~3차 본 실험을 그대로 두려는 것). `--arms sonnet.A1,sonnet.A2` 처럼 이름을 적으면 돕니다.
+
+출처(2026-11-11 확인)
+- 생각 설정: https://platform.claude.com/docs/en/build-with-claude/thinking
+- 가격: https://platform.claude.com/docs/en/about-claude/pricing
+
 ### Gemini 3.5 Flash-Lite (`gemini-3.5-flash-lite`, Google)
 
 | 조건 | stream | thinking_level |

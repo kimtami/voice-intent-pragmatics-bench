@@ -560,6 +560,39 @@ Gemini 3.5 Flash-Lite A2 는 추론 토큰 0 으로 effort 가 오르지 않아 
 - 결과 페이지: https://kimtami.github.io/itinerary-persona-vs-context-bench/
 - 저장소: https://github.com/kimtami/itinerary-persona-vs-context-bench
 
+## 덧붙임: Claude Haiku 5.5·Sonnet 5.5 대 GPT-6 Luna (7차, 2026-11-11)
+
+"Claude Haiku 나 Sonnet 을 GPT-6 Luna 대신 쓰면 속도·금액·품질이 어떻게 달라지는가"를 같은 30문항으로 다시 쟀습니다. 지연은 시각에 따라 움직이므로 다섯 조건을 같은 시각(2026-11-11 17:43~17:53 KST)에 새로 돌렸고, 위 1차 표의 값과 섞지 않았습니다. 30문항 × 3회, 조건마다 응답 90개, 오류 0, 채점은 1차와 같은 블라인드 채점(claude-opus-5-5)입니다.
+
+| 모델 | 설정 | 의도 정확도 (95% CI) | 의도 이해율 | 엄격 정확도 | 첫 발화 p50 | 첫 발화 p90 | 전체 p50 | 1,000턴당 비용 | 평균 출력 토큰 | 오류 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| GPT-6 Luna | 추론 없음 (effort none) | 87.2% (78.9–93.9) | 91.1% | 77.8% | 1,075ms | 1,841ms | 1,395ms | $0.04 | 26.1 | 0 |
+| Claude Haiku 5.5 | 생각 끔, effort low | 82.8% (72.8–91.1) | 94.4% | 70.0% | 676ms | 827ms | 1,028ms | $0.06 | 49.8 | 0 |
+| Claude Haiku 5.5 | 생각 켬(adaptive), effort medium | 88.3% (78.9–96.1) | 93.3% | 82.2% | 824ms | 1,976ms | 1,274ms | $0.10 | 130.6 | 0 |
+| Claude Sonnet 5.5 | 생각 끔(between_tools), effort low | 89.4% (81.7–96.1) | 94.4% | 83.3% | 769ms | 991ms | 1,300ms | $1.17 | 46.1 | 0 |
+| Claude Sonnet 5.5 | 생각 켬(adaptive), effort medium | 91.1% (81.7–97.8) | 94.4% | 87.8% | 1,927ms | 3,246ms | 2,270ms | $2.37 | 166.0 | 0 |
+
+**GPT-6 Luna 기본 설정 대비 (같은 문항끼리 짝지음)**
+
+| 모델 | 설정 | 정확도 차이 (95% CI) | 차이가 0보다 클 비율 | 첫 발화 p50 차이 | 비용 배수 |
+|---|---|---|---|---|---|
+| Claude Haiku 5.5 | 생각 끔, effort low | -4.4%p (-14.4–+3.9) | 17% | -399ms | 1.7배 |
+| Claude Haiku 5.5 | 생각 켬(adaptive), effort medium | +1.1%p (-9.4–+11.1) | 60% | -251ms | 2.8배 |
+| Claude Sonnet 5.5 | 생각 끔(between_tools), effort low | +2.2%p (-3.3–+7.8) | 76% | -306ms | 32.5배 |
+| Claude Sonnet 5.5 | 생각 켬(adaptive), effort medium | +3.9%p (-6.7–+12.2) | 78% | +852ms | 65.8배 |
+
+1. **정확도는 이 문항 수로 가르지 못했습니다.** 다섯 조건의 95% 구간이 모두 겹치고, Luna 대비 차이도 모두 0 을 포함합니다. 30문항 × 3회로 가를 수 있는 차이는 ±8%p 안팎입니다. "같다"가 아니라 "가르지 못했다"입니다.
+2. **첫 발화는 생각을 끈 Claude 두 모델이 Luna 보다 빨랐습니다.** 중앙값은 Haiku 676ms, Sonnet 769ms, Luna 1,075ms 이고, 느린 쪽(p90)은 Haiku 827ms, Sonnet 991ms, Luna 1,841ms 로 차이가 더 큽니다. 1차 때 Luna 는 851ms(p90 1,773ms), Haiku 는 777ms(p90 1,324ms)였으므로 이 값은 그날의 값으로 읽어야 합니다.
+3. **생각을 켜면 Sonnet 은 느려졌습니다.** adaptive + effort medium 에서 첫 발화 중앙값이 1,927ms 로 Luna 보다 852ms 늦습니다. Haiku 는 같은 설정에서 824ms 였지만 p90 이 1,976ms 로 늘었습니다.
+4. **비용은 Sonnet 이 Luna 의 약 32배입니다(생각 끔). 생각을 켜면 약 66배입니다.** Haiku 는 단가가 Luna 와 같지만 출력 토큰이 더 많아 1.7배였습니다(평균 49.8 대 26.1 토큰).
+5. Sonnet 5.5 는 생각을 완전히 끌 수 없어서 가장 낮은 설정(`between_tools`)을 썼습니다. 이 실행에서 생각 토큰은 0 이었습니다. 설정과 출처는 [docs/model-settings.md](docs/model-settings.md)에 있습니다.
+
+주의할 점
+- 채점 모델이 Claude 계열입니다. Claude 응답에 유리하게 채점했을 가능성을 이 실험으로는 배제하지 못합니다. 다른 계열 모델로 교차 채점하지 않았습니다.
+- GPT-6 Luna 응답은 이 리포의 키가 아닌 다른 OpenAI 계정의 키로 받았습니다(이 리포의 키는 사용 한도가 소진된 상태였습니다). 계정이 다르면 지연이 다를 수 있고, Luna 실행은 Claude 실행 창 안의 17:47~17:50 에 돌았습니다.
+- 설정은 모델마다 한두 개입니다. Luna 는 추론 없음 하나만 다시 돌렸습니다.
+- 원본은 `results/claude/raw`, 채점은 `results/claude/judged`, 표는 `python -m vib.claude_compare` 로 다시 만듭니다.
+
 ## 무엇을 비교하나
 
 | 조건 | 내용 |
@@ -654,6 +687,7 @@ results/travel/        6차 여행 개인화 (raw, judged, prep 추정·목표, 
 results/gate/          6차 게이트 점검 (기존 30문항 재현율, 순서 뒤집기 검사)
 results/*.md, *.csv    집계 표 (summary, paired, models_vs_base, gap, hypothesis_checks, by_category)
 results/*.png          차트 (상위 모델까지의 격차, 개요, 방법별 위치, 화용 현상별)
+results/claude/        7차 Claude Haiku·Sonnet 대 Luna (raw, judged, 요약 표. 본 표와 섞지 않음)
 docs/                  화용론 개요, 필요성, 실험 설계, 모델 설정 (페르소나 대 맥락 글은 다른 저장소로 옮기고 링크만 둠)
 site/                  결과 페이지 (GitHub Pages). 수치는 python -m vib.site_data 로 결과 파일에서 생성, 구성은 site/STORYBOARD.md
 video/                 결과 페이지의 대화 무대 (Remotion). 그림은 Codex 이미지 생성, 페이지용 플레이어는 site/js/stage-player.js 로 묶음 (video/README.md)

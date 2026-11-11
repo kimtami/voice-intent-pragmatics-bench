@@ -62,6 +62,14 @@ MODELS = {
         "A1": {"effort": "low", "thinking": "disabled", "max_tokens": 4096},
         "A2": {"effort": "medium", "thinking": "adaptive", "max_tokens": 4096},
     },
+    "sonnet": {
+        "provider": "anthropic",
+        "model": "claude-sonnet-5-5",
+        "key": "ANTHROPIC_API_KEY",
+        # Sonnet 5.5 는 thinking disabled 가 400. 생각을 끄는 꼴은 between_tools (effort high 이하에서만).
+        "A1": {"effort": "low", "thinking": "between_tools", "max_tokens": 4096},
+        "A2": {"effort": "medium", "thinking": "adaptive", "max_tokens": 4096},
+    },
     "gemini": {
         "provider": "gemini",
         "model": "gemini-3.5-flash-lite",
@@ -130,6 +138,9 @@ def _cross(analyzer_family: str, responder_family: str) -> Arm:
         note=f"analyzer={analyzer_family}(A2), responder={responder_family}(A1)",
     )
 
+
+# 7차에서 따로 더한 모델. `--arms all` 은 1~3차의 본 실험 그대로 두려고 이 모델들을 빼고, 이름을 적으면 돈다.
+LATER_FAMILIES = {"sonnet"}
 
 # C(공유 맥락)·CK(맥락+점검표)를 붙일 빠른 설정. 질문: 지연은 그대로 두고 상위 모델 정확도에 얼마나 다가가는가
 FAST_BASES = [("mercury", "A0"), ("mercury", "A1"), ("luna", "A1"), ("gemini", "A1")]

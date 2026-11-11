@@ -24,6 +24,7 @@ FAMILY_NAME = {
     "luna": "GPT-6 Luna",
     "mercury": "Mercury 3",
     "haiku": "Claude Haiku 5.5",
+    "sonnet": "Claude Sonnet 5.5",
     "gemini": "Gemini 3.5 Flash-Lite",
     "gemini38": "Gemini 3.8 Flash",
 }
@@ -84,6 +85,7 @@ PRICES = {
     "gpt-6-luna": (0.10, 0.50),
     "mercury-3": (0.10, 0.35),
     "claude-haiku-5-5": (0.10, 0.50),
+    "claude-sonnet-5-5": (2.00, 10.00),
     "gemini-3.5-flash-lite": (0.30, 2.50),
     "gemini-3.8-flash": (0.75, 3.75),
 }

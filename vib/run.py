@@ -26,7 +26,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from . import prompts
-from .arms import Arm, all_arms, fake_arms, screen_arms, selfhyp_arms, travel_arms
+from .arms import LATER_FAMILIES, Arm, all_arms, fake_arms, screen_arms, selfhyp_arms, travel_arms
 from .providers import json_call, stream_reply
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -57,7 +57,7 @@ def select_arms(spec: str, dry_run: bool, screen: bool = False, selfhyp: bool = 
         return list(pool.values()) if spec == "all" else [a for a in pool.values() if a.arm_id in spec.split(",")]
     pool = fake_arms() if dry_run else all_arms()
     if spec == "all":
-        return list(pool.values())
+        return [a for a in pool.values() if a.family not in LATER_FAMILIES]
     wanted = [s.strip() for s in spec.split(",") if s.strip()]
     out = []
     for arm in pool.values():
