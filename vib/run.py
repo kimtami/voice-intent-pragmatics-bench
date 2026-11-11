@@ -26,7 +26,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from . import prompts
-from .arms import LATER_FAMILIES, Arm, all_arms, fake_arms, screen_arms, selfhyp_arms, travel_arms
+from .arms import LATER_FAMILIES, Arm, all_arms, fake_arms, nocap_arms, screen_arms, selfhyp_arms, travel_arms
 from .providers import json_call, stream_reply
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -58,6 +58,8 @@ def select_arms(spec: str, dry_run: bool, screen: bool = False, selfhyp: bool = 
     pool = fake_arms() if dry_run else all_arms()
     if spec == "all":
         return [a for a in pool.values() if a.family not in LATER_FAMILIES]
+    if not dry_run:
+        pool = pool | nocap_arms()  # 8차 조건은 이름을 적을 때만 돈다
     wanted = [s.strip() for s in spec.split(",") if s.strip()]
     out = []
     for arm in pool.values():
@@ -254,6 +256,7 @@ def main() -> None:
     ap.add_argument("--selfhyp", action="store_true", help="5차 같은 모델 추정 실험")
     ap.add_argument("--items", default=None, help="문항 id 목록 (쉼표 구분)")
     ap.add_argument("--travel", action="store_true", help="6차 여행 개인화 실험 (data/travel/items.json)")
+    ap.add_argument("--items-file", default=None, help="문항 파일 (쉼표로 여러 개. 기본은 data/queries.json)")
     args = ap.parse_args()
 
     load_dotenv(ROOT / ".env", override=True)
@@ -279,6 +282,8 @@ def main() -> None:
         sys.exit("실행할 조건이 없습니다")
 
     items = json.loads((TRAVEL / "items.json").read_text(encoding="utf-8")) if args.travel else load_items(args.limit)
+    if args.items_file:
+        items = [q for f in args.items_file.split(",") for q in json.loads(Path(f).read_text(encoding="utf-8"))]
     if args.screen:
         from .screen_prep import SATURATED
         items = [it for it in items if it["category"] not in SATURATED]

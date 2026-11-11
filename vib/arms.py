@@ -181,6 +181,21 @@ def all_arms() -> dict[str, Arm]:
     return arms
 
 
+def nocap_arms() -> dict[str, Arm]:
+    """8차: 토큰 제한 없이 Luna 와 Haiku 의 기본 설정을 문항을 늘려 다시 잰다.
+
+    Luna 는 max_output_tokens 를 보내지 않는다. Anthropic 은 max_tokens 가 필수라 닿을 수 없는 값을 넣는다.
+    `--arms all` 에는 들어가지 않는다.
+    """
+    luna, haiku = MODELS["luna"], MODELS["haiku"]
+    return {
+        "luna.A1U": Arm("luna.A1U", "luna", "A1U", luna["provider"], luna["model"],
+                        luna["A1"] | {"max_output_tokens": None}, [luna["key"]]),
+        "haiku.A1U": Arm("haiku.A1U", "haiku", "A1U", haiku["provider"], haiku["model"],
+                         haiku["A1"] | {"max_tokens": 64000}, [haiku["key"]]),
+    }
+
+
 def selfhyp_arms() -> dict[str, Arm]:
     """5차: Luna none·low 지연 비교 + 같은 모델 추정(CS)을 로그만(CA)·상위 모델 추정(CH)과 같은 시각에 비교한다."""
     base = all_arms()

@@ -153,14 +153,16 @@ def stream_reply(provider: str, model: str, system: str, messages: list[dict], p
     clock = _Clock(params.get("hide_until"))
     try:
         if provider == "openai":
+            # max_output_tokens 가 None 이면 한도를 보내지 않는다 (8차: 토큰 제한 없이)
+            cap = params.get("max_output_tokens", 4096)
             stream = _openai().responses.create(
                 model=model,
                 instructions=system,
                 input=messages,
                 reasoning={"effort": params["effort"]},
-                max_output_tokens=params.get("max_output_tokens", 4096),
                 store=False,
                 stream=True,
+                **({} if cap is None else {"max_output_tokens": cap}),
             )
             usage = None
             for ev in stream:

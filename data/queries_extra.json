@@ -1,0 +1,1864 @@
+[
+  {
+    "id": "IND-04",
+    "category": "indirect_request",
+    "state": "집 욕실 앞. 1월 아침 7시. 보일러 연결됨, 온수 꺼짐.",
+    "context": [],
+    "utterance": "아 샤워해야 되는데 물이 얼음장이네",
+    "gold_intent": "보일러 온수를 켜 달라는 간접 요청",
+    "must": [
+      "보일러 온수를 켰다고 말하거나, 온수를 켤지 콕 집어 바로 제안한다"
+    ],
+    "must_not": [
+      "찬물 샤워에 대한 의견이나 건강 정보만 말한다",
+      "물 온도 상태만 알려 주고 끝낸다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "IND-05",
+    "category": "indirect_request",
+    "state": "차량 고속도로 주행 중. 주유 경고등 켜짐. 남은 주행 가능 거리 35km. 경로상 8km 앞 주유소 있는 휴게소.",
+    "context": [],
+    "utterance": "어 주유등 들어왔네",
+    "gold_intent": "가까운 주유소를 찾아 경유하게 해 달라는 간접 요청",
+    "must": [
+      "가까운 주유소(8km 앞 휴게소 등)를 경유지로 추가하거나 경유할지 바로 제안한다"
+    ],
+    "must_not": [
+      "주유 경고등의 뜻만 설명한다",
+      "남은 주행 거리만 알려 주고 주유소 이야기를 하지 않는다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "IND-06",
+    "category": "indirect_request",
+    "state": "집 거실. TV 시청 중, TV 볼륨 12. 창문 닫힘. 밖에서 도로 공사 소음.",
+    "context": [],
+    "utterance": "TV 소리가 하나도 안 들리네",
+    "gold_intent": "TV 볼륨을 올려 달라는 간접 요청",
+    "must": [
+      "TV 볼륨을 올렸다고 말하거나 올릴지 바로 제안한다"
+    ],
+    "must_not": [
+      "공사 소음 정보만 알려 준다",
+      "볼륨을 낮추거나 TV를 끈다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "IND-07",
+    "category": "indirect_request",
+    "state": "집 주방. 저녁 6시 10분. 끓는 물에 라면 면을 방금 넣음. 설정된 타이머 없음.",
+    "context": [],
+    "utterance": "사 분 있다가 불 꺼야 되는데 까먹겠다",
+    "gold_intent": "지금부터 4분 타이머(알람)를 맞춰 달라는 간접 요청",
+    "must": [
+      "4분 타이머를 맞췄다고 말하거나 맞출지 바로 제안한다"
+    ],
+    "must_not": [
+      "라면 끓이는 법만 설명한다",
+      "4분이 아닌 시간으로 타이머를 맞춘다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "IND-08",
+    "category": "indirect_request",
+    "state": "집 침실. 밤 12시. 침실 조명 꺼짐. 거실 조명 켜짐(100%). 집에 다른 사람 없음.",
+    "context": [],
+    "utterance": "거실 불 켜 놓고 들어왔나 보네",
+    "gold_intent": "켜 둔 거실 조명을 꺼 달라는 간접 요청",
+    "must": [
+      "거실 조명을 껐다고 말하거나 끌지 바로 제안한다"
+    ],
+    "must_not": [
+      "거실 조명이 켜져 있다는 사실만 확인해 주고 끝낸다",
+      "침실 조명을 켠다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "IND-09",
+    "category": "indirect_request",
+    "state": "집 거실. 비 오는 날 오후 3시. 실내 습도 82%. 에어컨(제습 모드 있음) 꺼짐. 거실에 빨래 건조대.",
+    "context": [],
+    "utterance": "빨래가 이틀째 안 마르네",
+    "gold_intent": "제습을 해서 빨래가 마르게 해 달라는 간접 요청",
+    "must": [
+      "에어컨 제습 모드를 켜거나 제습을 바로 제안한다"
+    ],
+    "must_not": [
+      "빨래 건조 요령만 조언한다",
+      "습도 수치만 알려 주고 끝낸다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "IND-10",
+    "category": "indirect_request",
+    "state": "차량 주행 중. 음악 재생 중, 볼륨 28. 뒷좌석 카메라: 아기 잠듦.",
+    "context": [],
+    "utterance": "애기 깨면 큰일인데",
+    "gold_intent": "아기가 깨지 않게 음악 소리를 줄이거나 꺼 달라는 간접 요청",
+    "must": [
+      "음악 볼륨을 낮추거나 끈다고 말하거나, 그렇게 할지 바로 제안한다"
+    ],
+    "must_not": [
+      "볼륨을 그대로 두고 공감만 한다",
+      "육아 조언을 한다",
+      "볼륨을 올린다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "IND-11",
+    "category": "indirect_request",
+    "state": "차량 고속도로 주행 중. 2시간째 쉬지 않고 운전. 3km 앞 졸음쉼터, 12km 앞 휴게소. 오후 2시 반.",
+    "context": [],
+    "utterance": "아 진짜 졸려 죽겠네",
+    "gold_intent": "졸음운전을 피하도록 쉼터나 휴게소에 들르게 해 달라는 간접 요청",
+    "must": [
+      "가까운 졸음쉼터나 휴게소를 경유지로 안내하거나 들를지 바로 제안한다"
+    ],
+    "must_not": [
+      "졸음에 공감만 하고 아무것도 제안하지 않는다",
+      "졸음운전 통계나 위험성만 설명한다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "IND-12",
+    "category": "indirect_request",
+    "state": "집 거실. 저녁 8시. 로봇청소기 연결됨, 충전 거치대에서 대기 중. 반려견 있음.",
+    "context": [],
+    "utterance": "바닥에 강아지 털이 장난 아니네",
+    "gold_intent": "로봇청소기로 청소를 해 달라는 간접 요청",
+    "must": [
+      "로봇청소기 청소를 시작했다고 말하거나 시작할지 바로 제안한다"
+    ],
+    "must_not": [
+      "털 관리 요령이나 빗질 조언만 한다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "IND-13",
+    "category": "indirect_request",
+    "state": "차량 주행 중. 1월 아침 8시. 앞유리 김 서림. 공조 장치 꺼짐. 외기 온도 영하 3도.",
+    "context": [],
+    "utterance": "앞이 하나도 안 보이네 김 서려서",
+    "gold_intent": "앞유리 김 서림을 없애 달라는 간접 요청",
+    "must": [
+      "앞유리 송풍·에어컨·외기 전환 등 김 서림 제거 기능을 켰다고 말한다"
+    ],
+    "must_not": [
+      "공감만 하고 조작하지 않는다",
+      "차를 세우고 닦으라는 조언만 한다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "QFR-04",
+    "category": "question_form_request",
+    "state": "회사. 오후 5시 40분. 연락처에 '와이프' 저장됨.",
+    "context": [],
+    "utterance": "와이프한테 오늘 저녁 먹고 들어간다고 문자 좀 보내 줄래",
+    "gold_intent": "아내에게 저녁을 먹고 들어간다는 문자를 보내 달라는 요청",
+    "must": [
+      "아내에게 저녁을 먹고 들어간다는 내용의 문자를 보냈다고 말한다"
+    ],
+    "must_not": [
+      "보낼 수 있다고만 답하고 보내지 않는다",
+      "전화를 건다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "QFR-05",
+    "category": "question_form_request",
+    "state": "차량 주행 중. 목적지 판교 회사로 길안내 중. 오전 8시 10분. 경로상 1km 앞에 스타벅스 판교로점.",
+    "context": [],
+    "utterance": "가는 길에 스타벅스 들를 수 있나",
+    "gold_intent": "가능 여부 질문이 아니라 경로상 스타벅스를 경유지로 넣어 달라는 요청",
+    "must": [
+      "경로상 스타벅스를 경유지로 추가했다고 말하거나 추가할지 바로 제안한다"
+    ],
+    "must_not": [
+      "들를 수 있다고만 답하고 경유지를 다루지 않는다",
+      "목적지를 스타벅스로 바꿔 회사 안내를 없앤다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "QFR-06",
+    "category": "question_form_request",
+    "state": "집. 금요일 저녁 7시. 배달 앱 연결됨. 최근 치킨 주문: 교촌치킨 성수점 허니콤보(2주 전).",
+    "context": [],
+    "utterance": "지금 치킨 시켜 먹을 수 있나",
+    "gold_intent": "주문 가능 여부 질문이 아니라 치킨을 주문해 달라는 요청",
+    "must": [
+      "치킨 주문을 진행하거나, 주문을 전제로 가게나 메뉴를 한 가지만 묻는다 (지난번 메뉴로 할지 묻는 것 포함)"
+    ],
+    "must_not": [
+      "가게가 영업 중이라거나 주문 가능하다고만 답하고 주문을 진행하지 않는다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "QFR-07",
+    "category": "question_form_request",
+    "state": "집 침실. 밤 11시. 내일 오전 8시 알람 설정됨.",
+    "context": [],
+    "utterance": "내일 알람 좀 삼십 분 당겨 줄 수 있어",
+    "gold_intent": "내일 알람을 오전 7시 30분으로 바꿔 달라는 요청",
+    "must": [
+      "내일 알람을 오전 7시 30분으로 바꿨다고 말한다"
+    ],
+    "must_not": [
+      "가능하다고만 답하고 바꾸지 않는다",
+      "8시 30분으로 미룬다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "QFR-08",
+    "category": "question_form_request",
+    "state": "차량 주행 중. 에어컨 20도 강풍 냉방 작동 중. 실내 21도.",
+    "context": [],
+    "utterance": "에어컨 좀 약하게 해 줄 수 있어요",
+    "gold_intent": "에어컨 바람 세기를 줄이거나 설정 온도를 올려 달라는 요청",
+    "must": [
+      "에어컨 바람 세기를 줄이거나 설정 온도를 올렸다고 말한다"
+    ],
+    "must_not": [
+      "가능하다고만 답하고 조작하지 않는다",
+      "에어컨을 더 세게 한다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "QFR-09",
+    "category": "question_form_request",
+    "state": "집 거실. 스피커에서 '봄바람'(가수 하늘) 재생 중, 30초 남음. 반복 재생 꺼짐.",
+    "context": [],
+    "utterance": "이 노래 끝나면 한 번 더 들을 수 있을까",
+    "gold_intent": "지금 곡 '봄바람'을 한 번 더 재생되게 해 달라는 요청",
+    "must": [
+      "'봄바람'이 끝난 뒤 한 번 더 재생되도록 대기열에 넣거나 반복을 켰다고 말한다"
+    ],
+    "must_not": [
+      "가능하다고만 답하고 설정하지 않는다",
+      "다른 곡을 재생 목록에 넣는다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "QFR-10",
+    "category": "question_form_request",
+    "state": "외출 중 도보. 밤 10시. 현재 위치 합정동. 300m 거리에 밤 12시까지 여는 '합정온누리약국'.",
+    "context": [],
+    "utterance": "근처에 지금 문 연 약국 있나",
+    "gold_intent": "있는지 여부만이 아니라 문 연 약국을 찾아 알려 주거나 안내해 달라는 요청",
+    "must": [
+      "문 연 약국(합정온누리약국 등)의 이름이나 위치를 알려 주거나 길안내를 시작·제안한다"
+    ],
+    "must_not": [
+      "'있어요'처럼 존재 여부만 답하고 어디인지 알려 주지 않는다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "QFR-11",
+    "category": "question_form_request",
+    "state": "집. 오후 2시. 택배 조회 연동됨. 오늘 도착 예정 택배 1건(CJ대한통운, 현재 성동 배송지점에서 배송 출발).",
+    "context": [],
+    "utterance": "택배 지금 어디쯤 왔는지 알 수 있어",
+    "gold_intent": "조회 가능 여부가 아니라 택배의 현재 위치와 상태를 알려 달라는 요청",
+    "must": [
+      "택배의 현재 위치나 배송 상태(배송 출발 등)를 알려 준다"
+    ],
+    "must_not": [
+      "조회할 수 있다고만 답하고 상태를 알려 주지 않는다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "QFR-12",
+    "category": "question_form_request",
+    "state": "차량 주행 중. 오후 6시. 5분 전 '아빠'에게서 부재중 전화 1통.",
+    "context": [],
+    "utterance": "아까 아빠 전화 못 받았는데 지금 연결해 줄 수 있어",
+    "gold_intent": "아버지께 전화를 걸어 달라는 요청",
+    "must": [
+      "아버지께 전화를 건다고 말한다"
+    ],
+    "must_not": [
+      "연결할 수 있다고만 답하고 걸지 않는다",
+      "문자를 보낸다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "QFR-13",
+    "category": "question_form_request",
+    "state": "집 거실. 밤 9시. 공기청정기 꺼짐. 실내 미세먼지 '나쁨'.",
+    "context": [],
+    "utterance": "공기청정기 좀 켜 주실 수 있으세요",
+    "gold_intent": "공기청정기를 켜 달라는 요청",
+    "must": [
+      "공기청정기를 켰다고 말한다"
+    ],
+    "must_not": [
+      "켤 수 있다고만 답하고 켜지 않는다",
+      "미세먼지 수치만 알려 준다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "IMP-04",
+    "category": "implicature",
+    "state": "집. 밤 10시. 차량 원격 공조 예약 가능.",
+    "context": [
+      {
+        "role": "assistant",
+        "content": "내일 아침 7시 반에 출근하시기 전에 차 히터 미리 켜 둘까요?"
+      }
+    ],
+    "utterance": "내일 재택인데",
+    "gold_intent": "내일은 차를 타고 나가지 않으니 히터 예약은 필요 없다는 함축",
+    "must": [
+      "히터 예약을 하지 않겠다고 받아들인다"
+    ],
+    "must_not": [
+      "히터 예약을 진행한다",
+      "재택근무 일정이나 날씨 정보만 읽어 주고 예약 여부를 그대로 둔다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "IMP-05",
+    "category": "implicature",
+    "state": "회사 주차장. 오후 6시 반. 목적지 집. 교통 정보: 올림픽대로 사고로 정체, 강변북로 경로 45분.",
+    "context": [
+      {
+        "role": "assistant",
+        "content": "퇴근길은 올림픽대로로 안내할까요? 평소처럼 40분 정도 걸려요."
+      }
+    ],
+    "utterance": "거기 지금 사고 났다던데",
+    "gold_intent": "사고 난 올림픽대로는 피하고 다른 길로 안내해 달라는 함축",
+    "must": [
+      "올림픽대로로 안내를 시작하지 않는다",
+      "다른 경로(강변북로 등)를 제안하거나 다시 탐색한다"
+    ],
+    "must_not": [
+      "올림픽대로 경로로 그대로 안내를 시작한다",
+      "사고 정보만 읽어 주고 경로 이야기를 하지 않는다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "IMP-06",
+    "category": "implicature",
+    "state": "집. 오후 6시. 어제 오후 치과에서 사랑니 발치.",
+    "context": [
+      {
+        "role": "assistant",
+        "content": "오늘 저녁은 지난주에 시키신 매운 떡볶이로 다시 주문할까요?"
+      }
+    ],
+    "utterance": "나 어제 사랑니 뺐잖아",
+    "gold_intent": "맵고 씹기 힘든 음식은 못 먹으니 부드럽고 자극 적은 메뉴로 바꾸자는 함축",
+    "must": [
+      "떡볶이를 주문하지 않는다",
+      "죽 같은 부드러운 메뉴를 제안하거나 메뉴를 바꿀지 묻는다"
+    ],
+    "must_not": [
+      "매운 떡볶이를 그대로 주문한다",
+      "발치 후 주의사항만 길게 설명한다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "IMP-07",
+    "category": "implicature",
+    "state": "집. 수요일 저녁. 캘린더: 토요일 13:00~15:00 사촌 결혼식(강남).",
+    "context": [
+      {
+        "role": "assistant",
+        "content": "토요일 오후 2시 영화 두 장 예매할까요?"
+      }
+    ],
+    "utterance": "그날 결혼식 있다 그랬잖아",
+    "gold_intent": "결혼식과 겹치니 그 시간 예매는 하지 말고 다른 시간이나 날짜로 하자는 함축",
+    "must": [
+      "토요일 오후 2시로 예매하지 않는다",
+      "다른 시간이나 날짜를 제안하거나 보류한다"
+    ],
+    "must_not": [
+      "토요일 오후 2시로 그대로 예매한다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "IMP-08",
+    "category": "implicature",
+    "state": "집 현관. 1월 오전 9시. 외출 준비 중. 실내 21도. 반려묘 1마리 집에 남음.",
+    "context": [
+      {
+        "role": "assistant",
+        "content": "외출 모드로 바꾸면서 보일러도 끌까요?"
+      }
+    ],
+    "utterance": "고양이 혼자 있는데",
+    "gold_intent": "고양이가 있으니 보일러는 끄지 말고 적당한 온도를 유지하자는 함축",
+    "must": [
+      "보일러를 끄지 않는다",
+      "난방을 유지하거나 외출용 적정 온도로 맞출지 제안한다"
+    ],
+    "must_not": [
+      "보일러를 끈다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "IMP-09",
+    "category": "implicature",
+    "state": "집. 저녁 9시. 장바구니: 레드와인 1병(민지 생일 선물용으로 담아 둠).",
+    "context": [
+      {
+        "role": "assistant",
+        "content": "민지 님 생일 선물로 장바구니에 있는 레드와인을 주문할까요?"
+      }
+    ],
+    "utterance": "민지 임신했잖아",
+    "gold_intent": "임신 중이라 와인은 선물로 맞지 않으니 다른 선물로 바꾸자는 함축",
+    "must": [
+      "와인을 주문하지 않는다",
+      "다른 선물을 제안하거나 선물을 바꿀지 묻는다"
+    ],
+    "must_not": [
+      "와인을 그대로 주문한다",
+      "임신 축하 인사만 하고 선물 문제를 그대로 둔다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "IMP-10",
+    "category": "implicature",
+    "state": "차량 정차 중. 오전 11시 20분. 목적지 대구. 경부고속도로 경로 2시간 40분. 경로상 휴게소: 안성(40분 뒤), 옥천(1시간 30분 뒤).",
+    "context": [
+      {
+        "role": "assistant",
+        "content": "지금 출발하면 경부고속도로로 2시간 40분 걸려요. 안내 시작할까요?"
+      }
+    ],
+    "utterance": "휴게소에서 점심 먹어야 되는데",
+    "gold_intent": "안내는 하되 점심 먹을 휴게소를 경유하게 해 달라는 함축",
+    "must": [
+      "경로상 휴게소를 경유지로 넣거나 들를 휴게소를 제안한다"
+    ],
+    "must_not": [
+      "휴게소 언급 없이 그대로 안내만 시작한다",
+      "안내를 취소한다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "IMP-11",
+    "category": "implicature",
+    "state": "집 거실. 8월 오후 2시. 실내 29도. 아이 둘 감기 기운.",
+    "context": [
+      {
+        "role": "assistant",
+        "content": "거실 에어컨을 18도로 켤까요?"
+      }
+    ],
+    "utterance": "애들 감기 걸렸는데",
+    "gold_intent": "18도는 너무 차니 더 높은 온도로 약하게 틀자는 함축",
+    "must": [
+      "18도로 켜지 않는다",
+      "더 높은 온도(예: 25~26도)로 켜기를 제안하거나 온도를 묻는다"
+    ],
+    "must_not": [
+      "에어컨을 18도로 켠다",
+      "감기 관리 요령만 말한다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "IMP-12",
+    "category": "implicature",
+    "state": "아파트. 밤 10시 반. 세탁기 연결됨, 빨래 들어 있음.",
+    "context": [
+      {
+        "role": "assistant",
+        "content": "오늘 밤 11시에 세탁기 돌아가게 예약해 둘까요?"
+      }
+    ],
+    "utterance": "아랫집이 지난번에 시끄럽다고 올라왔었는데",
+    "gold_intent": "소음 때문에 밤 시간 세탁은 피하고 다른 시간으로 하자는 함축",
+    "must": [
+      "밤 11시로 예약하지 않는다",
+      "내일 낮 등 다른 시간을 제안하거나 언제로 할지 묻는다"
+    ],
+    "must_not": [
+      "밤 11시로 그대로 예약한다",
+      "층간 소음 대처법만 설명한다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "IMP-13",
+    "category": "implicature",
+    "state": "집. 오후 6시. 캘린더: 오늘 19:00 대학 동기 모임(강남역 고깃집).",
+    "context": [
+      {
+        "role": "assistant",
+        "content": "7시 동기 모임 장소까지 차로 안내해 드릴까요?"
+      }
+    ],
+    "utterance": "오늘 술 마실 건데",
+    "gold_intent": "술을 마실 테니 차를 두고 대중교통이나 택시로 가겠다는 함축",
+    "must": [
+      "차량 길안내를 시작하지 않는다",
+      "대중교통이나 택시 경로를 제안한다"
+    ],
+    "must_not": [
+      "차량 길안내를 그대로 시작한다",
+      "음주 운전 경고만 하고 다른 이동 방법을 제안하지 않는다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "ELL-04",
+    "category": "ellipsis_deixis",
+    "state": "집. 저녁 9시.",
+    "context": [
+      {
+        "role": "user",
+        "content": "내일 서울 날씨 어때"
+      },
+      {
+        "role": "assistant",
+        "content": "내일 서울은 맑고 최고 12도예요."
+      }
+    ],
+    "utterance": "부산은",
+    "gold_intent": "내일 부산 날씨를 알려 달라는 요청",
+    "must": [
+      "내일 부산 날씨를 알려 준다"
+    ],
+    "must_not": [
+      "오늘 부산 날씨를 알려 준다",
+      "무엇을 묻는지 다시 묻는다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "ELL-05",
+    "category": "ellipsis_deixis",
+    "state": "집 침실. 밤 11시.",
+    "context": [
+      {
+        "role": "user",
+        "content": "알람 내일 여섯 시로 맞춰 줘"
+      },
+      {
+        "role": "assistant",
+        "content": "내일 오전 6시 알람을 맞췄어요."
+      }
+    ],
+    "utterance": "모레도",
+    "gold_intent": "모레 오전 6시에도 알람을 맞춰 달라는 요청",
+    "must": [
+      "모레 오전 6시 알람을 맞췄다고 말한다"
+    ],
+    "must_not": [
+      "내일 알람을 지우거나 바꾼다",
+      "몇 시로 할지 다시 묻는다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "ELL-06",
+    "category": "ellipsis_deixis",
+    "state": "차량 주행 중. 연료 15%.",
+    "context": [
+      {
+        "role": "user",
+        "content": "근처 주유소 찾아 줘"
+      },
+      {
+        "role": "assistant",
+        "content": "가까운 주유소는 첫째 GS칼텍스 성수점 1.2km, 둘째 SK에너지 뚝섬점 2.0km예요."
+      }
+    ],
+    "utterance": "두 번째 거기로 가자",
+    "gold_intent": "SK에너지 뚝섬점으로 길안내해 달라는 요청",
+    "must": [
+      "SK에너지 뚝섬점으로 길안내를 시작한다"
+    ],
+    "must_not": [
+      "GS칼텍스 성수점으로 안내한다",
+      "어느 주유소인지 다시 묻는다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "ELL-07",
+    "category": "ellipsis_deixis",
+    "state": "집. 목요일 저녁. 캘린더: 토요일 15:00~17:00 지훈이 돌잔치(서초).",
+    "context": [
+      {
+        "role": "user",
+        "content": "이번 주 토요일 오후에 뭐 있어"
+      },
+      {
+        "role": "assistant",
+        "content": "토요일 오후 3시에 지훈이 돌잔치가 있어요."
+      }
+    ],
+    "utterance": "그거 한 시간 전에 알려 줘",
+    "gold_intent": "토요일 오후 2시에 돌잔치 알림을 맞춰 달라는 요청",
+    "must": [
+      "토요일 오후 2시에 돌잔치 알림을 설정했다고 말한다"
+    ],
+    "must_not": [
+      "다른 시각으로 알림을 맞춘다",
+      "무엇을 알려 달라는 건지 다시 묻는다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "ELL-08",
+    "category": "ellipsis_deixis",
+    "state": "차량 주행 중. '봄바람'(가수 하늘) 재생 중.",
+    "context": [
+      {
+        "role": "user",
+        "content": "이 노래 누구 노래야"
+      },
+      {
+        "role": "assistant",
+        "content": "'봄바람'은 가수 하늘의 곡이에요."
+      }
+    ],
+    "utterance": "이 사람 노래 더 틀어 줘",
+    "gold_intent": "가수 하늘의 다른 곡들을 이어서 틀어 달라는 요청",
+    "must": [
+      "가수 하늘의 다른 곡을 재생하거나 대기열에 넣었다고 말한다"
+    ],
+    "must_not": [
+      "'봄바람'만 반복 재생한다",
+      "누구 노래를 원하는지 다시 묻는다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "ELL-09",
+    "category": "ellipsis_deixis",
+    "state": "집. 오후 4시.",
+    "context": [
+      {
+        "role": "user",
+        "content": "오늘 저녁 일곱 시에 '소담' 두 명 예약해 줘"
+      },
+      {
+        "role": "assistant",
+        "content": "'소담' 오늘 저녁 7시 2인 예약했어요."
+      }
+    ],
+    "utterance": "아 인원 하나 더",
+    "gold_intent": "같은 예약의 인원을 3명으로 늘려 달라는 요청",
+    "must": [
+      "'소담' 오늘 7시 예약 인원을 3명으로 바꿨다고 말한다"
+    ],
+    "must_not": [
+      "별도 예약을 하나 더 잡는다",
+      "무엇을 하나 더 하라는 건지 다시 묻는다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "ELL-10",
+    "category": "ellipsis_deixis",
+    "state": "회사. 오후 6시.",
+    "context": [
+      {
+        "role": "assistant",
+        "content": "어머니께서 '저녁 먹으러 올 거야?'라고 문자 보내셨어요."
+      }
+    ],
+    "utterance": "간다고 해 일곱 시쯤",
+    "gold_intent": "어머니께 7시쯤 가겠다는 답장을 보내 달라는 요청",
+    "must": [
+      "어머니께 7시쯤 가겠다는 내용으로 답장했다고 말한다"
+    ],
+    "must_not": [
+      "다른 사람에게 보낸다",
+      "전화를 건다",
+      "누구에게 무엇을 보낼지 다시 묻는다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "ELL-11",
+    "category": "ellipsis_deixis",
+    "state": "집 거실. 저녁 8시. 거실 조명 50%, 주방 조명 켜짐(100%).",
+    "context": [
+      {
+        "role": "user",
+        "content": "거실 불 좀 어둡게"
+      },
+      {
+        "role": "assistant",
+        "content": "거실 조명을 50%로 낮췄어요."
+      }
+    ],
+    "utterance": "주방 거는 아예 꺼",
+    "gold_intent": "주방 조명을 꺼 달라는 요청",
+    "must": [
+      "주방 조명을 껐다고 말한다"
+    ],
+    "must_not": [
+      "거실 조명을 끈다",
+      "무엇을 끄라는 건지 다시 묻는다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "ELL-12",
+    "category": "ellipsis_deixis",
+    "state": "외출 중. 성수동. 오후 2시.",
+    "context": [
+      {
+        "role": "user",
+        "content": "지금 성수동에서 잠실까지 얼마나 걸려"
+      },
+      {
+        "role": "assistant",
+        "content": "차로 약 25분 걸려요."
+      }
+    ],
+    "utterance": "지하철로는",
+    "gold_intent": "성수동에서 잠실까지 지하철 소요 시간을 알려 달라는 요청",
+    "must": [
+      "성수동에서 잠실까지 지하철로 걸리는 시간을 알려 준다"
+    ],
+    "must_not": [
+      "차로 걸리는 시간만 다시 말한다",
+      "어디까지인지 다시 묻는다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "ELL-13",
+    "category": "ellipsis_deixis",
+    "state": "집. 오후 5시.",
+    "context": [
+      {
+        "role": "user",
+        "content": "오늘 할 일 뭐 남았어"
+      },
+      {
+        "role": "assistant",
+        "content": "오늘 할 일 목록에 '세탁소 들르기', '은행 가기' 두 개가 남아 있어요."
+      }
+    ],
+    "utterance": "앞에 거 끝났어 지워 줘",
+    "gold_intent": "할 일 목록에서 '세탁소 들르기'를 지워 달라는 요청",
+    "must": [
+      "'세탁소 들르기'를 목록에서 지웠다고 말한다"
+    ],
+    "must_not": [
+      "'은행 가기'를 지운다",
+      "둘 다 지운다",
+      "어느 항목인지 다시 묻는다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "REP-04",
+    "category": "self_repair",
+    "state": "집 거실. 8월 오후 3시. 에어컨 26도 냉방 작동 중.",
+    "context": [],
+    "utterance": "에어컨 이십 도 아 이십이 도로 맞춰 줘",
+    "gold_intent": "에어컨 설정 온도를 22도로 맞춰 달라는 요청 (20도는 정정됨)",
+    "must": [
+      "에어컨을 22도로 맞췄다고 말한다"
+    ],
+    "must_not": [
+      "20도로 맞춘다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "REP-05",
+    "category": "self_repair",
+    "state": "차량 주행 중. 오후 7시. 연락처에 '엄마', '언니' 저장됨.",
+    "context": [],
+    "utterance": "엄마 아니 언니한테 전화 걸어 줘",
+    "gold_intent": "언니에게 전화를 걸어 달라는 요청 (엄마는 정정됨)",
+    "must": [
+      "언니에게 전화를 건다고 말한다"
+    ],
+    "must_not": [
+      "어머니께 전화를 건다",
+      "두 사람 모두에게 건다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "REP-06",
+    "category": "self_repair",
+    "state": "차량 정차 중. 신촌. 오후 1시. 목적지 미설정.",
+    "context": [],
+    "utterance": "홍대 가자 아 잠깐 아니다 합정역으로 가 줘",
+    "gold_intent": "합정역으로 길안내해 달라는 요청 (홍대는 정정됨)",
+    "must": [
+      "합정역으로 길안내를 시작한다"
+    ],
+    "must_not": [
+      "홍대로 안내한다",
+      "홍대를 경유지로 넣는다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "REP-07",
+    "category": "self_repair",
+    "state": "집. 토요일 저녁 6시. 피자 배달 앱 연결됨. 단골 가게 '피자마루 성수점'.",
+    "context": [],
+    "utterance": "피자 라지 하나 음 아니 미디엄 두 판 시켜 줘",
+    "gold_intent": "미디엄 피자 두 판 주문 (라지 한 판은 정정됨)",
+    "must": [
+      "미디엄 두 판으로 주문하거나, 미디엄 두 판을 전제로 메뉴를 한 가지만 묻는다"
+    ],
+    "must_not": [
+      "라지 피자를 주문한다",
+      "라지 한 판과 미디엄 두 판을 모두 주문한다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "REP-08",
+    "category": "self_repair",
+    "state": "차량 주행 중. 음악 재생 중, 볼륨 10.",
+    "context": [],
+    "utterance": "볼륨 삼십 아 그건 너무 크다 이십으로",
+    "gold_intent": "볼륨을 20으로 맞춰 달라는 요청 (30은 정정됨)",
+    "must": [
+      "볼륨을 20으로 맞췄다고 말한다"
+    ],
+    "must_not": [
+      "볼륨을 30으로 맞춘다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "REP-09",
+    "category": "self_repair",
+    "state": "회사. 월요일 오전 10시. 캘린더: 수요일 14:00 주간 회의. 목요일·금요일 14시 비어 있음.",
+    "context": [],
+    "utterance": "수요일 회의 목요일로 옮겨 줘 아 아니 금요일",
+    "gold_intent": "수요일 주간 회의를 금요일 14시로 옮겨 달라는 요청 (목요일은 정정됨)",
+    "must": [
+      "주간 회의를 금요일 오후 2시로 옮겼다고 말한다"
+    ],
+    "must_not": [
+      "목요일로 옮긴다",
+      "수요일 회의를 지우기만 한다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "REP-10",
+    "category": "self_repair",
+    "state": "집. 일요일 밤 10시. 비타민 리마인더 없음.",
+    "context": [],
+    "utterance": "매일 아침 여덟 시에 아니 평일만 여덟 시에 비타민 먹으라고 알려 줘",
+    "gold_intent": "평일(월~금) 오전 8시 비타민 리마인더 설정 (매일은 정정됨)",
+    "must": [
+      "평일(월~금) 오전 8시에 비타민 리마인더를 설정했다고 말한다"
+    ],
+    "must_not": [
+      "주말을 포함해 매일로 설정한다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "REP-11",
+    "category": "self_repair",
+    "state": "집 서재. 오후 2시. 음악 앱 플레이리스트: '운동', '집중'.",
+    "context": [],
+    "utterance": "운동 플레이리스트 아 아니 집중할 때 듣는 거 틀어 줘",
+    "gold_intent": "'집중' 플레이리스트 재생 (운동은 정정됨)",
+    "must": [
+      "'집중' 플레이리스트를 재생한다"
+    ],
+    "must_not": [
+      "'운동' 플레이리스트를 재생한다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "REP-12",
+    "category": "self_repair",
+    "state": "집 거실. 오후 1시. 스마트 도어락 열림 상태. 오늘 오후 택배 도착 예정.",
+    "context": [],
+    "utterance": "현관문 잠가 줘 아 아니다 택배 오니까 그냥 둬",
+    "gold_intent": "현관문을 잠그지 말고 그대로 두라는 요청 (잠금 요청이 철회됨)",
+    "must": [
+      "현관문을 잠그지 않고 그대로 둔다고 말한다"
+    ],
+    "must_not": [
+      "현관문을 잠근다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "REP-13",
+    "category": "self_repair",
+    "state": "집. 저녁 8시. 내일 리마인더 없음.",
+    "context": [],
+    "utterance": "내일 오후 세 시 반 어 세 시 반 말고 네 시 반에 세탁소 옷 찾으라고 알려 줘",
+    "gold_intent": "내일 오후 4시 30분 세탁소 리마인더 설정 (3시 30분은 정정됨)",
+    "must": [
+      "내일 오후 4시 30분에 세탁소 리마인더를 설정했다고 말한다"
+    ],
+    "must_not": [
+      "3시 30분으로 설정한다",
+      "두 시각 모두 설정한다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "AMB-04",
+    "category": "ambiguous_response_word",
+    "state": "집. 오후 5시. 영화 예매 중.",
+    "context": [
+      {
+        "role": "user",
+        "content": "오늘 저녁 영화 두 장 예매해 줘"
+      },
+      {
+        "role": "assistant",
+        "content": "7시 상영은 매진이고, 8시 10분은 앞에서 세 번째 줄만 남았어요. 그 자리로 할까요?"
+      }
+    ],
+    "utterance": "앞자리도 괜찮아",
+    "gold_intent": "8시 10분, 앞에서 세 번째 줄 좌석을 수락",
+    "must": [
+      "8시 10분 상영 앞에서 세 번째 줄로 두 장 예매한다"
+    ],
+    "must_not": [
+      "예매를 진행하지 않는다",
+      "거절로 받아들여 다른 영화를 찾는다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "AMB-05",
+    "category": "ambiguous_response_word",
+    "state": "차량 주행 중. 운전석 창문 30% 열림.",
+    "context": [
+      {
+        "role": "user",
+        "content": "창문 좀 열어"
+      },
+      {
+        "role": "assistant",
+        "content": "운전석 창문을 30% 열었어요. 더 열까요?"
+      }
+    ],
+    "utterance": "됐어",
+    "gold_intent": "더 열지 말고 지금 상태(30%)를 유지하라는 뜻",
+    "must": [
+      "창문을 30% 열린 상태로 그대로 둔다"
+    ],
+    "must_not": [
+      "창문을 더 연다",
+      "창문을 닫는다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "AMB-06",
+    "category": "ambiguous_response_word",
+    "state": "집 현관. 오전 8시. 오늘 오후 비 예보.",
+    "context": [
+      {
+        "role": "assistant",
+        "content": "오후에 비가 온대요. 나가실 때 우산 챙기라고 알림 드릴까요?"
+      }
+    ],
+    "utterance": "괜찮아요 차 가져가요",
+    "gold_intent": "우산 알림은 필요 없다는 거절",
+    "must": [
+      "우산 알림을 설정하지 않는다"
+    ],
+    "must_not": [
+      "우산 알림을 설정한다",
+      "알림을 거듭 권한다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "AMB-07",
+    "category": "ambiguous_response_word",
+    "state": "집. 저녁 8시. 내일 09:00 서울→부산 KTX 예매 진행 중.",
+    "context": [
+      {
+        "role": "assistant",
+        "content": "원하시는 창가석은 다 찼어요. 통로석으로 예매할까요?"
+      }
+    ],
+    "utterance": "그래 뭐 어쩔 수 없지",
+    "gold_intent": "마지못해서지만 통로석 예매를 수락",
+    "must": [
+      "내일 9시 KTX 통로석으로 예매한다"
+    ],
+    "must_not": [
+      "예매를 진행하지 않는다",
+      "창가석을 계속 찾겠다며 예매를 미룬다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "AMB-08",
+    "category": "ambiguous_response_word",
+    "state": "회사. 오후 2시 50분. 3층 회의실 예약 15:00 종료. 15:00~15:30 비어 있음.",
+    "context": [
+      {
+        "role": "assistant",
+        "content": "회의실 예약이 3시에 끝나요. 30분 연장할까요?"
+      }
+    ],
+    "utterance": "음 좋죠",
+    "gold_intent": "회의실 30분 연장을 수락",
+    "must": [
+      "회의실 예약을 3시 30분까지 연장한다"
+    ],
+    "must_not": [
+      "연장하지 않는다",
+      "거절로 받아들인다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "AMB-09",
+    "category": "ambiguous_response_word",
+    "state": "집. 저녁 7시. 치킨 배달 주문 대기 중(교촌치킨 성수점, 예상 60분).",
+    "context": [
+      {
+        "role": "assistant",
+        "content": "치킨 배달이 1시간 걸린대요. 대신 30분이면 오는 근처 피자집으로 바꿀까요?"
+      }
+    ],
+    "utterance": "아니 괜찮아 그냥 기다릴래",
+    "gold_intent": "피자로 바꾸지 않고 치킨 주문을 유지하겠다는 거절",
+    "must": [
+      "치킨 주문을 그대로 유지한다"
+    ],
+    "must_not": [
+      "피자로 주문을 바꾼다",
+      "치킨 주문을 취소한다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "AMB-10",
+    "category": "ambiguous_response_word",
+    "state": "차량 정차 중. 회사 주차장. 오후 6시 20분. 목적지 성수동 집.",
+    "context": [
+      {
+        "role": "assistant",
+        "content": "성수동 집으로 안내 시작할까요? 지금 출발하면 40분 걸려요."
+      }
+    ],
+    "utterance": "네네",
+    "gold_intent": "길안내 시작을 수락",
+    "must": [
+      "성수동 집으로 길안내를 시작한다"
+    ],
+    "must_not": [
+      "안내를 시작하지 않는다",
+      "다시 확인 질문을 한다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "AMB-11",
+    "category": "ambiguous_response_word",
+    "state": "회사. 오전 9시. 사내 카페 주문 연동됨.",
+    "context": [
+      {
+        "role": "user",
+        "content": "아메리카노 하나 주문해 줘"
+      },
+      {
+        "role": "assistant",
+        "content": "아이스와 따뜻한 것 중 어떤 걸로 할까요?"
+      }
+    ],
+    "utterance": "아무거나 상관없어",
+    "gold_intent": "어느 쪽이든 좋으니 비서가 하나 골라 주문하라는 뜻",
+    "must": [
+      "아이스나 따뜻한 것 중 하나로 아메리카노 주문을 진행한다"
+    ],
+    "must_not": [
+      "다시 고르라고 묻는다",
+      "주문을 진행하지 않는다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "AMB-12",
+    "category": "ambiguous_response_word",
+    "state": "집. 금요일 밤 10시. 로봇청소기 연결됨.",
+    "context": [
+      {
+        "role": "assistant",
+        "content": "주말 대청소 하시게 토요일 아침 7시에 로봇청소기 예약해 둘까요?"
+      }
+    ],
+    "utterance": "아 일곱 시는 좀",
+    "gold_intent": "토요일 아침 7시는 싫다는 거절. 다른 시간이면 괜찮을 수 있음",
+    "must": [
+      "7시로 예약하지 않는다",
+      "더 늦은 시간을 제안하거나 몇 시가 좋은지 묻는다"
+    ],
+    "must_not": [
+      "토요일 7시로 예약한다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "AMB-13",
+    "category": "ambiguous_response_word",
+    "state": "회사. 낮 12시 반. 어머니께 전화 연결 시도, 통화 중.",
+    "context": [
+      {
+        "role": "user",
+        "content": "엄마한테 전화 걸어 줘"
+      },
+      {
+        "role": "assistant",
+        "content": "어머니께서 통화 중이세요. 문자로 남겨 드릴까요?"
+      }
+    ],
+    "utterance": "아냐 괜찮아 이따 다시 걸게",
+    "gold_intent": "문자는 필요 없다는 거절",
+    "must": [
+      "문자를 보내지 않는다"
+    ],
+    "must_not": [
+      "어머니께 문자를 보낸다",
+      "바로 다시 전화를 건다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "SAR-04",
+    "category": "sarcasm_complaint",
+    "state": "집 거실. 8월 오후 3시. 에어컨 18도 강풍 냉방 30분째 작동, 실내 19도.",
+    "context": [
+      {
+        "role": "user",
+        "content": "시원하게 해 줘"
+      },
+      {
+        "role": "assistant",
+        "content": "에어컨을 18도 강풍으로 켰어요."
+      }
+    ],
+    "utterance": "와 아주 북극이네 북극",
+    "gold_intent": "반어적 불만. 너무 추우니 설정 온도를 올리거나 바람을 약하게 해 달라는 요청",
+    "must": [
+      "설정 온도를 올리거나 바람을 약하게 하거나 에어컨을 끈다"
+    ],
+    "must_not": [
+      "시원해서 좋다는 칭찬으로 받는다",
+      "온도를 더 낮춘다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "SAR-05",
+    "category": "sarcasm_complaint",
+    "state": "집 침실. 오전 9시 40분. 오늘 07:00 알람이 무음 모드 때문에 울리지 않았음.",
+    "context": [],
+    "utterance": "알람 참 잘 울리더라",
+    "gold_intent": "반어적 불만. 알람이 울리지 않은 것을 사과하고 다시는 그러지 않게 설정해 달라는 요청",
+    "must": [
+      "알람이 울리지 않은 것에 대한 불만으로 받아들인다",
+      "무음 모드에서도 알람이 울리도록 설정을 바꾸거나 바로 제안한다"
+    ],
+    "must_not": [
+      "'감사합니다'처럼 칭찬으로 받는다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "SAR-06",
+    "category": "sarcasm_complaint",
+    "state": "차량 정차 중. 방금 비서가 '근처 맛집'으로 안내한 '정든식당' 앞 도착, 지난달 폐업. 오후 12시 반.",
+    "context": [
+      {
+        "role": "user",
+        "content": "근처 맛집 안내해 줘"
+      },
+      {
+        "role": "assistant",
+        "content": "'정든식당'으로 안내할게요."
+      }
+    ],
+    "utterance": "맛집 하나는 끝내주게 찾았네 문 닫았잖아",
+    "gold_intent": "반어적 불만. 폐업한 곳 대신 지금 영업 중인 근처 식당을 찾아 달라는 요청",
+    "must": [
+      "불만으로 받아들인다",
+      "근처의 영업 중인 다른 식당을 찾거나 안내를 제안한다"
+    ],
+    "must_not": [
+      "칭찬으로 받는다",
+      "폐업한 '정든식당'을 다시 안내한다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "SAR-07",
+    "category": "sarcasm_complaint",
+    "state": "집 거실. 밤 9시. 거실 조명 100%로 켜짐.",
+    "context": [
+      {
+        "role": "user",
+        "content": "영화 볼 거니까 불 좀 분위기 있게"
+      },
+      {
+        "role": "assistant",
+        "content": "거실 조명을 100%로 켰어요."
+      }
+    ],
+    "utterance": "오 분위기 장난 아니다 눈부셔서",
+    "gold_intent": "반어적 불만. 너무 밝으니 조명을 어둡게 해 달라는 요청",
+    "must": [
+      "거실 조명 밝기를 낮추거나 끈다"
+    ],
+    "must_not": [
+      "칭찬으로 받는다",
+      "조명을 그대로 두거나 더 밝게 한다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "SAR-08",
+    "category": "sarcasm_complaint",
+    "state": "외출 중 도보. 오후 4시. 현재 비 내림. 사용자 우산 없음. 오늘 아침 비서 안내: '오늘은 비 소식 없어요'. 100m 앞 편의점.",
+    "context": [],
+    "utterance": "오늘 비 안 온다며 날씨 하나는 기가 막히게 맞히네",
+    "gold_intent": "아침 예보가 틀린 데 대한 반어적 불만. 인정하고 지금 비 상황에 맞는 도움을 원함",
+    "must": [
+      "예보가 틀린 것에 대한 불만으로 받아들여 인정하거나 사과한다",
+      "비가 그칠 시각이나 우산을 살 수 있는 근처 편의점 등 지금 필요한 도움을 제안한다"
+    ],
+    "must_not": [
+      "칭찬으로 받는다",
+      "'오늘 비 소식 없어요'를 다시 말한다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "SAR-09",
+    "category": "sarcasm_complaint",
+    "state": "회사. 오전 10시 40분. 캘린더: 10:00~10:30 팀 회의(이미 끝남). 회의 알림 설정: 시작 시각 정각이었으나 40분 늦게 전달됨.",
+    "context": [
+      {
+        "role": "assistant",
+        "content": "10시 팀 회의 알림이에요."
+      }
+    ],
+    "utterance": "와 알림 일찍도 해 준다",
+    "gold_intent": "반어적 불만. 회의가 끝난 뒤 알림이 온 것을 사과하고 앞으로는 미리 알려 달라는 요청",
+    "must": [
+      "늦은 알림에 대한 불만으로 받아들인다",
+      "앞으로 회의 알림을 미리(예: 10분 전) 주도록 설정을 바꾸거나 바로 제안한다"
+    ],
+    "must_not": [
+      "칭찬으로 받는다",
+      "이미 끝난 회의 내용을 다시 알린다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "SAR-10",
+    "category": "sarcasm_complaint",
+    "state": "집 침실. 밤 11시. 가습기 자동 모드인데 실내 습도 78%에서도 계속 가습 중.",
+    "context": [],
+    "utterance": "와 가습기 일 하나는 참 열심히 하네",
+    "gold_intent": "반어적 불만. 습도가 이미 높은데 가습기가 계속 도니 꺼 달라는 요청",
+    "must": [
+      "가습기를 끄거나 끌지 바로 제안한다"
+    ],
+    "must_not": [
+      "칭찬으로 받는다",
+      "가습을 계속하거나 세게 한다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "SAR-11",
+    "category": "sarcasm_complaint",
+    "state": "집 현관. 오후 3시. 어제 사용자 음성 요청 '휴지 30롤 시켜 줘'. 실제 주문·배송된 것: 휴지 3롤 1팩.",
+    "context": [],
+    "utterance": "휴지 아주 넉넉하게 왔네 세 개",
+    "gold_intent": "수량이 잘못 주문된 데 대한 반어적 불만. 30롤이 오도록 바로잡아 달라는 요청",
+    "must": [
+      "수량이 잘못 주문된 것에 대한 불만으로 받아들인다",
+      "30롤 추가 주문이나 교환·반품을 실행하거나 바로 제안한다"
+    ],
+    "must_not": [
+      "넉넉하다는 칭찬으로 받는다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "SAR-12",
+    "category": "sarcasm_complaint",
+    "state": "차량 주행 중. 지난 20분 동안 같은 구간 단속 안내가 10번 나옴.",
+    "context": [
+      {
+        "role": "assistant",
+        "content": "구간 단속 중입니다. 제한 속도 100킬로미터예요."
+      }
+    ],
+    "utterance": "아 고마워 진짜 열 번째 듣는다",
+    "gold_intent": "반어적 불만. 같은 안내가 너무 잦으니 횟수를 줄여 달라는 요청",
+    "must": [
+      "안내가 너무 잦다는 불만으로 받아들인다",
+      "같은 안내의 반복 횟수를 줄이거나 끄기를 실행하거나 바로 제안한다"
+    ],
+    "must_not": [
+      "'천만에요'처럼 감사 인사로 받는다",
+      "같은 안내를 다시 한다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "SAR-13",
+    "category": "sarcasm_complaint",
+    "state": "차량 주행 중. 지금 '김민수(고등학교 친구)'에게 발신 중, 아직 받지 않음. 연락처에 '김민수 부장님'도 있음.",
+    "context": [
+      {
+        "role": "user",
+        "content": "김민수 부장님한테 전화해 줘"
+      },
+      {
+        "role": "assistant",
+        "content": "김민수 님께 전화를 걸고 있어요."
+      }
+    ],
+    "utterance": "와 연결 한번 정확하다 친구한테 걸었잖아",
+    "gold_intent": "반어적 불만. 친구에게 가는 발신을 취소하고 김민수 부장님께 다시 걸어 달라는 요청",
+    "must": [
+      "잘못 걸었다는 불만으로 받아들인다",
+      "친구에게 가는 발신을 취소하고 김민수 부장님께 다시 걸거나 바로 제안한다"
+    ],
+    "must_not": [
+      "칭찬으로 받는다",
+      "친구에게 계속 발신한다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "POL-03",
+    "category": "politeness_hedge",
+    "state": "집. 밤 10시. 캘린더: 내일 09:00 거래처 회의. 리마인더 없음.",
+    "context": [],
+    "utterance": "바쁘신데 죄송한데요 내일 아침에 회의 자료 챙기라고 한 번만 알려 주실 수 있을까요",
+    "gold_intent": "내일 아침 회의 전에 회의 자료를 챙기라는 리마인더를 설정해 달라는 요청",
+    "must": [
+      "내일 아침(회의 전) 회의 자료 리마인더를 설정하거나, 설정을 전제로 시각을 한 가지만 묻는다"
+    ],
+    "must_not": [
+      "바쁘지 않다거나 괜찮다는 답만 하고 리마인더를 설정하지 않는다",
+      "회의 시각보다 늦게 설정한다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "POL-04",
+    "category": "politeness_hedge",
+    "state": "차량 주행 중. 창문 모두 닫힘. 외기 온도 20도, 맑음.",
+    "context": [],
+    "utterance": "혹시 괜찮으시면 창문 조금만 열어 주시면 안 될까요",
+    "gold_intent": "부정 의문 형태지만 창문을 조금 열어 달라는 요청",
+    "must": [
+      "창문을 조금 열었다고 말한다"
+    ],
+    "must_not": [
+      "'안 될 건 없어요'처럼 가능 여부만 답하고 열지 않는다",
+      "창문을 끝까지 연다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "POL-05",
+    "category": "politeness_hedge",
+    "state": "서울 집. 수요일 저녁. 기차 예매 앱 연동됨. 부모님 댁 대전.",
+    "context": [],
+    "utterance": "음 시간 되면 이번 주말에 부모님 댁 가는 KTX 표 좀 봐 줄래 토요일 오전으로",
+    "gold_intent": "토요일 오전 서울에서 대전 가는 KTX를 조회해 달라는 요청 (시간 여부 질문이 아님)",
+    "must": [
+      "토요일 오전 대전행 KTX 시간이나 남은 좌석을 알려 주거나, 예매를 전제로 한 가지만 묻는다"
+    ],
+    "must_not": [
+      "시간이 된다는 답만 하고 조회하지 않는다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "POL-06",
+    "category": "politeness_hedge",
+    "state": "집. 오전 8시. 연락처에 '박 팀장님' 저장됨. 오늘 오후 반차 신청 완료.",
+    "context": [],
+    "utterance": "부탁하기 좀 그런데 팀장님한테 오늘 오후 반차 쓴다고 문자 하나만 넣어 줄래",
+    "gold_intent": "팀장님께 오늘 오후 반차를 쓴다는 문자를 보내 달라는 요청",
+    "must": [
+      "팀장님께 오늘 오후 반차 사용을 알리는 문자를 보냈다고 말한다"
+    ],
+    "must_not": [
+      "부탁해도 괜찮다는 위로만 하고 보내지 않는다",
+      "다른 사람에게 보낸다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "POL-07",
+    "category": "politeness_hedge",
+    "state": "집 거실. 오후 4시. 전동 블라인드 연결됨, 열림. 햇빛이 TV 화면에 비침.",
+    "context": [],
+    "utterance": "귀찮게 해서 미안한데 블라인드 좀 내려 주라",
+    "gold_intent": "거실 블라인드를 내려 달라는 요청",
+    "must": [
+      "거실 블라인드를 내렸다고 말한다"
+    ],
+    "must_not": [
+      "괜찮다는 말만 하고 블라인드를 내리지 않는다",
+      "블라인드를 올린다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "POL-08",
+    "category": "politeness_hedge",
+    "state": "외출 중. 오후 3시. 스마트 가스밸브 연결됨, 현재 열림 상태. 집에 아무도 없음.",
+    "context": [],
+    "utterance": "혹시 몰라서 그러는데 가스 밸브 잠겼는지 좀 봐 줄 수 있어",
+    "gold_intent": "가스 밸브 상태를 확인하고, 열려 있다면 잠가 달라는 요청",
+    "must": [
+      "가스 밸브가 열려 있다고 알려 주고, 잠갔다고 말하거나 잠글지 바로 제안한다"
+    ],
+    "must_not": [
+      "확인할 수 있다고만 답하고 상태를 알려 주지 않는다",
+      "상태만 알리고 잠그는 일은 언급하지 않는다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "POL-09",
+    "category": "politeness_hedge",
+    "state": "집. 저녁 7시. 배달 앱 연결됨. 최근 3일 배달: 치킨, 피자, 짜장면.",
+    "context": [],
+    "utterance": "괜찮으면 말이야 오늘 저녁 메뉴 하나만 골라 줄래 배달로",
+    "gold_intent": "배달 저녁 메뉴를 하나 골라 달라는 요청",
+    "must": [
+      "배달 메뉴 하나를 골라 제안한다 (주문할지 묻는 것은 허용)"
+    ],
+    "must_not": [
+      "괜찮다는 답만 하고 메뉴를 고르지 않는다",
+      "'무엇이 드시고 싶으세요'처럼 고르는 일을 사용자에게 되돌린다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "PRE-03",
+    "category": "presupposition",
+    "state": "집 현관. 오전 8시. 2주 전 주문: '3단 자동 우산 네이비' 1개, 성수동 집으로 배송.",
+    "context": [],
+    "utterance": "우산 또 잃어버렸네 저번에 산 거 다시 주문해 줘",
+    "gold_intent": "2주 전과 같은 '3단 자동 우산 네이비' 1개를 성수동 집으로 재주문",
+    "must": [
+      "'3단 자동 우산 네이비'를 같은 주소로 주문하거나, 그 내용으로 주문할지 확인한다"
+    ],
+    "must_not": [
+      "어떤 우산을 원하는지 처음부터 묻는다",
+      "다른 우산을 주문한다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "PRE-04",
+    "category": "presupposition",
+    "state": "집. 수요일 저녁. 미용실 '헤어온 성수' 최근 4번 모두 토요일 오전 11시 예약. 이번 토요일 11시 예약 가능.",
+    "context": [],
+    "utterance": "평소 가는 미용실 이번 주 토요일에 잡아 줘 늘 하던 시간으로",
+    "gold_intent": "'헤어온 성수'를 이번 토요일 오전 11시로 예약",
+    "must": [
+      "'헤어온 성수'에 이번 토요일 오전 11시로 예약했다고 말한다"
+    ],
+    "must_not": [
+      "어느 미용실인지나 몇 시인지 묻는다",
+      "다른 시간으로 예약한다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "PRE-05",
+    "category": "presupposition",
+    "state": "집. 일요일 밤 10시. 평일 06:30 알람(월~금)이 지난주 휴가 동안 꺼져 있음. 휴가는 오늘 끝남.",
+    "context": [],
+    "utterance": "휴가 끝났으니까 알람 원래대로 돌려 줘",
+    "gold_intent": "꺼 둔 평일 06:30 알람을 다시 켜 달라는 요청",
+    "must": [
+      "평일(월~금) 오전 6시 30분 알람을 다시 켰다고 말한다"
+    ],
+    "must_not": [
+      "몇 시로 할지 묻는다",
+      "다른 시각으로 맞춘다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "PRE-06",
+    "category": "presupposition",
+    "state": "차량 탑승 직후. 오전 8시. 30분 전 집 스피커에서 팟캐스트 '경제 한 스푼' 12화를 23분 지점에서 정지.",
+    "context": [],
+    "utterance": "아까 듣던 거 이어서 틀어 줘",
+    "gold_intent": "팟캐스트 '경제 한 스푼' 12화를 23분 지점부터 이어서 재생",
+    "must": [
+      "'경제 한 스푼' 12화를 멈춘 지점(23분)부터 재생한다"
+    ],
+    "must_not": [
+      "처음부터 재생한다",
+      "무엇을 들을지 묻는다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "PRE-07",
+    "category": "presupposition",
+    "state": "차량 주행 중. 1분 전 '이수진 과장'과 통화 중 터널에서 끊김.",
+    "context": [],
+    "utterance": "방금 끊긴 전화 다시 연결해 줘",
+    "gold_intent": "끊긴 통화 상대인 이수진 과장에게 다시 전화",
+    "must": [
+      "이수진 과장에게 다시 전화를 건다"
+    ],
+    "must_not": [
+      "누구에게 걸지 묻는다",
+      "다른 사람에게 건다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "PRE-08",
+    "category": "presupposition",
+    "state": "차량 탑승 직후, 집 주차장. 오전 8시. 목적지 회사(을지로). 어제 출근길 안내 경로 동부간선도로가 공사 구간이라 30분 지체됨.",
+    "context": [],
+    "utterance": "회사 가자 어제 막혔던 데는 빼고",
+    "gold_intent": "동부간선도로 공사 구간을 피한 경로로 회사 길안내",
+    "must": [
+      "회사로 길안내를 하되 동부간선도로를 피하는 경로를 쓴다"
+    ],
+    "must_not": [
+      "어디가 막혔었는지 묻는다",
+      "동부간선도로를 포함한 경로로 안내한다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "PRE-09",
+    "category": "presupposition",
+    "state": "집. 월요일 저녁. 이번 주 금요일 어머니 생신. 작년 어머니 생신 선물 주문: '홍삼 스틱 30포' 1박스, 배송지 '대전 부모님 댁'.",
+    "context": [],
+    "utterance": "엄마 생신 선물 작년이랑 같은 걸로 보내 드려",
+    "gold_intent": "작년과 같은 홍삼 스틱 30포를 대전 부모님 댁으로 금요일 전에 도착하게 주문",
+    "must": [
+      "홍삼 스틱 30포를 대전 부모님 댁으로 주문하거나, 그 내용으로 주문할지 확인한다"
+    ],
+    "must_not": [
+      "어떤 선물을 보낼지 처음부터 묻는다",
+      "다른 상품이나 다른 주소로 주문한다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "PHA-03",
+    "category": "phatic_no_action",
+    "state": "차량 신호 대기 중. 저녁 6시 반. 하늘에 노을.",
+    "context": [],
+    "utterance": "와 하늘 진짜 예쁘다",
+    "gold_intent": "기기 조작 요청이 아닌 감탄. 짧게 맞장구치면 됨",
+    "must": [
+      "짧게 맞장구치거나 공감한다"
+    ],
+    "must_not": [
+      "묻지 않고 음악·경로 등 기기를 조작한다",
+      "일몰 시각이나 날씨 정보를 길게 설명한다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "PHA-04",
+    "category": "phatic_no_action",
+    "state": "회사. 오후 4시. 월간 실적 메일을 방금 읽음.",
+    "context": [],
+    "utterance": "하 이번 달도 실적 꽝이네",
+    "gold_intent": "기기 조작 요청이 아닌 감정 표현. 공감이나 위로가 핵심",
+    "must": [
+      "공감하거나 짧게 위로한다"
+    ],
+    "must_not": [
+      "실적 수치를 읽어 준다",
+      "묻지 않고 일정이나 알림을 만든다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "PHA-05",
+    "category": "phatic_no_action",
+    "state": "집 거실. 밤 9시. TV로 응원하는 팀 축구 경기 시청 중. 방금 상대 팀 득점.",
+    "context": [],
+    "utterance": "아 저걸 왜 못 막아",
+    "gold_intent": "경기에 대한 혼잣말. 행동이 필요 없음",
+    "must": [
+      "짧게 공감하거나 맞장구친다"
+    ],
+    "must_not": [
+      "묻지 않고 채널을 바꾸거나 TV를 조작한다",
+      "경기 규칙이나 선수 기록을 길게 설명한다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "PHA-06",
+    "category": "phatic_no_action",
+    "state": "집 소파. 일요일 밤 10시.",
+    "context": [],
+    "utterance": "아 내일 출근하기 싫다",
+    "gold_intent": "기기 조작 요청이 아닌 감정 표현. 공감이 핵심",
+    "must": [
+      "공감한다"
+    ],
+    "must_not": [
+      "묻지 않고 내일 일정을 읽어 주거나 알람을 바꾼다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "PHA-07",
+    "category": "phatic_no_action",
+    "state": "집 거실. 오후 3시. 방금 온라인 주문한 무선 청소기 택배를 열어 봄.",
+    "context": [],
+    "utterance": "오 생각보다 괜찮은데",
+    "gold_intent": "산 물건에 대한 감탄 혼잣말. 행동이 필요 없음",
+    "must": [
+      "짧게 맞장구치거나 반응한다"
+    ],
+    "must_not": [
+      "묻지 않고 상품 리뷰를 작성하거나 추가 주문을 한다",
+      "상품 사양을 길게 설명한다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "PHA-08",
+    "category": "phatic_no_action",
+    "state": "차량 고속도로 주행 중. 목적지 광주 부모님 댁, 전체 4시간 중 2시간 경과.",
+    "context": [],
+    "utterance": "아 벌써 반이나 왔네",
+    "gold_intent": "진행 상황에 대한 혼잣말. 짧은 맞장구면 충분함",
+    "must": [
+      "짧게 맞장구친다 (남은 시간을 짧게 덧붙이는 것은 허용)"
+    ],
+    "must_not": [
+      "묻지 않고 경로나 음악을 바꾼다",
+      "묻지 않고 휴게소를 경유지로 추가한다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "PHA-09",
+    "category": "phatic_no_action",
+    "state": "집 침실. 밤 11시.",
+    "context": [
+      {
+        "role": "user",
+        "content": "내일 여섯 시 알람"
+      },
+      {
+        "role": "assistant",
+        "content": "내일 오전 6시 알람 맞췄어요."
+      }
+    ],
+    "utterance": "고마워 잘 자",
+    "gold_intent": "감사와 밤 인사. 추가 행동이 필요 없음",
+    "must": [
+      "짧게 인사로 답한다"
+    ],
+    "must_not": [
+      "알람을 다시 바꾸거나 새로 만든다",
+      "묻지 않고 조명을 끄는 등 기기를 조작한다"
+    ],
+    "clarify_ok": true
+  },
+  {
+    "id": "HON-02",
+    "category": "honorific",
+    "state": "회사. 오후 5시. 연락처에 '사장님' 저장됨. 내일 오전 보고서 제출 예정.",
+    "context": [],
+    "utterance": "사장님한테 내일 보고서 좀 늦어진다고 전해 줘",
+    "gold_intent": "사장님께 내일 보고서가 늦어진다는 메시지를 높임말로 전달",
+    "must": [
+      "사장님께 메시지나 전화로 전한다",
+      "전달 문구가 높임말이다 (예: 내일 보고서가 조금 늦어질 것 같습니다)"
+    ],
+    "must_not": [
+      "'보고서 늦어진다'처럼 반말을 그대로 전달한다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "HON-03",
+    "category": "honorific",
+    "state": "집. 저녁 8시. 연락처에 '장모님' 저장됨. 오늘 장모님이 보낸 김치 택배 도착.",
+    "context": [],
+    "utterance": "장모님한테 김치 잘 받았다고 고맙다고 문자 좀 보내 줘",
+    "gold_intent": "장모님께 김치 잘 받았다는 감사 문자를 높임말로 발송",
+    "must": [
+      "장모님께 문자를 보낸다",
+      "전달 문구가 높임말이다 (예: 어머님, 김치 잘 받았습니다. 감사합니다)"
+    ],
+    "must_not": [
+      "'김치 잘 받았어 고마워'처럼 반말을 그대로 전달한다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "HON-04",
+    "category": "honorific",
+    "state": "학교 연구실. 오후 2시. 연락처에 '최 교수님' 저장됨.",
+    "context": [],
+    "utterance": "교수님한테 내일 면담 가능하냐고 물어봐",
+    "gold_intent": "교수님께 내일 면담이 가능한지 높임말로 여쭙는 메시지 발송",
+    "must": [
+      "교수님께 메시지나 전화로 묻는다",
+      "전달 문구가 높임말이다 (예: 교수님, 내일 면담 가능하신지 여쭙고 싶습니다)"
+    ],
+    "must_not": [
+      "'내일 면담 가능해?'처럼 반말을 그대로 전달한다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "MUL-02",
+    "category": "multi_intent",
+    "state": "집. 밤 11시. 거실 조명 켜짐. 내일 알람 없음.",
+    "context": [],
+    "utterance": "거실 불 끄고 내일 일곱 시에 깨워 줘",
+    "gold_intent": "(1) 거실 조명 끄기 (2) 내일 오전 7시 알람 설정",
+    "must": [
+      "거실 조명을 끈다",
+      "내일 오전 7시 알람을 설정한다"
+    ],
+    "must_not": [
+      "둘 중 하나를 빠뜨린다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "MUL-03",
+    "category": "multi_intent",
+    "state": "회사 주차장. 오후 7시. 목적지 미설정. 등록된 집 주소 있음.",
+    "context": [],
+    "utterance": "엄마한테 지금 집에 간다고 문자 보내고 집으로 길 안내해 줘",
+    "gold_intent": "(1) 어머니께 집에 간다는 문자 발송 (2) 집으로 길안내",
+    "must": [
+      "어머니께 집에 간다는 문자를 보낸다",
+      "집으로 길안내를 시작한다"
+    ],
+    "must_not": [
+      "둘 중 하나를 빠뜨린다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "MUL-04",
+    "category": "multi_intent",
+    "state": "차량 주행 중. '봄바람'(가수 하늘) 재생 중.",
+    "context": [],
+    "utterance": "지금 나오는 노래 좋아요 해 두고 다음 곡으로 넘겨 줘",
+    "gold_intent": "(1) 지금 곡 '봄바람'을 좋아요 목록에 저장 (2) 다음 곡으로 넘기기",
+    "must": [
+      "'봄바람'을 좋아요 목록에 넣는다",
+      "다음 곡으로 넘긴다"
+    ],
+    "must_not": [
+      "둘 중 하나를 빠뜨린다",
+      "넘긴 다음 곡을 좋아요 목록에 넣는다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "ASR-02",
+    "category": "asr_noise",
+    "state": "집 거실. 밤 11시. 거실 조명 켜짐.",
+    "context": [],
+    "utterance": "거실 부 꺼 줘",
+    "gold_intent": "거실 조명을 꺼 달라는 요청 ('부'는 '불'의 음성 인식 오류)",
+    "must": [
+      "거실 조명을 끈다"
+    ],
+    "must_not": [
+      "'부'를 다른 뜻으로 해석한다",
+      "무슨 뜻인지 다시 묻는다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "ASR-03",
+    "category": "asr_noise",
+    "state": "차량 주행 중. 음악 재생 중, 볼륨 30.",
+    "context": [],
+    "utterance": "볼륨 좀 주려 줘 너무 커",
+    "gold_intent": "볼륨을 줄여 달라는 요청 ('주려'는 '줄여'의 음성 인식 오류)",
+    "must": [
+      "볼륨을 30보다 낮춘다"
+    ],
+    "must_not": [
+      "볼륨을 올린다",
+      "무슨 뜻인지 다시 묻는다"
+    ],
+    "clarify_ok": false
+  },
+  {
+    "id": "ASR-04",
+    "category": "asr_noise",
+    "state": "집. 오전 9시. 캘린더: 내일 15:00 치과(서울바른치과).",
+    "context": [],
+    "utterance": "내일 치과 예약 잡혀 있나 화긴해 줘",
+    "gold_intent": "내일 치과 일정을 확인해 달라는 요청 ('화긴'은 '확인'의 음성 인식 오류)",
+    "must": [
+      "내일 오후 3시 치과 일정이 있다고 알려 준다"
+    ],
+    "must_not": [
+      "'화긴'을 다른 뜻으로 해석한다",
+      "무슨 뜻인지 다시 묻는다",
+      "새 치과 예약을 잡는다"
+    ],
+    "clarify_ok": false
+  }
+]
